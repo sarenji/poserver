@@ -54,7 +54,7 @@ User.prototype.log = function(message) {
     sys.kick(this.id);
   }
   this.lastMessage = message;
-  this.lastMessageTime = +new Date;
+  this.lastMessageTime = getTime();
 }
 
 User.prototype.isSpamming = function(message) {
@@ -66,7 +66,7 @@ User.prototype.isSpamming = function(message) {
     return true;
   }
   
-  if ((+new Date) - this.lastMessageTime < 50) {
+  if (timeDelta(this.lastMessageTime) < 50) {
     return true;
   }
   return false;
@@ -220,6 +220,14 @@ function prettyPrintTime(seconds) {
   _(4,  12, "month");
   _(12, seconds + 1, "year");
   return time.join(", ");
+}
+
+function getTime() {
+  return +new Date;
+}
+
+function timeDelta(milliseconds) {
+  return getTime() - milliseconds;
 }
 
 /** length is in minutes. */
