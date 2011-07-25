@@ -1,0 +1,381 @@
+/** URL of most recent script. Currently the master branch of my GitHub. */
+var SCRIPT_URL = "https://raw.github.com/sarenji/poserver/master/scripts.js"
+
+/** User authentication constants */
+var USER          = 0;
+var MODERATOR     = 1;
+var ADMINISTRATOR = 2;
+var OWNER         = 3;
+
+var AUTH_VALUES = {
+  OWNER         : OWNER,
+  ADMIN         : ADMINISTRATOR,
+  ADMINISTRATOR : ADMINISTRATOR,
+  MOD           : MODERATOR,
+  MODERATOR     : MODERATOR,
+  USER          : USER
+};
+
+/** Other constants */
+var MODERATOR_MAX_BAN_LENGTH = 3 * 60 * 60; // in seconds
+var TEMPORARY_BANS           = {};          // keys are ips
+
+/*
+TODO:
+make bans persistent
+Race conditions involving delayedCalls. Need a way to clear them.
+ban to use intelligence: 3m uses minutes, 3s uses seconds
+make ranking work for other players as well
+tournaments (w/ channel too)
+wall should hit all channels
+*/
+
+function User(id) {
+  this.id = id;
+  this.ip = sys.ip(id);
+  this.name = sys.name(id);
+  this.auth = sys.auth(id);
+  this.muted = false;
+  this.lastMessage = null;
+  this.lastMessageTime = 0;
+}
+
+User.prototype.authedFor = function(auth) {
+  return this.auth >= auth;
+}
+
+User.prototype.run = function(command, args) {
+  commands[command].apply(this, args);
+}
+
+User.prototype.log = function(message) {
+  if (this.isSpamming(message)) {
+    sys.stopEvent();
+    sys.kick(this.id);
+  }
+  this.lastMessage = message;
+  this.lastMessageTime = +new Date;
+}
+
+User.prototype.isSpamming = function(message) {
+  if (this.authedFor(MODERATOR)) {
+    return false;
+  }
+  
+  if (this.lastMessage === message) {
+    return true;
+  }
+  
+  if ((+new Date) - this.lastMessageTime < 50) {
+    return true;
+  }
+  return false;
+}
+
+User.prototype.outranks = function(other) {
+  return this.auth > other.auth;
+}
+
+// temporary until i figure out a nicer way of doing this.
+var help = [
+  [
+    "** BASIC USER COMMANDS",
+    "/ranking -- See your own ranking.",
+    "/clearpass -- Clear your own password"
+  ], [
+    "** MODERATOR COMMANDS",
+    "/kick user",
+    "/k is aliased to /kick.",
+    "/ban user -- bans user for " + MODERATOR_MAX_BAN_LENGTH / 60 / 60 + " hours.",
+    "/ban user:duration -- duration is in hours. Maximum of " + MODERATOR_MAX_BAN_LENGTH / 60 / 60 + " hours.",
+    "/b is aliased to /ban.",
+    "/unban user",
+    "/mute user",
+    "/mute user:duration",
+    "/unmute user",
+    "/wall message"
+  ], [
+    "** ADMINISTRATOR COMMANDS",
+    "/ban user -- bans user permanently.",
+    "/b is aliased to /ban."
+  ], [
+    "** OWNER COMMANDS",
+    "/clearpass user -- Clear user's password."
+  ]
+];
+
+/** All of these commands are run in the context of a User object. */
+var commands = {};
+commands.commands = function() {
+  for (var i = 0; i <= this.auth; i++) {
+    for (var j = 0; j < help[i].length; j++) {
+      announce(this.id, help[i][j]);
+    }
+  }
+};
+
+commands.auth = function(group) {
+  var list = sys.dbAuths().sort();
+  
+  if (group) {
+    var auth = AUTH_VALUES[group.toUpperCase()];
+    list     = findAuthLevel(auth, list);
+  }
+  
+  for (var i = 0, len = list.length; i < len; i++) {
+    announce(this.id, list[i]);
+  }
+};
+
+commands.ranking = function() {
+  var rank = sys.ranking(this.id);
+  var tier = sys.tier(this.id);
+  if (rank) {
+    announce(this.id, "Your rank in " + tier + " is " + rank
+      + "/" + sys.totalPlayersByTier(tier) + " ["
+      + sys.ladderRating(this.id) + " points / "
+      + sys.ratedBattles(this.id) +" battles]!");
+  } else {
+    announce(this.id, "You are not ranked in " + tier + " yet!");
+  }
+};
+
+commands.k = commands.kick = function(player_name) {
+  if (this.authedFor(MODERATOR)) {
+    var player_id = sys.id(player_name);
+    sys.kick(player_id);
+    announce(this.name + " kicked " + player_name + ".");
+  }
+};
+
+commands.reload = function() {
+  sys.webCall(SCRIPT_URL, function(res) {
+    changeScript(res, true);
+  });
+};
+
+commands.wall = function(args) {
+  if (this.authedFor(MODERATOR)) {
+    var message = args;
+    for (var i = 0, len = arguments.length; i < len; i++) {
+      message += ":" + arguments[i];
+    }
+    announce(message);
+  }
+};
+
+function parseLength(length) {
+  var groups = length.match(/\d+[mshdyMw]?/g);
+  var time   = 0;
+  for (var i = 0, len = groups.length; i < len; i++) {
+    var last = groups[len - 1];
+    switch (last) {
+      case 's':
+        time += parseInt(last, 10);
+        break;
+      case 'm':
+        time += parseInt(last, 10) * 60;
+        break;
+      case 'd':
+        time += parseInt(last, 10) * 60 * 60 * 24;
+        break;
+      case 'w':
+        time += parseInt(last, 10) * 60 * 60 * 24 * 7;
+        break;
+      case 'M':
+        time += parseInt(last, 10) * 60 * 60 * 24 * 30;
+        break;
+      case 'y':
+        time += parseInt(last, 10) * 60 * 60 * 24 * 30 * 12;
+        break;
+      case 'h':
+      default:
+        time += parseInt(last, 10) * 60 * 60;
+        break;
+    }
+  }
+  return time;
+}
+
+function pluralize(word, number) {
+  return number === 1 ? word : word + "s";
+}
+
+function prettyPrintTime(seconds) {
+  function _(by, next, text) {
+    seconds = Math.floor(seconds / by);
+    var mod = seconds % next;
+    if (mod !== 0) {
+      time.unshift(mod + " " + pluralize(text, mod));
+    }
+  }
+  var time = [];
+  _(1,  60, "second");
+  _(60, 60, "minute");
+  _(60, 24, "hour");
+  _(24, 7,  "day");
+  _(7,  4,  "week");
+  _(4,  12, "month");
+  _(12, seconds + 1, "year");
+  return time.join(", ");
+}
+
+/** length is in minutes. */
+commands.b = commands.ban = function(player_name, length) {
+  if (this.authedFor(MODERATOR)) {
+    var player_id = sys.id(player_name);
+    sys.ban(player_name);
+    sys.kick(player_id);
+    
+    if (length) {
+      length = parseLength(length);
+    }
+    
+    // limit mod bans to 3 hours max
+    if (this.auth == MODERATOR) {
+      if (length) {
+        length = Math.min(length, MODERATOR_MAX_BAN_LENGTH);
+      } else {
+        length = MODERATOR_MAX_BAN_LENGTH;
+      }
+    }
+    
+    if (length) {
+      // unban after a set amount of minutes
+      // TODO: save bans in case of server crash
+      sys.delayedCall(function() {
+        sys.unban(player_name);
+      }, length);
+      var ip = sys.dbIp(player_name);
+      TEMPORARY_BANS[ip] = {
+        expires : (+new Date) + length * 1000
+      };
+      
+      announce(player_name + " was banned for " + prettyPrintTime(length) + ".");
+    } else {
+      announce(player_name + " was banned forever.");
+    }
+  }
+};
+
+commands.unban = function(playerName) {
+  var player = getPlayer(playerName);
+  if (this.authedFor(MODERATOR) && this.outranks(player)) {
+    var ip = sys.dbIp(playerName);
+    if (ip === undefined) {
+      announce(this.id, "No such user!");
+    } else if (ip in TEMPORARY_BANS) {
+      delete TEMPORARY_BANS[ip];
+      announce(this.name + " unbanned " + playerName + ".");
+    } else {
+      announce(this.id, "This player is not banned!");
+    }
+  }
+};
+
+commands.mute = function(player_name, length) {
+  var player = getPlayer(player_name);
+  if (this.authedFor(MODERATOR) && this.outranks(player)) {
+    var message = this.name + " muted " + player_name;
+    player.muted = true;
+    
+    if (length) {
+      length = parseLength(length);
+      sys.delayedCall(function() {
+        player.muted = false;
+      }, length);
+      message += " for " + prettyPrintTime(length) + ".";
+    }
+    
+    announce(message + ".");
+  }
+};
+commands.unmute = function(player_name) {
+  if (this.authedFor(MODERATOR)) {
+    var player = getPlayer(player_name);
+    player.muted = false;
+    announce(this.name + " unmuted " + player_name + ".");
+  }
+};
+
+commands.clearpass = function(player_name) {
+  if (player_name === undefined) {
+    sys.clearPass(this.name);
+    announce(this.id, "Your password was cleared.");
+  } else if (this.authedFor(OWNER)) {
+    sys.clearPass(player_name);
+    announce(this.id, "You cleared " + player_name + "'s password.");
+  }
+};
+
+function makeKey(player_id) {
+  var arr = [ sys.ip(player_id) ];
+  for (var i = 1, len = arguments.length; i < len; i++) {
+    arr.push(arguments[i]);
+  }
+  return arr.join(":");
+}
+
+function findAuthLevel(auth, list) {
+  var arr = [];
+  for (var i = 0, len = list.length; i < len; i++) {
+    var userName = list[i];
+    var status   = sys.id(userName) ? " (Online)" : " (Offline)";
+    arr.push(userName + status);
+  }
+  return arr;
+}
+
+function getPlayer(player_name) {
+  var player_id = sys.id(player_name);
+  return SESSION.users(player_id);
+}
+
+function announce(player_id, message) {
+  if (message === undefined) {
+    message = player_id;
+    sys.sendAll("*** " + message);
+  } else {
+    sys.sendMessage(player_id, "*** " + message);
+  }
+}
+
+function sanitize(message) {
+  // whitelist includes: a-zA-Z0-9_, -, space, {}[]/\()[]!@#$%^&*"'?<>+=`~|.,
+  message = message.replace(/[^\w\-\[\]\/\\\(\)\<\>\!\@\#\$\%\^\&\*\~\`\=\+\"\'\,\.\?\{\}\;\:\| ]/g, "");
+  return message;
+}
+
+SESSION.registerUserFactory(User);
+
+({
+  serverStartUp : function() {
+    
+  },
+  beforeLogIn : function(player_id) {
+    if (/[^\w-\[\] ]/g.test(sys.name(player_id))) {
+      announce(player_id, "Please do not use special characters in your name.");
+      sys.stopEvent();
+    }
+  },
+  afterLogIn : function(player_id) {
+    announce(player_id, "This place is strictly for development.");
+  },
+  beforeChatMessage: function(player_id, message) {
+    var user = SESSION.users(player_id);
+    message  = sanitize(message);
+    
+    if (message[0] === '/' && message.length > 1) {
+      sys.stopEvent();
+      message     = message.substr(1);
+      var pieces  = message.split(/\s+/);
+      var command = pieces.shift();
+      pieces      = pieces.join(" ").split(":");
+      user.run(command, pieces);
+    } else if (user.muted) {
+      sys.stopEvent();
+    }
+    
+    user.log(message);
+  }
+})
