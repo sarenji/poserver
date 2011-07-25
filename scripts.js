@@ -362,7 +362,7 @@ SESSION.registerUserFactory(User);
     
   },
   beforeLogIn : function(player_id) {
-    if (/[^\w-\[\] ]/g.test(sys.name(player_id))) {
+    if (/[^\w-\[\]\. ]/g.test(sys.name(player_id))) {
       announce(player_id, "Please do not use special characters in your name.");
       sys.stopEvent();
     }
