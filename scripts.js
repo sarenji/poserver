@@ -24,7 +24,6 @@ var TEMPORARY_BANS           = {};          // keys are ips
 TODO:
 make bans persistent
 Race conditions involving delayedCalls. Need a way to clear them.
-ban to use intelligence: 3m uses minutes, 3s uses seconds
 make ranking work for other players as well
 tournaments (w/ channel too)
 wall should hit all channels
