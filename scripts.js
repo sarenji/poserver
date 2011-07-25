@@ -149,9 +149,11 @@ commands.k = commands.kick = function(player_name) {
 };
 
 commands.reload = function() {
-  sys.webCall(SCRIPT_URL, function(res) {
-    changeScript(res, true);
-  });
+  if (this.authedFor(OWNER)) {
+    sys.webCall(SCRIPT_URL, function(res) {
+      changeScript(res, true);
+    });
+  }
 };
 
 commands.wall = function(args) {
