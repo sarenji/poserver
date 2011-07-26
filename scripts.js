@@ -365,6 +365,17 @@ SESSION.registerUserFactory(User);
     if (/[^\w-\[\]\. ]/g.test(sys.name(player_id))) {
       announce(player_id, "Please do not use special characters in your name.");
       sys.stopEvent();
+      return;
+    }
+    
+    var ip = sys.ip(player_id);
+    if (ip in TEMPORARY_BANS) {
+      if (TEMPORARY_BANS[ip].expires <= getTime()) {
+        delete TEMPORARY_BANS[ip];
+      } else {
+        sys.stopEvent();
+        return;
+      }
     }
   },
   afterLogIn : function(player_id) {
