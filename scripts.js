@@ -150,7 +150,7 @@ commands.k = commands.kick = function(player_name) {
 commands.reload = function() {
   if (this.authedFor(OWNER)) {
     sys.webCall(SCRIPT_URL, function(res) {
-      changeScript(res, true);
+      sys.changeScript(res, true);
     });
   }
 };
