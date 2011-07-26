@@ -379,7 +379,7 @@ SESSION.registerUserFactory(User);
     }
   },
   afterLogIn : function(player_id) {
-    announce(player_id, "This place is strictly for development.");
+    
   },
   beforeChatMessage: function(player_id, message) {
     var user = SESSION.users(player_id);
