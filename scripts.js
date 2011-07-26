@@ -282,6 +282,12 @@ commands.unban = function(playerName) {
   }
 };
 
+commands.ipunban = function(ip) {
+  if (this.authedFor(MODERATOR)) {
+    sys.unban(ip);
+  }
+}
+
 commands.mute = function(player_name, length) {
   var player = getPlayer(player_name);
   if (this.authedFor(MODERATOR) && this.outranks(player)) {
