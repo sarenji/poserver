@@ -134,7 +134,7 @@ commands.auth = function(type, token, newAuth) {
       announce(this.id, token + "'s authority level is " + auth + ".");
     }
   } else {
-    announce("Invalid arguments.");
+    announce(this.id, "Invalid arguments.");
   }
 };
 
