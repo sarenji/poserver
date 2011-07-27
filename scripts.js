@@ -127,7 +127,7 @@ commands.auth = function(type, token, newAuth) {
     if (newAuth) {
       var id = sys.id(token);
       sys.changeAuth(id, newAuth);
-      announce(this.id, "You set " + token + "'s authority level to " + auth + ".");
+      announce(this.id, "You set " + token + "'s authority level to " + newAuth + ".");
     } else {
       var auth = sys.auth(token);
       var id   = sys.id(token);
