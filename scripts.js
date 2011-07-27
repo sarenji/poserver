@@ -154,7 +154,8 @@ commands.ranking = function() {
 };
 
 commands.k = commands.kick = function(player_name) {
-  if (this.authedFor(MODERATOR)) {
+  var player = getPlayer(player_name);
+  if (this.authedFor(MODERATOR) && this.outranks(player)) {
     var player_id = sys.id(player_name);
     sys.kick(player_id);
     announce(this.name + " kicked " + player_name + ".");
@@ -260,7 +261,8 @@ function timeDelta(milliseconds) {
 
 /** length is in minutes. */
 commands.b = commands.ban = function(player_name, length) {
-  if (this.authedFor(MODERATOR)) {
+  var player = getPlayer(player_name);
+  if (this.authedFor(MODERATOR) && this.outranks(player)) {
     var player_id = sys.id(player_name);
     sys.ban(player_name);
     sys.kick(player_id);
@@ -335,7 +337,8 @@ commands.mute = function(player_name, length) {
   }
 };
 commands.unmute = function(player_name) {
-  if (this.authedFor(MODERATOR)) {
+  var player = getPlayer(player_name);
+  if (this.authedFor(MODERATOR) && this.outranks(player)) {
     var player = getPlayer(player_name);
     player.muted = false;
     announce(this.name + " unmuted " + player_name + ".");
