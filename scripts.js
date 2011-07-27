@@ -165,8 +165,8 @@ commands.reload = function() {
 commands.wall = function(args) {
   if (this.authedFor(MODERATOR)) {
     var message = args;
-    for (var i = 0, len = arguments.length; i < len; i++) {
-      message += ":" + arguments[i];
+    for (var i = 1, len = arguments.length; i < len; i++) {
+      message += " " + arguments[i];
     }
     announce(message);
   }
