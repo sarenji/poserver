@@ -162,8 +162,14 @@ commands.k = commands.kick = function(player_name) {
 commands.reload = function() {
   if (this.authedFor(OWNER)) {
     sys.webCall(SCRIPT_URL, function(res) {
-      sys.changeScript(res, true);
-      announce(this.id, "Script reloaded!");
+      try {
+        sys.changeScript(res);
+        sys.writeToFile("scripts.js", res);
+        announce(this.id, "Script reloaded!");
+      } catch (err) {
+        sys.changeScript(sys.getFileContent("scripts.js"));
+        announce(this.id, "Could not reload! ERROR: " + err);
+      }
     });
   }
 };
