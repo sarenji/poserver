@@ -264,7 +264,7 @@ commands.b = commands.ban = function(player_name, length) {
       }, length);
       var ip = sys.dbIp(player_name);
       TEMPORARY_BANS[ip] = {
-        expires : (+new Date) + length * 1000
+        expires : getTime() + length * 1000
       };
       
       announce(player_name + " was banned for " + prettyPrintTime(length) + ".");
