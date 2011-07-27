@@ -157,6 +157,7 @@ commands.reload = function() {
   if (this.authedFor(OWNER)) {
     sys.webCall(SCRIPT_URL, function(res) {
       sys.changeScript(res, true);
+      announce(this.id, "Script reloaded!");
     });
   }
 };
