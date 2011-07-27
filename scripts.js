@@ -185,7 +185,7 @@ commands.reload = function() {
         sys.system("curl " + SCRIPT_URL + " > scripts.js");
         sys.changeScript(sys.getFileContent("scripts.js"));
         announce(this.id, "Script reloaded!");
-      } else {
+      } catch (err) {
         announce(this.id, "Could not reload! ERROR: " + err);
       }
     }
