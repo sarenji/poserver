@@ -126,7 +126,7 @@ commands.auth = function(type, token, newAuth) {
       announce(this.id, list[i]);
     }
   } else if (type === "user") {
-    if (newAuth) {
+    if (this.authedFor(OWNER) && newAuth) {
       var id = sys.id(token);
       sys.changeAuth(id, newAuth);
       announce(this.id, "You set " + token + "'s authority level to " + newAuth + ".");
