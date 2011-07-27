@@ -113,16 +113,22 @@ commands.commands = function() {
   }
 };
 
-commands.auth = function(group) {
+commands.auth = function(type, token, newAuth) {
   var list = sys.dbAuths().sort();
   
-  if (group) {
-    var auth = AUTH_VALUES[group.toUpperCase()];
-    list     = findAuthLevel(auth, list);
-  }
-  
-  for (var i = 0, len = list.length; i < len; i++) {
-    announce(this.id, list[i]);
+  if (type === "group") {
+    var group = AUTH_VALUES[token.toUpperCase()];
+    list      = findGroupAuthLevel(group, list);
+    
+    for (var i = 0, len = list.length; i < len; i++) {
+      announce(this.id, list[i]);
+    }
+  } else if (type === "user") {
+    var auth = sys.auth(token);
+    var id   = sys.id(token);
+    announce(this.id, token + "'s authority level is " + auth);
+  } else {
+    announce("Invalid arguments.");
   }
 };
 
@@ -331,7 +337,7 @@ function makeKey(player_id) {
   return arr.join(":");
 }
 
-function findAuthLevel(auth, list) {
+function findGroupAuthLevel(auth, list) {
   var arr = [];
   for (var i = 0, len = list.length; i < len; i++) {
     var userName = list[i];
