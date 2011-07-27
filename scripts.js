@@ -44,7 +44,9 @@ User.prototype.authedFor = function(auth) {
 }
 
 User.prototype.run = function(command, args) {
-  commands[command].apply(this, args);
+  if (command in commands) {
+    commands[command].apply(this, args);
+  }
 }
 
 User.prototype.log = function(message) {
@@ -413,6 +415,7 @@ SESSION.registerUserFactory(User);
     message  = sanitize(message);
     if (message.length === 0) {
       sys.stopEvent();
+      return;
     }
     
     if (message[0] === '/' && message.length > 1) {
@@ -422,8 +425,12 @@ SESSION.registerUserFactory(User);
       var command = pieces.shift();
       pieces      = pieces.join(" ").split(":");
       user.run(command, pieces);
-    } else if (user.muted) {
+      return;
+    }
+    
+    if (user.muted) {
       sys.stopEvent();
+      return;
     }
     
     user.log(message);
