@@ -312,6 +312,7 @@ commands.unban = function(playerName) {
     if (ip === undefined) {
       announce(this.id, "No such user!");
     } else if (ip in TEMPORARY_BANS) {
+      sys.unban(player_name);
       delete TEMPORARY_BANS[ip];
       announce(this.name + " unbanned " + playerName + ".");
     } else {
@@ -409,7 +410,8 @@ SESSION.registerUserFactory(User);
     
   },
   beforeLogIn : function(player_id) {
-    if (/[^\w-\[\]\. ]/g.test(sys.name(player_id))) {
+    var player_name = sys.name(player_id);
+    if (/[^\w-\[\]\. ]/g.test(player_name)) {
       announce(player_id, "Please do not use special characters in your name.");
       sys.stopEvent();
       return;
@@ -419,6 +421,7 @@ SESSION.registerUserFactory(User);
     if (ip in TEMPORARY_BANS) {
       if (TEMPORARY_BANS[ip].expires <= getTime()) {
         delete TEMPORARY_BANS[ip];
+        sys.unban(player_name);
       } else {
         sys.stopEvent();
         return;
