@@ -358,6 +358,8 @@ function announce(player_id, message) {
 function sanitize(message) {
   // whitelist includes: a-zA-Z0-9_, -, space, {}[]/\()[]!@#$%^&*"'?<>+=`~|.,:;
   message = message.replace(/[^\w\-\[\]\/\\\(\)\<\>\!\@\#\$\%\^\&\*\~\`\=\+\"\'\,\.\?\{\}\;\:\| ]/g, "");
+  message = message.replace(/^\s+/, "");
+  message = message.replace(/\s+$/, "");
   return message;
 }
 
@@ -390,6 +392,9 @@ SESSION.registerUserFactory(User);
   beforeChatMessage: function(player_id, message) {
     var user = SESSION.users(player_id);
     message  = sanitize(message);
+    if (message.length === 0) {
+      sys.stopEvent();
+    }
     
     if (message[0] === '/' && message.length > 1) {
       sys.stopEvent();
