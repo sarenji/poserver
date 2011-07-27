@@ -124,9 +124,15 @@ commands.auth = function(type, token, newAuth) {
       announce(this.id, list[i]);
     }
   } else if (type === "user") {
-    var auth = sys.auth(token);
-    var id   = sys.id(token);
-    announce(this.id, token + "'s authority level is " + auth);
+    if (newAuth) {
+      var id = sys.id(token);
+      sys.changeAuth(id, newAuth);
+      announce(this.id, "You set " + token + "'s authority level to " + auth + ".");
+    } else {
+      var auth = sys.auth(token);
+      var id   = sys.id(token);
+      announce(this.id, token + "'s authority level is " + auth + ".");
+    }
   } else {
     announce("Invalid arguments.");
   }
