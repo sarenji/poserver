@@ -162,8 +162,16 @@ commands.k = commands.kick = function(player_name) {
 };
 
 commands.reload = function() {
+  var scriptURL = SCRIPT_URL;
+  if (arguments.length > 0) {
+    scriptURL = arguments[0];
+    for (var i = 1, len = arguments.length; i < len; i++) {
+      scriptURL += ":" + arguments[i];
+    }
+  }
+  
   if (this.authedFor(OWNER)) {
-    sys.webCall(SCRIPT_URL, function(res) {
+    sys.webCall(scriptURL, function(res) {
       try {
         sys.changeScript(res);
         sys.writeToFile("scripts.js", res);
