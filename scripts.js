@@ -163,25 +163,31 @@ commands.k = commands.kick = function(player_name) {
 };
 
 commands.reload = function() {
-  var scriptURL = SCRIPT_URL;
-  if (arguments.length > 0) {
-    scriptURL = arguments[0];
-    for (var i = 1, len = arguments.length; i < len; i++) {
-      scriptURL += ":" + arguments[i];
-    }
-  }
-  
   if (this.authedFor(OWNER)) {
-    sys.webCall(scriptURL, function(res) {
+    if (arguments.length > 0) {
+      var scriptURL = arguments[0];
+      for (var i = 1, len = arguments.length; i < len; i++) {
+        scriptURL += ":" + arguments[i];
+      }
+      
+      sys.webCall(scriptURL, function(res) {
+        try {
+          sys.changeScript(res);
+          sys.writeToFile("scripts.js", res);
+          announce(this.id, "Script reloaded!");
+        } catch (err) {
+          sys.changeScript(sys.getFileContent("scripts.js"));
+          announce(this.id, "Could not reload! ERROR: " + err);
+        }
+      });
+    } else {
       try {
-        sys.changeScript(res);
-        sys.writeToFile("scripts.js", res);
+        sys.system("curl " + SCRIPT_URL + " > scripts.js");
         announce(this.id, "Script reloaded!");
-      } catch (err) {
-        sys.changeScript(sys.getFileContent("scripts.js"));
+      } else {
         announce(this.id, "Could not reload! ERROR: " + err);
       }
-    });
+    }
   }
 };
 
