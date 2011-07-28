@@ -109,7 +109,7 @@ var help = [
 
 /** All of these commands are run in the context of a User object. */
 var commands = {};
-commands.commands = function() {
+commands.help = commands.commands = function() {
   for (var i = 0; i <= this.auth; i++) {
     for (var j = 0; j < help[i].length; j++) {
       announce(this.id, help[i][j]);
