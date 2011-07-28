@@ -82,7 +82,8 @@ var help = [
   [
     "** BASIC USER COMMANDS",
     "/ranking -- See your own ranking.",
-    "/clearpass -- Clear your own password"
+    "/clearpass -- Clear your own password",
+    "/auth group:name"
   ], [
     "** MODERATOR COMMANDS",
     "/kick user",
@@ -91,6 +92,7 @@ var help = [
     "/ban user:duration -- duration is in hours. Maximum of " + MODERATOR_MAX_BAN_LENGTH / 60 / 60 + " hours.",
     "/b is aliased to /ban.",
     "/unban user",
+    "/mute -- mutes whole server",
     "/mute user",
     "/mute user:duration",
     "/unmute user",
@@ -182,9 +184,15 @@ commands.reload = function() {
       });
     } else {
       try {
-        sys.system("curl " + SCRIPT_URL + " > scripts.js");
-        sys.changeScript(sys.getFileContent("scripts.js"));
-        announce(this.id, "Script reloaded!");
+        sys.system("curl -o new_scripts.js " + SCRIPT_URL);
+        var new_scripts = sys.getFileContent("new_scripts.js");
+        sys.changeScript(new_scripts);
+        if (new_scripts) {
+          sys.writeToFile("scripts.js", new_scripts);
+          announce(this.id, "Script reloaded!");
+        } else {
+          announce(this.id, "ERROR: The script fetched was a blank file.");
+        }
       } catch (err) {
         announce(this.id, "Could not reload! ERROR: " + err);
       }
