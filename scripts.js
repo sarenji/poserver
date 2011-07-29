@@ -144,16 +144,22 @@ commands.auth = function(type, token, newAuth) {
   }
 };
 
-commands.ranking = function() {
-  var rank = sys.ranking(this.id);
-  var tier = sys.tier(this.id);
+commands.ranking = function(player_name) {
+  var player  = this;
+  if (player_name) {
+    player = getPlayer(player_name);
+  }
+  var rank   = sys.ranking(player.id);
+  var tier   = sys.tier(player.id);
   if (rank) {
-    announce(this.id, "Your rank in " + tier + " is " + rank
+    var possessive = player_name ? player_name + "'s" : "Your";
+    announce(this.id, possessive + " rank in " + tier + " is " + rank
       + "/" + sys.totalPlayersByTier(tier) + " ["
       + sys.ladderRating(this.id) + " points / "
       + sys.ratedBattles(this.id) +" battles]!");
   } else {
-    announce(this.id, "You are not ranked in " + tier + " yet!");
+    var noun = player_name ? player_name + " is" : "You are";
+    announce(this.id, noun + " not ranked in " + tier + " yet!");
   }
 };
 
