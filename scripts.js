@@ -24,7 +24,6 @@ var TEMPORARY_BANS           = {};          // keys are ips
 TODO:
 make bans persistent
 Race conditions involving delayedCalls. Need a way to clear them.
-make ranking work for other players as well
 tournaments (w/ channel too)
 wall should hit all channels
 */
@@ -75,6 +74,11 @@ User.prototype.isSpamming = function(message) {
 
 User.prototype.outranks = function(other) {
   return this.auth > other.auth;
+}
+
+function getPlayer(player_name) {
+  var player_id = sys.id(player_name);
+  return SESSION.users(player_id);
 }
 
 // temporary until i figure out a nicer way of doing this.
@@ -153,13 +157,13 @@ commands.ranking = function(player_name) {
   var tier   = sys.tier(player.id);
   if (rank) {
     var possessive = player_name ? player_name + "'s" : "Your";
-    announce(this.id, possessive + " rank in " + tier + " is " + rank
+    announce(player.id, possessive + " rank in " + tier + " is " + rank
       + "/" + sys.totalPlayersByTier(tier) + " ["
-      + sys.ladderRating(this.id) + " points / "
-      + sys.ratedBattles(this.id) +" battles]!");
+      + sys.ladderRating(player.id) + " points / "
+      + sys.ratedBattles(player.id) +" battles]!");
   } else {
     var noun = player_name ? player_name + " is" : "You are";
-    announce(this.id, noun + " not ranked in " + tier + " yet!");
+    announce(player.id, noun + " not ranked in " + tier + " yet!");
   }
 };
 
@@ -218,71 +222,7 @@ commands.wall = function(args) {
   }
 };
 
-function parseLength(length) {
-  var groups = length.match(/\d+[mshdyMw]?/g);
-  var time   = 0;
-  for (var i = 0, len = groups.length; i < len; i++) {
-    var last = groups[len - 1];
-    switch (last) {
-      case 's':
-        time += parseInt(last, 10);
-        break;
-      case 'm':
-        time += parseInt(last, 10) * 60;
-        break;
-      case 'd':
-        time += parseInt(last, 10) * 60 * 60 * 24;
-        break;
-      case 'w':
-        time += parseInt(last, 10) * 60 * 60 * 24 * 7;
-        break;
-      case 'M':
-        time += parseInt(last, 10) * 60 * 60 * 24 * 30;
-        break;
-      case 'y':
-        time += parseInt(last, 10) * 60 * 60 * 24 * 30 * 12;
-        break;
-      case 'h':
-      default:
-        time += parseInt(last, 10) * 60 * 60;
-        break;
-    }
-  }
-  return time;
-}
-
-function pluralize(word, number) {
-  return number === 1 ? word : word + "s";
-}
-
-function prettyPrintTime(seconds) {
-  function _(by, next, text) {
-    seconds = Math.floor(seconds / by);
-    var mod = seconds % next;
-    if (mod !== 0) {
-      time.unshift(mod + " " + pluralize(text, mod));
-    }
-  }
-  var time = [];
-  _(1,  60, "second");
-  _(60, 60, "minute");
-  _(60, 24, "hour");
-  _(24, 7,  "day");
-  _(7,  4,  "week");
-  _(4,  12, "month");
-  _(12, seconds + 1, "year");
-  return time.join(", ");
-}
-
-function getTime() {
-  return +new Date;
-}
-
-function timeDelta(milliseconds) {
-  return getTime() - milliseconds;
-}
-
-/** length is in minutes. */
+/** length is in hours by default. */
 commands.b = commands.ban = function(player_name, length) {
   var player = getPlayer(player_name);
   if (this.authedFor(MODERATOR) && this.outranks(player)) {
@@ -387,6 +327,9 @@ commands.clearpass = function(player_name) {
   }
 };
 
+/*******************\
+* Registry helpers  *
+\*******************/
 function makeKey(player_id) {
   var arr = [ sys.ip(player_id) ];
   for (var i = 1, len = arguments.length; i < len; i++) {
@@ -407,6 +350,72 @@ function deleteValue(key) {
   sys.removeValue(key);
 }
 
+/*******************\
+* Time helpers      *
+\*******************/
+function parseLength(length) {
+  var groups = length.match(/\d+[mshdyMw]?/g);
+  var time   = 0;
+  for (var i = 0, len = groups.length; i < len; i++) {
+    var last = groups[len - 1];
+    switch (last) {
+      case 's':
+        time += parseInt(last, 10);
+        break;
+      case 'm':
+        time += parseInt(last, 10) * 60;
+        break;
+      case 'd':
+        time += parseInt(last, 10) * 60 * 60 * 24;
+        break;
+      case 'w':
+        time += parseInt(last, 10) * 60 * 60 * 24 * 7;
+        break;
+      case 'M':
+        time += parseInt(last, 10) * 60 * 60 * 24 * 30;
+        break;
+      case 'y':
+        time += parseInt(last, 10) * 60 * 60 * 24 * 30 * 12;
+        break;
+      case 'h':
+      default:
+        time += parseInt(last, 10) * 60 * 60;
+        break;
+    }
+  }
+  return time;
+}
+
+function prettyPrintTime(seconds) {
+  function _(by, next, text) {
+    seconds = Math.floor(seconds / by);
+    var mod = seconds % next;
+    if (mod !== 0) {
+      time.unshift(mod + " " + pluralize(text, mod));
+    }
+  }
+  var time = [];
+  _(1,  60, "second");
+  _(60, 60, "minute");
+  _(60, 24, "hour");
+  _(24, 7,  "day");
+  _(7,  4,  "week");
+  _(4,  12, "month");
+  _(12, seconds + 1, "year");
+  return time.join(", ");
+}
+
+function getTime() {
+  return +new Date;
+}
+
+function timeDelta(milliseconds) {
+  return getTime() - milliseconds;
+}
+
+/*******************\
+* Auth helpers      *
+\*******************/
 function findGroupAuthLevel(auth, list) {
   var arr = [];
   for (var i = 0, len = list.length; i < len; i++) {
@@ -417,11 +426,9 @@ function findGroupAuthLevel(auth, list) {
   return arr;
 }
 
-function getPlayer(player_name) {
-  var player_id = sys.id(player_name);
-  return SESSION.users(player_id);
-}
-
+/*******************\
+* Chat helpers      *
+\*******************/
 function announce(player_id, message) {
   if (message === undefined) {
     message = player_id;
@@ -437,6 +444,10 @@ function sanitize(message) {
   message = message.replace(/^\s+/, "");
   message = message.replace(/\s+$/, "");
   return message;
+}
+
+function pluralize(word, number) {
+  return number !== 1 ? word + "s" : word;
 }
 
 SESSION.registerUserFactory(User);
