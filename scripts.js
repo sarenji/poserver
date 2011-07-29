@@ -342,9 +342,15 @@ commands.mute = function(player_name, length) {
     player.muted = true;
     
     if (length) {
+      var key = makeKey(player.id, "muted");
       length = parseLength(length);
+      setValue(key, getTime() + length);
       sys.delayedCall(function() {
-        player.muted = false;
+        var expired = getValue(makeKey(player.ip, "muted"), 0);
+        if (parseInt(expired, 10) < getTime()) {
+          player.muted = false;
+          deleteKey(key);
+        }
       }, length);
       message += " for " + prettyPrintTime(length) + ".";
     }
@@ -356,7 +362,9 @@ commands.unmute = function(player_name) {
   var player = getPlayer(player_name);
   if (this.authedFor(MODERATOR) && this.outranks(player)) {
     var player = getPlayer(player_name);
+    var key    = makeKey(player.ip, "muted");
     player.muted = false;
+    deleteValue(key);
     announce(this.name + " unmuted " + player_name + ".");
   }
 };
@@ -377,6 +385,18 @@ function makeKey(player_id) {
     arr.push(arguments[i]);
   }
   return arr.join(":");
+}
+
+function getValue(key, defaultValue) {
+  return sys.getVal(key) || defaultValue;
+}
+
+function setValue(key, value) {
+  sys.saveVal(key, value);
+}
+
+function deleteValue(key) {
+  sys.removeValue(key);
 }
 
 function findGroupAuthLevel(auth, list) {
@@ -437,7 +457,12 @@ SESSION.registerUserFactory(User);
     }
   },
   afterLogIn : function(player_id) {
-    
+    var user    = SESSION.users(player_id);
+    var key     = makeKey(player_id, "muted");
+    var expired = parseInt(getValue(key, 0), 10);
+    if (expired > getTime()) {
+      user.muted = true;
+    }
   },
   beforeChatMessage: function(player_id, message) {
     var user = SESSION.users(player_id);
