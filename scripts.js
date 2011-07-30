@@ -122,11 +122,11 @@ commands.help = commands.commands = function() {
 };
 
 commands.auth = function(type, token, newAuth) {
-  var list = sys.dbAuths().sort();
+  var list = sys.dbAuths();
   
   if (type === "group") {
     var group = AUTH_VALUES[token.toUpperCase()];
-    list      = findGroupAuthLevel(group, list);
+    list      = findGroupAuthLevel(group, list).sort();
     
     for (var i = 0, len = list.length; i < len; i++) {
       announce(this.id, list[i]);
@@ -420,8 +420,12 @@ function findGroupAuthLevel(auth, list) {
   var arr = [];
   for (var i = 0, len = list.length; i < len; i++) {
     var userName = list[i];
-    var status   = sys.id(userName) ? " (Online)" : " (Offline)";
-    arr.push(userName + status);
+    var userId   = sys.id(userName);
+    var userAuth = sys.auth(userId);
+    if (userAuth == auth) {
+      var status = userId ? " (Online)" : " (Offline)";
+      arr.push(userName + status);
+    }
   }
   return arr;
 }
