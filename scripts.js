@@ -139,8 +139,8 @@ commands.auth = function(type, token, newAuth) {
         announce(this.id, "You set " + token + "'s authority level to " + newAuth + ".");
       }
     } else {
-      var auth = sys.auth(token);
       var id   = sys.id(token);
+      var auth = sys.auth(id);
       announce(this.id, token + "'s authority level is " + auth + ".");
     }
   } else {
