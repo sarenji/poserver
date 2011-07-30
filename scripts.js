@@ -516,5 +516,7 @@ SESSION.registerUserFactory(User);
     }
     
     user.log(message);
+    sys.stopEvent();
+    sys.sendAll(player.name + ": " + message);
   }
 })
