@@ -286,6 +286,11 @@ commands.ipunban = function(ip) {
 commands.mute = function(player_name, length) {
   var player = getPlayer(player_name);
   if (this.authedFor(MODERATOR) && this.outranks(player)) {
+    if (player.muted) {
+      announce(this.id, player_name + " is already muted!");
+      return;
+    }
+    
     var message = this.name + " muted " + player_name;
     player.muted = true;
     
