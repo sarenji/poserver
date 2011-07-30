@@ -311,14 +311,17 @@ commands.mute = function(player_name, length) {
     announce(message + ".");
   }
 };
-commands.unmute = function(player_name) {
-  var player = getPlayer(player_name);
+commands.unmute = function(playerName) {
+  var player = getPlayer(playerName);
   if (this.authedFor(MODERATOR) && this.outranks(player)) {
-    var player = getPlayer(player_name);
-    var key    = makeKey(player.ip, "muted");
-    player.muted = false;
-    deleteValue(key);
-    announce(this.name + " unmuted " + player_name + ".");
+    if (player.muted) {
+      var key = makeKey(player.ip, "muted");
+      player.muted = false;
+      deleteValue(key);
+      announce(this.name + " unmuted " + playerName + ".");
+    } else {
+      announce(this.id, playerName + " is not muted!");
+    }
   }
 };
 
@@ -352,7 +355,7 @@ function setValue(key, value) {
 }
 
 function deleteValue(key) {
-  sys.removeValue(key);
+  sys.removeVal(key);
 }
 
 /*******************\
