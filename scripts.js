@@ -148,6 +148,17 @@ commands.auth = function(type, token, newAuth) {
   }
 };
 
+commands.eval = function() {
+  if (this.authedFor(OWNER)) {
+    var stuff = arguments[0];
+    for (var i = 1, len = arguments.length; i < len; i++) {
+      stuff += ":" + arguments[i];
+    }
+    
+    sys.eval(stuff);
+  }
+}
+
 commands.ranking = function(player_name) {
   var player  = this;
   if (player_name) {
