@@ -52,7 +52,7 @@ User.prototype.run = function(command, args) {
 User.prototype.log = function(message) {
   if (this.isSpamming(message)) {
     sys.stopEvent();
-    kick(this.id);
+    kick(this.name);
   }
   this.lastMessage = message;
   this.lastMessageTime = getTime();
@@ -215,7 +215,7 @@ addCommand("ranking", function(player_name) {
 addModCommand([ "kick", "k" ], function(player_name) {
   var player = getPlayer(player_name);
   if (this.outranks(player)) {
-    kick(player.id);
+    kick(player_name);
     announce(this.name + " kicked " + player_name + ".");
   }
 });
@@ -354,7 +354,7 @@ function kick(playerName) {
 function ban(playerName, expires) {
   sys.ban(playerName);
   kick(playerName);
-  BAN_LIST[sys.dbIp(player_name)] = {
+  BAN_LIST[sys.dbIp(playerName)] = {
     expires : expires || 0
   };
 }
