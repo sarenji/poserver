@@ -4,9 +4,9 @@ Made for the popular Pokemon simulator, [Pokemon Online](pokemon-online.eu).
 
 ## Commands
 
-Stuff in braces -- {} -- mean you should type something there instead, excluding the braces.
+Stuff in braces -- `{}` -- mean you should type something there instead, excluding the braces.
 
-Stuff in brackets -- [] -- are optional.
+Stuff in brackets -- `[]` -- are optional.
 
 ### Regular users
 
