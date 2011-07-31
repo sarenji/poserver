@@ -218,8 +218,8 @@ addModCommand([ "kick", "k" ], function(player_name, reason) {
     if (reason) {
       message += " (" + reason + ")";
     }
-    kick(player_name);
     announce(message);
+    kick(player_name);
   }
 });
 
@@ -267,8 +267,8 @@ addModCommand([ "ban", "b" ], function(player_name, length, reason) {
     if (reason) {
       message += " (" + reason + ")";
     }
-    ban(player_name, getTime() + length * 1000);
     announce(message);
+    ban(player_name, getTime() + length * 1000);
   }
 });
 
