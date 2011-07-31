@@ -484,6 +484,7 @@ SESSION.registerUserFactory(User);
 
 ({
   serverStartUp : function() {
+    // record bans
     var banlist = sys.banList();
     for (var i = 0, len = banlist.length; i < len; i++) {
       var ip = sys.dbIp(banlist[i]);
@@ -491,6 +492,14 @@ SESSION.registerUserFactory(User);
         expires : 0
       };
     }
+    
+    // update existing User prototypes
+    sys.playerIds().forEach(function(id) {
+      var user = SESSION.users(id);
+      if (user) {
+        user.__proto__ = User.prototype;
+      }
+    });
   },
   beforeLogIn : function(player_id) {
     var player_name = sys.name(player_id);
