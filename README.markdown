@@ -19,6 +19,9 @@ Stuff in brackets -- `[]` -- are optional.
 * `/clearpass`  
   Clear your own password.
 
+* `/idle` or `/away`
+  Toggles your idle status.
+
 * `/auth group:{group name}`  
   Finds all users under that group. Groups: moderator/mod, administrator/admin, and owner.
 
