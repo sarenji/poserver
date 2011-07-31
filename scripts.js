@@ -376,29 +376,30 @@ function parseLength(length) {
   var groups = length.match(/\d+[mshdyMw]?/g);
   var time   = 0;
   for (var i = 0, len = groups.length; i < len; i++) {
-    var last = groups[len - 1];
+    var first = groups[i].substring(0, groups[i].length - 1);
+    var last  = groups[i].substr(-1);
     switch (last) {
       case 's':
-        time += parseInt(last, 10);
+        time += parseInt(first, 10);
         break;
       case 'm':
-        time += parseInt(last, 10) * 60;
+        time += parseInt(first, 10) * 60;
         break;
       case 'd':
-        time += parseInt(last, 10) * 60 * 60 * 24;
+        time += parseInt(first, 10) * 60 * 60 * 24;
         break;
       case 'w':
-        time += parseInt(last, 10) * 60 * 60 * 24 * 7;
+        time += parseInt(first, 10) * 60 * 60 * 24 * 7;
         break;
       case 'M':
-        time += parseInt(last, 10) * 60 * 60 * 24 * 30;
+        time += parseInt(first, 10) * 60 * 60 * 24 * 30;
         break;
       case 'y':
-        time += parseInt(last, 10) * 60 * 60 * 24 * 30 * 12;
+        time += parseInt(first, 10) * 60 * 60 * 24 * 30 * 12;
         break;
       case 'h':
       default:
-        time += parseInt(last, 10) * 60 * 60;
+        time += parseInt(first, 10) * 60 * 60;
         break;
     }
   }
