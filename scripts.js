@@ -259,7 +259,7 @@ addModCommand([ "ban", "b" ], function(player_name, length) {
   }
 });
 
-addAdminCommand("permaban", function(playerName) {
+addAdminCommand(["permban", "permaban", "pb"], function(playerName) {
   var auth = parseInt(sys.dbAuth(playerName), 10);
   if (this.outranks(auth)) {
     ban(playerName);
