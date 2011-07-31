@@ -35,7 +35,7 @@ Stuff in brackets -- `[]` -- are optional.
 
 * `/ban {user}:{duration}`  
   Bans user temporarily. Provide a modifier for more fine-tuning.  
-  Ex. /ban BagAeolus:1h3m2s bans BagAeolus for 1 hour, 3 minutes, and 2 seconds.
+  Ex. `/ban BagAeolus:1h3m2s` bans BagAeolus for 1 hour, 3 minutes, and 2 seconds.
 
 * `/unban {user}`  
   Reverses the ban on user.
