@@ -199,8 +199,9 @@ commands.reload = function() {
         scriptURL += ":" + arguments[i];
       }
       
+      var id = this.id;
       sys.webCall(scriptURL, function(res) {
-        announce(this.id, "Script reloaded!");
+        announce(id, "Script reloaded!");
         sys.changeScript(res);
         sys.writeToFile("scripts.js", res);
       });
@@ -464,6 +465,22 @@ function pluralize(word, number) {
   return number !== 1 ? word + "s" : word;
 }
 
+/*******************\
+* Generic helpers   *
+\*******************/
+function compact(array) {
+  new_array = [];
+  for (var i = 0; i < array.length; i++) {
+    if (array[i]) {
+      new_array.push(array[i]);
+    }
+  }
+  return new_array;
+}
+
+/*******************\
+* PO Factories      *
+\*******************/
 SESSION.registerUserFactory(User);
 
 ({
@@ -516,9 +533,7 @@ SESSION.registerUserFactory(User);
       message     = message.substr(1);
       var pieces  = message.split(/\s+/);
       var command = pieces.shift();
-      if (pieces.length > 0) {
-        pieces      = pieces.join(" ").split(":");
-      }
+      pieces      = compact(pieces.join(" ").split(":"));
       user.run(command, pieces);
       return;
     }
