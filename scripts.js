@@ -18,7 +18,6 @@ var AUTH_VALUES = {
 
 /** Other constants */
 var MODERATOR_MAX_BAN_LENGTH = 3 * 60 * 60; // in seconds
-var BAN_LIST                 = {};          // keys are ips
 
 /*
 TODO:
@@ -269,14 +268,15 @@ addAdminCommand("permaban", function(playerName) {
 });
 
 addModCommand("unban", function(playerName) {
-  var auth = parseInt(sys.dbAuth(playerName), 10);
+  var auth       = parseInt(sys.dbAuth(playerName), 10);
+  var expiresKey = makeKey(playerName, "ban:expires");
   if (this.outranks(auth)) {
     var ip = sys.dbIp(playerName);
     if (ip === undefined) {
       announce(this.id, "No such user!");
-    } else if (ip in BAN_LIST) {
+    } else if (getValue(expiresKey)) {
       sys.unban(playerName);
-      delete BAN_LIST[ip];
+      deleteValue(expiresKey);
       announce(this.name + " unbanned " + playerName + ".");
     } else {
       announce(this.id, "This player is not banned!");
@@ -300,17 +300,17 @@ addModCommand("mute", function(player_name, length) {
     player.muted = true;
     
     if (length) {
-      var key = makeKey(player.id, "muted");
+      var key = makeKey(player.name, "muted");
       length = parseLength(length);
       setValue(key, getTime() + length);
       sys.delayedCall(function() {
-        var expired = getValue(makeKey(player.ip, "muted"), 0);
+        var expired = getValue(makeKey(player.name, "muted"), 0);
         if (parseInt(expired, 10) < getTime()) {
           player.muted = false;
-          deleteKey(key);
+          deleteValue(key);
         }
       }, length);
-      message += " for " + prettyPrintTime(length) + ".";
+      message += " for " + prettyPrintTime(length);
     }
     
     announce(message + ".");
@@ -321,7 +321,7 @@ addModCommand("unmute", function(playerName) {
   var player = getPlayer(playerName);
   if (this.outranks(player)) {
     if (player.muted) {
-      var key = makeKey(player.ip, "muted");
+      var key = makeKey(player.name, "muted");
       player.muted = false;
       deleteValue(key);
       announce(this.name + " unmuted " + playerName + ".");
@@ -352,23 +352,20 @@ function kick(playerName) {
 }
 
 function ban(playerName, expires) {
-  if (!expires || expires === 0) {
+  var banKey = makeKey(playerName, "ban");
+  setValue(banKey + ":expires", expires || 0);
+  kick(playerName);
+  if (!expires) {
     sys.ban(playerName);
   }
-  kick(playerName);
-  BAN_LIST[sys.dbIp(playerName)] = {
-    expires : expires || 0
-  };
 }
 
 /*******************\
 * Registry helpers  *
 \*******************/
-function makeKey(player_id) {
-  var arr = [ sys.ip(player_id) ];
-  for (var i = 1, len = arguments.length; i < len; i++) {
-    arr.push(arguments[i]);
-  }
+function makeKey(playerName) {
+  var arr = toArray(arguments, 1);
+  arr.unshift(sys.dbIp(playerName));
   return arr.join(":");
 }
 
@@ -518,15 +515,6 @@ SESSION.registerUserFactory(User);
 
 ({
   serverStartUp : function() {
-    // record bans
-    var banlist = sys.banList();
-    for (var i = 0, len = banlist.length; i < len; i++) {
-      var ip = sys.dbIp(banlist[i]);
-      BAN_LIST[ip] = {
-        expires : 0
-      };
-    }
-    
     // update existing User prototypes
     sys.playerIds().forEach(function(id) {
       var user = SESSION.users(id);
@@ -543,23 +531,26 @@ SESSION.registerUserFactory(User);
       return;
     }
     
-    var ip = sys.ip(player_id);
-    if (ip in BAN_LIST) {
-      var expires = BAN_LIST[ip].expires;
-      if (expires > 0 && expires <= getTime()) {
-        delete BAN_LIST[ip];
-      } else {
+    // unban users
+    var expireKey = makeKey(player_name, "ban:expires");
+    var expires   = parseInt(getValue(expireKey), 10);
+    if (expires > 0) {
+      if (expires > getTime()) {
         sys.stopEvent();
         return;
+      } else {
+        deleteValue(expireKey);
       }
     }
   },
   afterLogIn : function(player_id) {
     var user    = SESSION.users(player_id);
-    var key     = makeKey(player_id, "muted");
+    var key     = makeKey(user.name, "muted");
     var expired = parseInt(getValue(key, 0), 10);
     if (expired > getTime()) {
       user.muted = true;
+    } else {
+      deleteValue(key);
     }
   },
   beforeChatMessage: function(player_id, message) {
