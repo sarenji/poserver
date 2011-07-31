@@ -172,13 +172,13 @@ commands.ranking = function(player_name) {
   var tier   = sys.tier(player.id);
   if (rank) {
     var possessive = player_name ? player_name + "'s" : "Your";
-    announce(player.id, possessive + " rank in " + tier + " is " + rank
+    announce(this.id, possessive + " rank in " + tier + " is " + rank
       + "/" + sys.totalPlayersByTier(tier) + " ["
       + sys.ladderRating(player.id) + " points / "
       + sys.ratedBattles(player.id) +" battles]!");
   } else {
     var noun = player_name ? player_name + " is" : "You are";
-    announce(player.id, noun + " not ranked in " + tier + " yet!");
+    announce(this.id, noun + " not ranked in " + tier + " yet!");
   }
 };
 
