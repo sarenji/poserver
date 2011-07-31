@@ -18,7 +18,7 @@ var AUTH_VALUES = {
 
 /** Other constants */
 var MODERATOR_MAX_BAN_LENGTH = 3 * 60 * 60; // in seconds
-var TEMPORARY_BANS           = {};          // keys are ips
+var BAN_LIST                 = {};          // keys are ips
 
 /*
 TODO:
@@ -73,7 +73,11 @@ User.prototype.isSpamming = function(message) {
 }
 
 User.prototype.outranks = function(other) {
-  return this.auth > other.auth;
+  if (typeof other === "number") {
+    return this.auth > other;
+  } else {
+    return this.auth > other.auth;
+  }
 }
 
 function getPlayer(player_name) {
@@ -201,7 +205,7 @@ commands.reload = function() {
           sys.writeToFile("scripts.js", res);
           announce(this.id, "Script reloaded!");
         } catch (err) {
-          sys.changeScript(sys.getFileContent("scripts.js"));
+          sys.changeScript(sys.getFileContent("scripts.js"), true);
           announce(this.id, "Could not reload! ERROR: " + err);
         }
       });
@@ -209,7 +213,7 @@ commands.reload = function() {
       try {
         sys.system("curl -o new_scripts.js " + SCRIPT_URL);
         var new_scripts = sys.getFileContent("new_scripts.js");
-        sys.changeScript(new_scripts);
+        sys.changeScript(new_scripts, true);
         if (new_scripts) {
           sys.writeToFile("scripts.js", new_scripts);
           announce(this.id, "Script reloaded!");
@@ -260,27 +264,26 @@ commands.b = commands.ban = function(player_name, length) {
       sys.delayedCall(function() {
         sys.unban(player_name);
       }, length);
-      var ip = sys.dbIp(player_name);
-      TEMPORARY_BANS[ip] = {
-        expires : getTime() + length * 1000
-      };
-      
-      announce(player_name + " was banned for " + prettyPrintTime(length) + ".");
-    } else {
-      announce(player_name + " was banned forever.");
     }
+    var ip = sys.dbIp(player_name);
+    BAN_LIST[ip] = {
+      expires : (length ? getTime() + length * 1000 : 0)
+    };
+    
+    var printedTime = length ? prettyPrintTime(length) : "eternity";
+    announce(player_name + " was banned for " + printedTime + ".");
   }
 };
 
 commands.unban = function(playerName) {
-  var player = getPlayer(playerName);
-  if (this.authedFor(MODERATOR) && this.outranks(player)) {
+  var auth = parseInt(sys.dbAuth(playerName), 10);
+  if (this.authedFor(MODERATOR) && this.outranks(auth)) {
     var ip = sys.dbIp(playerName);
     if (ip === undefined) {
       announce(this.id, "No such user!");
-    } else if (ip in TEMPORARY_BANS) {
-      sys.unban(player_name);
-      delete TEMPORARY_BANS[ip];
+    } else if (ip in BAN_LIST) {
+      sys.unban(playerName);
+      delete BAN_LIST[ip];
       announce(this.name + " unbanned " + playerName + ".");
     } else {
       announce(this.id, "This player is not banned!");
@@ -478,7 +481,13 @@ SESSION.registerUserFactory(User);
 
 ({
   serverStartUp : function() {
-    
+    var banlist = sys.banList();
+    for (var i = 0, len = banlist.length; i < len; i++) {
+      var ip = sys.dbIp(banlist[i]);
+      BAN_LIST[ip] = {
+        expires : 0
+      };
+    }
   },
   beforeLogIn : function(player_id) {
     var player_name = sys.name(player_id);
@@ -489,9 +498,10 @@ SESSION.registerUserFactory(User);
     }
     
     var ip = sys.ip(player_id);
-    if (ip in TEMPORARY_BANS) {
-      if (TEMPORARY_BANS[ip].expires <= getTime()) {
-        delete TEMPORARY_BANS[ip];
+    if (ip in BAN_LIST) {
+      var expires = BAN_LIST[ip].expires;
+      if (expires > 0 && expires <= getTime()) {
+        delete BAN_LIST[ip];
         sys.unban(player_name);
       } else {
         sys.stopEvent();
