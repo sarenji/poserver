@@ -211,11 +211,15 @@ addCommand("ranking", function(player_name) {
   }
 });
 
-addModCommand([ "kick", "k" ], function(player_name) {
+addModCommand([ "kick", "k" ], function(player_name, reason) {
   var player = getPlayer(player_name);
   if (this.outranks(player)) {
+    var message = this.name + " kicked " + player_name + ".";
+    if (reason) {
+      message += " (" + reason + ")";
+    }
     kick(player_name);
-    announce(this.name + " kicked " + player_name + ".");
+    announce(message);
   }
 });
 
@@ -243,27 +247,40 @@ addModCommand("wall", function() {
   announce(message);
 });
 
-addModCommand([ "ban", "b" ], function(player_name, length) {
+addModCommand([ "ban", "b" ], function(player_name, length, reason) {
   var auth = parseInt(sys.dbAuth(player_name), 10);
+  var message;
   if (this.outranks(auth)) {
-    length = length ? parseLength(length)
-                    : MODERATOR_MAX_BAN_LENGTH;
+    if (length && /^(\d+[mshdyMw]?)+$/.test(length)) {
+      length = parseLength(length);
+    } else {
+      reason = length;
+      length = MODERATOR_MAX_BAN_LENGTH;
+    }
     
     // limit mod bans
     if (this.auth === MODERATOR) {
       length = Math.min(length, MODERATOR_MAX_BAN_LENGTH);
     }
     
-    ban(player_name, getTime() + length * 1000)
-    announce(player_name + " was banned for " + prettyPrintTime(length) + ".");
+    message = player_name + " was banned for " + prettyPrintTime(length) + ".";
+    if (reason) {
+      message += " (" + reason + ")";
+    }
+    ban(player_name, getTime() + length * 1000);
+    announce(message);
   }
 });
 
-addAdminCommand(["permban", "permaban", "pb"], function(playerName) {
+addAdminCommand(["permban", "permaban", "pb"], function(playerName, reason) {
   var auth = parseInt(sys.dbAuth(playerName), 10);
   if (this.outranks(auth)) {
+    var message = playerName + " was banned for eternity.";
+    if (reason) {
+      message += " (" + reason + ")";
+    }
     ban(playerName);
-    announce(playerName + " was banned for eternity.");
+    announce(message);
   }
 });
 
