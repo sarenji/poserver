@@ -193,24 +193,24 @@ commands.k = commands.kick = function(player_name) {
 
 commands.reload = function() {
   if (this.authedFor(OWNER)) {
+    var id = this.id;
     if (arguments.length > 0) {
       var scriptURL = arguments[0];
       for (var i = 1, len = arguments.length; i < len; i++) {
         scriptURL += ":" + arguments[i];
       }
       
-      var id = this.id;
       sys.webCall(scriptURL, function(res) {
-        announce(id, "Script reloaded!");
         sys.changeScript(res);
         sys.writeToFile("scripts.js", res);
+        announce(id, "Script reloaded!");
       });
     } else {
       sys.system("curl -k -o new_scripts.js " + SCRIPT_URL);
       var new_scripts = sys.getFileContent("new_scripts.js");
-      announce(this.id, "Script reloaded!");
       sys.changeScript(new_scripts, true);
       sys.writeToFile("scripts.js", new_scripts);
+      announce(id, "Script reloaded!");
     }
   }
 };
