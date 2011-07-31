@@ -36,6 +36,7 @@ function User(id) {
   this.muted = false;
   this.lastMessage = null;
   this.lastMessageTime = 0;
+  this.idle = sys.away(id);
 }
 
 User.prototype.authedFor = function(auth) {
@@ -51,7 +52,7 @@ User.prototype.run = function(command, args) {
 User.prototype.log = function(message) {
   if (this.isSpamming(message)) {
     sys.stopEvent();
-    sys.kick(this.id);
+    kick(this.id);
   }
   this.lastMessage = message;
   this.lastMessageTime = getTime();
@@ -117,15 +118,45 @@ var help = [
 
 /** All of these commands are run in the context of a User object. */
 var commands = {};
-commands.help = commands.commands = function() {
+function addCommand(commandName, func) {
+  if (typeof commandName == "string") {
+    commands[commandName] = func;
+  } else {
+    for (var i = 0; i < commandName.length; i++) {
+      commands[commandName[i]] = func;
+    }
+  }
+}
+
+function addAuthCommand(auth, commandName, func) {
+  addCommand(commandName, function() {
+    if (this.authedFor(auth)) {
+      func.apply(this, arguments);
+    }
+  });
+}
+
+function addModCommand(commandName, func) {
+  addAuthCommand(MODERATOR, commandName, func);
+}
+
+function addAdminCommand(commandName, func) {
+  addAuthCommand(ADMINISTRATOR, commandName, func);
+}
+
+function addOwnerCommand(commandName, func) {
+  addAuthCommand(ADMINISTRATOR, commandName, func);
+}
+
+addCommand([ "help", "commands" ], function() {
   for (var i = 0; i <= this.auth; i++) {
     for (var j = 0; j < help[i].length; j++) {
       announce(this.id, help[i][j]);
     }
   }
-};
+});
 
-commands.auth = function(type, token, newAuth) {
+addCommand("auth", function(type, token, newAuth) {
   var list = sys.dbAuths();
   
   if (type === "group") {
@@ -150,16 +181,19 @@ commands.auth = function(type, token, newAuth) {
   } else {
     announce(this.id, "Invalid arguments.");
   }
-};
+});
 
-commands.eval = function() {
-  if (this.authedFor(OWNER)) {
-    var stuff = toArray(arguments);
-    sys.eval(stuff);
-  }
-}
+addOwnerCommand("eval", function() {
+  var stuff = toArray(arguments);
+  sys.eval(stuff);
+});
 
-commands.ranking = function(player_name) {
+addCommand([ "idle", "away"], function() {
+  this.idle = !this.idle;
+  sys.changeAway(this.id, this.idle);
+});
+
+addCommand("ranking", function(player_name) {
   var player  = this;
   if (player_name) {
     player = getPlayer(player_name);
@@ -176,86 +210,67 @@ commands.ranking = function(player_name) {
     var noun = player_name ? player_name + " is" : "You are";
     announce(this.id, noun + " not ranked in " + tier + " yet!");
   }
-};
+});
 
-commands.k = commands.kick = function(player_name) {
+addModCommand([ "kick", "k" ], function(player_name) {
   var player = getPlayer(player_name);
-  if (this.authedFor(MODERATOR) && this.outranks(player)) {
-    var player_id = sys.id(player_name);
-    sys.kick(player_id);
+  if (this.outranks(player)) {
+    kick(player.id);
     announce(this.name + " kicked " + player_name + ".");
   }
-};
+});
 
-commands.reload = function() {
-  if (this.authedFor(OWNER)) {
-    var id = this.id;
-    if (arguments.length > 0) {
-      var scriptURL = toArray(arguments);
-      
-      sys.webCall(scriptURL, function(res) {
-        sys.changeScript(res);
-        sys.writeToFile("scripts.js", res);
-        announce(id, "Script reloaded!");
-      });
-    } else {
-      sys.system("curl -k -o new_scripts.js " + SCRIPT_URL);
-      var new_scripts = sys.getFileContent("new_scripts.js");
-      sys.changeScript(new_scripts, true);
-      sys.writeToFile("scripts.js", new_scripts);
+addOwnerCommand("reload", function() {
+  var id = this.id;
+  if (arguments.length > 0) {
+    var scriptURL = toArray(arguments);
+    
+    sys.webCall(scriptURL, function(res) {
+      sys.changeScript(res);
+      sys.writeToFile("scripts.js", res);
       announce(id, "Script reloaded!");
-    }
+    });
+  } else {
+    sys.system("curl -k -o new_scripts.js " + SCRIPT_URL);
+    var new_scripts = sys.getFileContent("new_scripts.js");
+    sys.changeScript(new_scripts, true);
+    sys.writeToFile("scripts.js", new_scripts);
+    announce(id, "Script reloaded!");
   }
-};
+});
 
-commands.wall = function() {
-  if (this.authedFor(MODERATOR)) {
-    var message = toArray(arguments).join(":");
-    announce(message);
+addModCommand("wall", function() {
+  var message = toArray(arguments).join(":");
+  announce(message);
+});
+
+addModCommand([ "ban", "b" ], function(player_name, length) {
+  var auth = parseInt(sys.dbAuth(player_name), 10);
+  if (this.outranks(auth)) {
+    length = length ? parseLength(length)
+                    : MODERATOR_MAX_BAN_LENGTH;
+    
+    // limit mod bans
+    if (this.auth === MODERATOR) {
+      length = Math.min(length, MODERATOR_MAX_BAN_LENGTH);
+    }
+    
+    ban(player_name, getTime() + length * 1000)
+    announce(player_name + " was banned for " + prettyPrintTime(length) + ".");
   }
-};
+});
 
-/** length is in hours by default. */
-commands.b = commands.ban = function(player_name, length) {
-  var player = getPlayer(player_name);
-  if (this.authedFor(MODERATOR) && this.outranks(player)) {
-    var player_id = sys.id(player_name);
-    sys.ban(player_name);
-    sys.kick(player_id);
-    
-    if (length) {
-      length = parseLength(length);
-    }
-    
-    // limit mod bans to 3 hours max
-    if (this.auth == MODERATOR) {
-      if (length) {
-        length = Math.min(length, MODERATOR_MAX_BAN_LENGTH);
-      } else {
-        length = MODERATOR_MAX_BAN_LENGTH;
-      }
-    }
-    
-    if (length) {
-      // unban after a set amount of minutes
-      // TODO: save bans in case of server crash
-      sys.delayedCall(function() {
-        sys.unban(player_name);
-      }, length);
-    }
-    var ip = sys.dbIp(player_name);
-    BAN_LIST[ip] = {
-      expires : (length ? getTime() + length * 1000 : 0)
-    };
-    
-    var printedTime = length ? prettyPrintTime(length) : "eternity";
-    announce(player_name + " was banned for " + printedTime + ".");
-  }
-};
-
-commands.unban = function(playerName) {
+addAdminCommand("permaban", function(playerName) {
   var auth = parseInt(sys.dbAuth(playerName), 10);
-  if (this.authedFor(MODERATOR) && this.outranks(auth)) {
+  if (this.outranks(auth)) {
+    ban(playerName);
+    announce(playerName + " was banned for eternity.");
+  }
+});
+
+addModCommand("unban", function(playerName) {
+  var auth = parseInt(sys.dbAuth(playerName), 10);
+  if (this.outranks(auth)) {
     var ip = sys.dbIp(playerName);
     if (ip === undefined) {
       announce(this.id, "No such user!");
@@ -267,17 +282,15 @@ commands.unban = function(playerName) {
       announce(this.id, "This player is not banned!");
     }
   }
-};
+});
 
-commands.ipunban = function(ip) {
-  if (this.authedFor(MODERATOR)) {
-    sys.unban(ip);
-  }
-}
+addModCommand("ipunban", function(ip) {
+  sys.unban(ip);
+});
 
-commands.mute = function(player_name, length) {
+addModCommand("mute", function(player_name, length) {
   var player = getPlayer(player_name);
-  if (this.authedFor(MODERATOR) && this.outranks(player)) {
+  if (this.outranks(player)) {
     if (player.muted) {
       announce(this.id, player_name + " is already muted!");
       return;
@@ -302,10 +315,11 @@ commands.mute = function(player_name, length) {
     
     announce(message + ".");
   }
-};
-commands.unmute = function(playerName) {
+});
+
+addModCommand("unmute", function(playerName) {
   var player = getPlayer(playerName);
-  if (this.authedFor(MODERATOR) && this.outranks(player)) {
+  if (this.outranks(player)) {
     if (player.muted) {
       var key = makeKey(player.ip, "muted");
       player.muted = false;
@@ -315,9 +329,9 @@ commands.unmute = function(playerName) {
       announce(this.id, playerName + " is not muted!");
     }
   }
-};
+});
 
-commands.clearpass = function(player_name) {
+addCommand("clearpass", function(player_name) {
   if (player_name === undefined) {
     sys.clearPass(this.name);
     announce(this.id, "Your password was cleared.");
@@ -325,7 +339,25 @@ commands.clearpass = function(player_name) {
     sys.clearPass(player_name);
     announce(this.id, "You cleared " + player_name + "'s password.");
   }
-};
+});
+
+/*******************\
+* Script wrappers   *
+\*******************/
+function kick(playerName) {
+  var id = sys.id(playerName);
+  if (id) {
+    sys.kick(id);
+  }
+}
+
+function ban(playerName, expires) {
+  sys.ban(playerName);
+  kick(playerName);
+  BAN_LIST[sys.dbIp(player_name)] = {
+    expires : expires || 0
+  };
+}
 
 /*******************\
 * Registry helpers  *
