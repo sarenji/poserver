@@ -30,16 +30,15 @@ Stuff in brackets -- `[]` -- are optional.
 
 ### Moderator commands
 
-* `/kick {user}`  
-  Kicks the user. This is also aliased to /k.
+* `/kick {user}[:reason]`  
+  Kicks the user. Reason is optional. This is also aliased to /k.
 
-* `/ban {user}`  
-  Bans user for the maximum amount of time moderators can ban for (default: 3 hours). Aliased to /b.
+* `/ban {user}[:reason]`  
+  Bans user for 3 hours. Aliased to /b.
 
-* `/ban {user}[:duration]`  
+* `/ban {user}[:duration][:reason]`  
   Bans user temporarily. Provide a modifier for more fine-tuning.  
-  Ex. `/ban BagAeolus:1h3m2s` bans BagAeolus for 1 hour, 3 minutes, and 2 seconds.  
-  If you don't provide a duration, defaults to 3 hours.
+  Ex. `/ban BagAeolus:1h3m2s` bans BagAeolus for 1 hour, 3 minutes, and 2 seconds.
 
 * `/unban {user}`  
   Reverses the ban on user.
@@ -59,7 +58,7 @@ Stuff in brackets -- `[]` -- are optional.
 
 ### Administrator commands
 
-* `/permaban {user}` or `/permban {user}` or `/pb {user}`  
+* `/permaban {user}[:reason]` or `/permban {user}[:reason]` or `/pb {user}[:reason]`  
   Bans forever.
 
 ### Owner commands
