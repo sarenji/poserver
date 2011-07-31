@@ -28,7 +28,7 @@ Stuff in brackets -- `[]` -- are optional.
 ### Moderators
 
 * `/kick {user}`  
-  -- Kicks the user. This is also aliased to /k.
+  Kicks the user. This is also aliased to /k.
 
 * `/ban {user}`  
   Bans user for the maximum amount of time moderators can ban for (default: 3 hours). Aliased to /b.
@@ -39,6 +39,16 @@ Stuff in brackets -- `[]` -- are optional.
 
 * `/unban {user}`  
   Reverses the ban on user.
+
+* `/mute {user}`  
+  Mutes user until the user signs out.
+
+* `/mute {user}:{duration}`
+  Mutes user for a time. The user continues to be muted even after signing off.
+  Ex. `/mute BagAeolus:1y` mutes BagAeolus for one year, even if BagAeolus signs off.
+
+* `/unmute {user}`
+  Unmutes the user.
 
 * `/wall {message}`  
   Sends a message outlined in red for all to see.
