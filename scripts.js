@@ -352,7 +352,9 @@ function kick(playerName) {
 }
 
 function ban(playerName, expires) {
-  sys.ban(playerName);
+  if (!expires || expires === 0) {
+    sys.ban(playerName);
+  }
   kick(playerName);
   BAN_LIST[sys.dbIp(playerName)] = {
     expires : expires || 0
@@ -546,7 +548,6 @@ SESSION.registerUserFactory(User);
       var expires = BAN_LIST[ip].expires;
       if (expires > 0 && expires <= getTime()) {
         delete BAN_LIST[ip];
-        sys.unban(player_name);
       } else {
         sys.stopEvent();
         return;
