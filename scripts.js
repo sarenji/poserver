@@ -154,11 +154,7 @@ commands.auth = function(type, token, newAuth) {
 
 commands.eval = function() {
   if (this.authedFor(OWNER)) {
-    var stuff = arguments[0];
-    for (var i = 1, len = arguments.length; i < len; i++) {
-      stuff += ":" + arguments[i];
-    }
-    
+    var stuff = toArray(arguments);
     sys.eval(stuff);
   }
 }
@@ -195,10 +191,7 @@ commands.reload = function() {
   if (this.authedFor(OWNER)) {
     var id = this.id;
     if (arguments.length > 0) {
-      var scriptURL = arguments[0];
-      for (var i = 1, len = arguments.length; i < len; i++) {
-        scriptURL += ":" + arguments[i];
-      }
+      var scriptURL = toArray(arguments);
       
       sys.webCall(scriptURL, function(res) {
         sys.changeScript(res);
@@ -215,12 +208,9 @@ commands.reload = function() {
   }
 };
 
-commands.wall = function(args) {
+commands.wall = function() {
   if (this.authedFor(MODERATOR)) {
-    var message = args;
-    for (var i = 1, len = arguments.length; i < len; i++) {
-      message += " " + arguments[i];
-    }
+    var message = toArray(arguments).join(":");
     announce(message);
   }
 };
@@ -476,6 +466,15 @@ function compact(array) {
     }
   }
   return new_array;
+}
+
+function toArray(args, startIndex) {
+  startIndex = startIndex || 0;
+  var array  = [];
+  for (var i = startIndex, len = args.length; i < len; i++) {
+    array.push(args[i]);
+  }
+  return array;
 }
 
 /*******************\
