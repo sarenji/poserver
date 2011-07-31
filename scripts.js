@@ -200,29 +200,16 @@ commands.reload = function() {
       }
       
       sys.webCall(scriptURL, function(res) {
-        try {
-          sys.changeScript(res);
-          sys.writeToFile("scripts.js", res);
-          announce(this.id, "Script reloaded!");
-        } catch (err) {
-          sys.changeScript(sys.getFileContent("scripts.js"), true);
-          announce(this.id, "Could not reload! ERROR: " + err);
-        }
+        announce(this.id, "Script reloaded!");
+        sys.changeScript(res);
+        sys.writeToFile("scripts.js", res);
       });
     } else {
-      try {
-        sys.system("curl -o new_scripts.js " + SCRIPT_URL);
-        var new_scripts = sys.getFileContent("new_scripts.js");
-        sys.changeScript(new_scripts, true);
-        if (new_scripts) {
-          sys.writeToFile("scripts.js", new_scripts);
-          announce(this.id, "Script reloaded!");
-        } else {
-          announce(this.id, "ERROR: The script fetched was a blank file.");
-        }
-      } catch (err) {
-        announce(this.id, "Could not reload! ERROR: " + err);
-      }
+      sys.system("curl -k -o new_scripts.js " + SCRIPT_URL);
+      var new_scripts = sys.getFileContent("new_scripts.js");
+      announce(this.id, "Script reloaded!");
+      sys.changeScript(new_scripts, true);
+      sys.writeToFile("scripts.js", new_scripts);
     }
   }
 };
@@ -520,28 +507,27 @@ SESSION.registerUserFactory(User);
   beforeChatMessage: function(player_id, message) {
     var user = SESSION.users(player_id);
     message  = sanitize(message);
+    sys.stopEvent();
     if (message.length === 0) {
-      sys.stopEvent();
       return;
     }
     
     if (message[0] === '/' && message.length > 1) {
-      sys.stopEvent();
       message     = message.substr(1);
       var pieces  = message.split(/\s+/);
       var command = pieces.shift();
-      pieces      = pieces.join(" ").split(":");
+      if (pieces.length > 0) {
+        pieces      = pieces.join(" ").split(":");
+      }
       user.run(command, pieces);
       return;
     }
     
     if (user.muted) {
-      sys.stopEvent();
       return;
     }
     
     user.log(message);
-    sys.stopEvent();
     sys.sendAll(user.name + ": " + message);
   }
 })
