@@ -10,50 +10,50 @@ Stuff in brackets -- [] -- are optional.
 
 ### Regular users
 
-* /ranking  
+* `/ranking`  
   See your own ranking
 
-* /ranking {name}  
+* `/ranking {name}`  
   See name's ranking
 
-* /clearpass  
+* `/clearpass`  
   Clear your own password.
 
-* /auth group:{group name}  
+* `/auth group:{group name}`  
   Finds all users under that group. Groups: moderator/mod, administrator/admin, and owner.
 
-* /auth user:{name}  
+* `/auth user:{name}`  
   Finds the auth level of that user.
 
 ### Moderators
 
-* /kick {user}  
+* `/kick {user}`  
   -- Kicks the user. This is also aliased to /k.
 
-* /ban {user}  
+* `/ban {user}`  
   Bans user for the maximum amount of time moderators can ban for (default: 3 hours). Aliased to /b.
 
-* /ban {user}:{duration}  
+* `/ban {user}:{duration}`  
   Bans user temporarily. Provide a modifier for more fine-tuning.  
   Ex. /ban BagAeolus:1h3m2s bans BagAeolus for 1 hour, 3 minutes, and 2 seconds.
 
-* /unban {user}  
+* `/unban {user}`  
   Reverses the ban on user.
 
-* /wall {message}  
+* `/wall {message}`  
   Sends a message outlined in red for all to see.
 
 ### Administrators
 
-* /ban {user}  
+* `/ban {user}`  
   Bans forever. Aliased to /b.
 
 ### Owners
 
-* /clearpass {user}  
+* `/clearpass {user}`  
   Clears user's password.
 
-* /reload [url]  
+* `/reload [url]`  
   Reloads from this github URL by default, or from url if specified. Note that you must have `curl` installed to reload from github.
 
 ## x command doesn't work!
