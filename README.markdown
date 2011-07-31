@@ -8,7 +8,7 @@ Stuff in braces -- `{}` -- mean you should type something there instead, excludi
 
 Stuff in brackets -- `[]` -- are optional.
 
-### Regular users
+### Regular user commands
 
 * `/ranking`  
   See your own ranking
@@ -25,7 +25,7 @@ Stuff in brackets -- `[]` -- are optional.
 * `/auth user:{name}`  
   Finds the auth level of that user.
 
-### Moderators
+### Moderator commands
 
 * `/kick {user}`  
   Kicks the user. This is also aliased to /k.
@@ -53,12 +53,12 @@ Stuff in brackets -- `[]` -- are optional.
 * `/wall {message}`  
   Sends a message outlined in red for all to see.
 
-### Administrators
+### Administrator commands
 
 * `/ban {user}`  
   Bans forever. Aliased to /b.
 
-### Owners
+### Owner commands
 
 * `/clearpass {user}`  
   Clears user's password.
