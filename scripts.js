@@ -243,10 +243,8 @@ addOwnerCommand("reload", function() {
 });
 
 addOwnerCommand("reloadtiers", function() {
-  var id = this.id;
   sys.system("curl -k -o tiers.xml " + TIERS_URL);
   sys.reloadTiers();
-  announce(id, "Tiers reloaded!");
 });
 
 addModCommand("wall", function() {
