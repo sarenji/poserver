@@ -528,68 +528,79 @@ function toArray(args, startIndex) {
 \*******************/
 SESSION.registerUserFactory(User);
 
-({
-  serverStartUp : function() {
-    // update existing User prototypes
-    sys.playerIds().forEach(function(id) {
-      var user = SESSION.users(id);
-      if (user) {
-        user.__proto__ = User.prototype;
-      }
-    });
-  },
-  beforeLogIn : function(player_id) {
-    var player_name = sys.name(player_id);
-    if (/[^\w-\[\]\. ]/g.test(player_name)) {
-      announce(player_id, "Please do not use special characters in your name.");
+/*******************\
+* Starter scripts   *
+\*******************/
+function serverStartUp() {
+  // update existing User prototypes
+  sys.playerIds().forEach(function(id) {
+    var user = SESSION.users(id);
+    if (user) {
+      user.__proto__ = User.prototype;
+    }
+  });
+}
+
+function beforeLogIn(player_id) {
+  var player_name = sys.name(player_id);
+  if (/[^\w-\[\]\. ]/g.test(player_name)) {
+    announce(player_id, "Please do not use special characters in your name.");
+    sys.stopEvent();
+    return;
+  }
+  
+  // unban users
+  var expireKey = makeKey(player_name, "ban:expires");
+  var expires   = parseInt(getValue(expireKey), 10);
+  if (expires > 0) {
+    if (expires > getTime()) {
       sys.stopEvent();
       return;
-    }
-    
-    // unban users
-    var expireKey = makeKey(player_name, "ban:expires");
-    var expires   = parseInt(getValue(expireKey), 10);
-    if (expires > 0) {
-      if (expires > getTime()) {
-        sys.stopEvent();
-        return;
-      } else {
-        deleteValue(expireKey);
-      }
-    }
-  },
-  afterLogIn : function(player_id) {
-    var user    = SESSION.users(player_id);
-    var key     = makeKey(user.name, "muted");
-    var expired = parseInt(getValue(key, 0), 10);
-    if (expired > getTime()) {
-      user.muted = true;
     } else {
-      deleteValue(key);
+      deleteValue(expireKey);
     }
-  },
-  beforeChatMessage: function(player_id, message, channelId) {
-    var user = SESSION.users(player_id);
-    message  = sanitize(message);
-    sys.stopEvent();
-    if (message.length === 0) {
-      return;
-    }
-    
-    if (message[0] === '/' && message.length > 1) {
-      message     = message.substr(1);
-      var pieces  = message.split(/\s+/);
-      var command = pieces.shift();
-      pieces      = compact(pieces.join(" ").split(":"));
-      user.run(command, pieces);
-      return;
-    }
-    
-    if (user.muted) {
-      return;
-    }
-    
-    user.log(message);
-    sys.sendAll(user.name + ": " + message, channelId);
   }
+}
+
+function afterLogIn(player_id) {
+  var user    = SESSION.users(player_id);
+  var key     = makeKey(user.name, "muted");
+  var expired = parseInt(getValue(key, 0), 10);
+  if (expired > getTime()) {
+    user.muted = true;
+  } else {
+    deleteValue(key);
+  }
+}
+
+function beforeChatMessage(player_id, message, channelId) {
+  var user = SESSION.users(player_id);
+  message  = sanitize(message);
+  sys.stopEvent();
+  if (message.length === 0) {
+    return;
+  }
+  
+  if (message[0] === '/' && message.length > 1) {
+    message     = message.substr(1);
+    var pieces  = message.split(/\s+/);
+    var command = pieces.shift();
+    pieces      = compact(pieces.join(" ").split(":"));
+    user.run(command, pieces);
+    return;
+  }
+  
+  if (user.muted) {
+    return;
+  }
+  
+  user.log(message);
+  sys.sendAll(user.name + ": " + message, channelId);
+}
+
+({
+  serverStartUp     : serverStartUp,
+  beforeLogIn       : beforeLogIn,
+  afterLogIn        : afterLogIn,
+  beforeChatMessage : beforeChatMessage
 })
