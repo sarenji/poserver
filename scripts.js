@@ -1,5 +1,7 @@
 /** URL of most recent script. Currently the master branch of my GitHub. */
 var SCRIPT_URL = "https://raw.github.com/sarenji/poserver/master/scripts.js"
+/** URL of most recent tiers.xml. Currently the master branch of my GitHub. */
+var TIERS_URL  = "https://raw.github.com/sarenji/poserver/master/tiers.xml"
 
 /** User authentication constants */
 var USER          = 0;
@@ -238,6 +240,13 @@ addOwnerCommand("reload", function() {
     sys.writeToFile("scripts.js", new_scripts);
     announce(id, "Script reloaded!");
   }
+});
+
+addOwnerCommand("reloadtiers", function() {
+  var id = this.id;
+  sys.system("curl -k -o tiers.xml " + TIERS_URL);
+  sys.reloadTiers();
+  announce(id, "Tiers reloaded!");
 });
 
 addModCommand("wall", function() {
