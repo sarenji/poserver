@@ -21,8 +21,6 @@ var MODERATOR_MAX_BAN_LENGTH = 3 * 60 * 60; // in seconds
 
 /*
 TODO:
-make bans persistent
-Race conditions involving delayedCalls. Need a way to clear them.
 tournaments (w/ channel too)
 wall should hit all channels
 */
@@ -570,7 +568,7 @@ SESSION.registerUserFactory(User);
       deleteValue(key);
     }
   },
-  beforeChatMessage: function(player_id, message) {
+  beforeChatMessage: function(player_id, message, channelId) {
     var user = SESSION.users(player_id);
     message  = sanitize(message);
     sys.stopEvent();
@@ -592,6 +590,6 @@ SESSION.registerUserFactory(User);
     }
     
     user.log(message);
-    sys.sendAll(user.name + ": " + message);
+    sys.sendAll(user.name + ": " + message, channelId);
   }
 })
