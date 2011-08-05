@@ -56,6 +56,16 @@ Stuff in brackets -- `[]` -- are optional.
 * `/wall {message}`  
   Sends a message outlined in red for all to see.
 
+### Possible time modifiers
+
+* `s`: seconds
+* `m`: minutes
+* `h`: hours (default if no modifier provided)
+* `d`: days
+* `w`: weeks
+* `M`: months
+* `y`: years
+
 ### Administrator commands
 
 * `/permaban {user}[:reason]` or `/permban {user}[:reason]` or `/pb {user}[:reason]`  
