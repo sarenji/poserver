@@ -270,7 +270,7 @@ addModCommand([ "ban", "b" ], function(player_name, length, reason) {
       length = Math.min(length, MODERATOR_MAX_BAN_LENGTH);
     }
     
-    message = player_name + " was banned for " + prettyPrintTime(length) + ".";
+    message = player_name + " was banned by " + this.name + " for " + prettyPrintTime(length) + ".";
     if (reason) {
       message += " (" + reason + ")";
     }
@@ -282,7 +282,7 @@ addModCommand([ "ban", "b" ], function(player_name, length, reason) {
 addAdminCommand(["permban", "permaban", "pb"], function(playerName, reason) {
   var auth = parseInt(sys.dbAuth(playerName), 10);
   if (this.outranks(auth)) {
-    var message = playerName + " was banned for eternity.";
+    var message = playerName + " was banned by " + this.name + " for eternity.";
     if (reason) {
       message += " (" + reason + ")";
     }
