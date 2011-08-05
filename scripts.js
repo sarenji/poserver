@@ -784,10 +784,12 @@ function beforeChallengeIssued(src, dest, clauses, rated, mode) {
 function beforeChangeTier(playerId, oldTier, newTier) {
   swiftSwimCheck(playerId, newTier);
   droughtCheck(playerId, newTier);
+  /*
   if (!hasValidTier(playerId, newTier)) {
     sys.stopEvent();
     announce(playerId, "You cannot switch to this tier.");
   }
+  */
 }
 
 function beforeChatMessage(player_id, message, channelId) {
