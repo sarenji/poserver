@@ -370,19 +370,18 @@ addCommand("clearpass", function(player_name) {
 \*******************/
 var BANS = {};
 function makeBan(tier, banObject) {
-  var tierBans = BANS[tier];
-  if (!tierBans) {
-    tierBans = BANS[tier] = {};
+  if (!BANS[tier]) {
+    BANS[tier] = {};
   }
   for (var k in banObject) {
     if (banObject.hasOwnProperty(k)) {
-      if (!(k in tierBans)) {
-        tierBans[k] = [];
+      if (!BANS[tier][k]) {
+        BANS[tier][k] = [];
       }
       var array = banObject[k];
       for (var i = 0; i < array.length; i++) {
-        if (tierBans[k].indexOf(array[i]) === -1) {
-          tierBans[k].append(array[i]);
+        if (BANS[tier][k].indexOf(array[i]) === -1) {
+          BANS[tier][k].append(array[i]);
         }
       }
     }
