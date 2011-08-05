@@ -381,7 +381,7 @@ function makeBan(tier, banObject) {
       var array = banObject[k];
       for (var i = 0; i < array.length; i++) {
         if (BANS[tier][k].indexOf(array[i]) === -1) {
-          BANS[tier][k].append(array[i]);
+          BANS[tier][k].push(array[i]);
         }
       }
     }
