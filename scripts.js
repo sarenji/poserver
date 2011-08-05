@@ -474,7 +474,7 @@ function parseLength(length) {
   var groups = length.match(/\d+[mshdyMw]?/g);
   var time   = 0;
   for (var i = 0, len = groups.length; i < len; i++) {
-    var first = parseInt(length, 10);
+    var first = parseInt(groups[i], 10);
     var last  = groups[i].substr(-1);
     switch (last) {
       case 's':
