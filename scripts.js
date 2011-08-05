@@ -694,9 +694,9 @@ function dreamWorldAbilitiesCheck(src, se) {
 
     for (var i = 0; i < 6; i++) {
         var x = sys.teamPoke(src, i);
-        if (x != 0 && sys.hasDreamWorldAbility(src, i)  && (!(x in dwpokemons) || (breedingpokemons.indexOf(x) != -1  && sys.compatibleAsDreamWorldEvent(src, i) != true))) {
+        if (x != 0 && sys.hasDreamWorldAbility(src, i)  && (!(x in dreamWorldPokemon) || (breedingpokemons.indexOf(x) != -1  && sys.compatibleAsDreamWorldEvent(src, i) != true))) {
             if (se) {
-                if (!(x in dwpokemons))
+                if (!(x in dreamWorldPokemon))
                     announce(src, "" + sys.pokemon(x) + " is  not allowed with a Dream World ability in this tier. Change it in the  teambuilder.");
                 else
                     announce(src, "" + sys.pokemon(x) + "  has to be Male and have no egg moves with its Dream World ability in  " +  sys.tier(src) + " tier. Change it in the teambuilder.");
