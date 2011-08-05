@@ -251,7 +251,7 @@ addOwnerCommand("reloadtiers", function() {
 
 addModCommand("wall", function() {
   var message = toArray(arguments).join(":");
-  announce(message);
+  announce(this.name + ": " + message);
 });
 
 addModCommand([ "ban", "b" ], function(player_name, length, reason) {
