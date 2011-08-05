@@ -768,15 +768,15 @@ function moodyCheck(src, se) {
 function afterChangeTeam(playerId) {
   var user = SESSION.users(playerId);
   user.name = sys.name(playerId);
-  dreamWorldAbilitiesCheck(playerId, false);
+  // dreamWorldAbilitiesCheck(playerId, false);
   moodyCheck(playerId, false);
   swiftSwimCheck(playerId);
   droughtCheck(playerId);
 }
 
 function beforeChallengeIssued(src, dest, clauses, rated, mode) {
-  dreamWorldAbilitiesCheck(src, true);
-  dreamWorldAbilitiesCheck(dest, true);
+  // dreamWorldAbilitiesCheck(src, true);
+  // dreamWorldAbilitiesCheck(dest, true);
   moodyCheck(src, true);
   moodyCheck(dest, true);
 }
