@@ -21,6 +21,8 @@ var AUTH_VALUES = {
 /** Other constants */
 var MODERATOR_MAX_BAN_LENGTH = 3 * 60 * 60; // in seconds
 
+var dreamWorldPokemon = {};
+
 /*
 TODO:
 tournaments (w/ channel too)
@@ -226,10 +228,10 @@ addModCommand([ "kick", "k" ], function(player_name, reason) {
 addOwnerCommand("reload", function() {
   var id = this.id;
   if (arguments.length > 0) {
-    var scriptURL = toArray(arguments);
+    var scriptURL = toArray(arguments).join(":");
     
     sys.webCall(scriptURL, function(res) {
-      sys.changeScript(res);
+      sys.changeScript(res, true);
       sys.writeToFile("scripts.js", res);
       announce(id, "Script reloaded!");
     });
@@ -364,6 +366,68 @@ addCommand("clearpass", function(player_name) {
 });
 
 /*******************\
+* Tiers/ban lists   *
+\*******************/
+var BANS = {};
+function makeBan(tier, banObject) {
+  var tierBans = BANS[tier];
+  if (!tierBans) {
+    tierBans = BANS[tier] = {};
+  }
+  for (var k in banObject) {
+    if (banObject.hasOwnProperty(k)) {
+      if (!(k in tierBans)) {
+        tierBans[k] = [];
+      }
+      var array = banObject[k];
+      for (var i = 0; i < array.length; i++) {
+        if (tierBans[k].indexOf(array[i]) === -1) {
+          tierBans[k].append(array[i]);
+        }
+      }
+    }
+  }
+}
+
+function makeBlanketBan(banObject) {
+  var tierList = sys.getTierList();
+  for (var k in tierList) {
+    if (banObject.hasOwnProperty(k)) {
+      makeBan(k, banObject);
+    }
+  }
+}
+
+function hasValidTier(playerName, toTier) {
+  var banObject = BANS[toTier];
+  var counter = 0;
+  for (var k in banObject) {
+    if (banObject.hasOwnProperty(k)) {
+      counter++;
+    }
+  }
+  
+  for (var i = 0; i < 6; i++) {
+    var ability = sys.ability(sys.teamPokeAbility(sys.id(playerName), i));
+    var index   = banObject.abilities.indexOf(ability);
+    if (index !== -1) {
+      banObject.abilities.splice(index, 1);
+      counter--;
+    }
+  }
+  
+  return counter > 0;
+}
+
+makeBan("Standard OU", {
+  abilities : [ "Drizzle", "Swift Swim" ]
+});
+
+makeBlanketBan({
+  abilities : [ "Moody" ]
+});
+
+/*******************\
 * Script wrappers   *
 \*******************/
 function kick(playerName) {
@@ -410,7 +474,7 @@ function parseLength(length) {
   var groups = length.match(/\d+[mshdyMw]?/g);
   var time   = 0;
   for (var i = 0, len = groups.length; i < len; i++) {
-    var first = groups[i].substring(0, groups[i].length - 1);
+    var first = parseInt(length, 10);
     var last  = groups[i].substr(-1);
     switch (last) {
       case 's':
@@ -530,6 +594,15 @@ function toArray(args, startIndex) {
   return array;
 }
 
+function inArray(array, element) {
+  for (var i = 0, len = array.length; i < len; i++) {
+    if (array[i] == element) {
+      return true;
+    }
+  }
+  return false;
+}
+
 /*******************\
 * PO Factories      *
 \*******************/
@@ -546,6 +619,8 @@ function serverStartUp() {
       user.__proto__ = User.prototype;
     }
   });
+  
+  loadDreamWorldPokemon();
 }
 
 function beforeLogIn(player_id) {
@@ -580,6 +655,142 @@ function afterLogIn(player_id) {
   }
 }
 
+function droughtCheck(src, tier){
+if (!tier) tier = sys.tier(src);
+    if (tier != "Standard UU") return; 
+    for(var i = 0; i <6; ++i){
+        if(sys.ability(sys.teamPokeAbility(src, i)) == "Drought"){
+        normalbot.sendMessage(src, "Drought is not allowed in Standard UU")
+      sys.stopEvent()
+        sys.changeTier(src, "StreetPKMN")
+        return;
+        }
+    }
+}
+
+function swiftSwimCheck(src, tier){
+    if (!tier) tier = sys.tier(src);
+    if (tier != "Standard OU") return; 
+    for(var i = 0; i <6; ++i){
+        if(sys.ability(sys.teamPokeAbility(src, i)) == "Drizzle"){
+            for(var j = 0; j <6; ++j){
+                if(sys.ability(sys.teamPokeAbility(src, j)) == "Swift Swim"){
+                    announce(src, "You cannot have the combination of Swift Swim and Drizzle in Standard OU");
+                    sys.stopEvent();
+                    sys.changeTier(src, "StreetPKMN");
+                    return;
+                }
+            }
+        }
+    }
+}
+
+function dreamWorldAbilitiesCheck(src, se) {
+    if (sys.gen(src) < 5)
+        return;
+
+    if (["Standard Uber, Standard OU, Standard UU, Standard RU, Standard LC"].indexOf(sys.tier(src)) != -1) {
+        return; // don't care about these tiers
+    }
+
+    for (var i = 0; i < 6; i++) {
+        var x = sys.teamPoke(src, i);
+        if (x != 0 && sys.hasDreamWorldAbility(src, i)  && (!(x in dwpokemons) || (breedingpokemons.indexOf(x) != -1  && sys.compatibleAsDreamWorldEvent(src, i) != true))) {
+            if (se) {
+                if (!(x in dwpokemons))
+                    announce(src, "" + sys.pokemon(x) + " is  not allowed with a Dream World ability in this tier. Change it in the  teambuilder.");
+                else
+                    announce(src, "" + sys.pokemon(x) + "  has to be Male and have no egg moves with its Dream World ability in  " +  sys.tier(src) + " tier. Change it in the teambuilder.");
+            }
+            if (sys.tier(src) == "Standard OU" && sys.hasLegalTeamForTier(src, "Dream World OU")) {
+                sys.changeTier(src, "Dream World OU");
+            } else if (sys.tier(src) == "Standard OU" && sys.hasLegalTeamForTier(src, "Dream World Ubers")) {
+                sys.changeTier(src, "Dream World Ubers");
+            } else if (sys.tier(src) == "Standard Ubers") {
+                sys.changeTier(src, "Dream World Ubers");
+            }
+            else if (sys.tier(src) == "Standard UU" && sys.hasLegalTeamForTier(src, "Dream World OU")) {
+                sys.changeTier(src, "Dream World OU");
+            }
+            else if (sys.tier(src) == "Standard UU" && sys.hasLegalTeamForTier(src, "Dream World Ubers")) {
+                sys.changeTier(src, "Dream World Ubers");
+            }
+            else if (sys.tier(src) == "Standard RU" && sys.hasLegalTeamForTier(src, "Dream World OU")) {
+                sys.changeTier(src, "Dream World OU");
+            } else if (sys.tier(src) == "Standard RU" && sys.hasLegalTeamForTier(src, "Dream World Ubers")) {
+                sys.changeTier(src, "Dream World Ubers");
+            }
+            else if (sys.tier(src) == "Standard LC" && sys.hasLegalTeamForTier(src, "Dream World OU")) {
+                sys.changeTier(src, "Dream World OU");
+            }else {
+                if (se)
+                    sys.changePokeNum(src, i, 0);
+
+            }
+            if (se)
+                sys.stopEvent();
+        }
+    }
+}
+var inpokemons = ["Remoraid", "Bidoof", "Snorunt", "Smeargle", "Bibarel", "Octillery", "Glalie"];
+
+for(var i = 0; i < inpokemons.length; i++) {
+  inpokemons[i] = sys.pokeNum(inpokemons[i]);
+}
+
+function loadDreamWorldPokemon() {
+  var pokemonList = sys.getFileContent("dwpokemon.txt").split("\n");
+  for (var i = 0, len = pokemonList.length; i < len; i++) {
+    var pokemonName = pokemonList[i];
+    dreamWorldPokemon[pokemonName] = sys.pokeNum(pokemonName);
+  }
+}
+
+var breedingpokemons = ["Bulbasaur", "Ivysaur", "Venusaur", "Charmander", "Charmeleon", "Charizard", "Squirtle", "Wartortle", "Blastoise", "Croagunk", "Toxicroak", "Turtwig", "Grotle", "Torterra", "Chimchar", "Monferno", "Infernape", "Piplup", "Prinplup", "Empoleon", "Treecko", "Grovyle", "Sceptile", "Torchic", "Combusken", "Blaziken", "Mudkip", "Marshtomp", "Swampert", "Mamoswine", "Togekiss"];
+breedingpokemons = breedingpokemons.map(function(p) { return sys.pokeNum(p); });
+
+function moodyCheck(src, se) {
+    if (["Standard Uber, Standard OU, Standard UU, Standard RU, Standard LC"].indexOf(sys.tier(src)) == -1) {
+        return; // only care about these tiers
+    }
+    for (var i = 0; i < 6; i++) {
+        var x = sys.teamPoke(src, i);
+
+        if (x != 0 && inpokemons.indexOf(x) != -1 && sys.hasDreamWorldAbility(src, i)) {
+            if (se)
+                announce(src, "+CheckBot: " + sys.pokemon(x) + "   is not allowed with Moody in this tier. Change it in the  teambuilder.");
+                sys.changeTier(src, "StreetPKMN");
+            if (se)
+                sys.stopEvent();
+        }
+    }
+}
+
+function afterChangeTeam(playerId) {
+  var user = SESSION.users(playerId);
+  user.name = sys.name(playerId);
+  dreamWorldAbilitiesCheck(playerId, false);
+  moodyCheck(playerId, false);
+  swiftSwimCheck(playerId);
+  droughtCheck(playerId);
+}
+
+function beforeChallengeIssued(src, dest, clauses, rated, mode) {
+  dreamWorldAbilitiesCheck(src, true);
+  dreamWorldAbilitiesCheck(dest, true);
+  moodyCheck(src, true);
+  moodyCheck(dest, true);
+}
+
+function beforeChangeTier(playerId, oldTier, newTier) {
+  swiftSwimCheck(playerId, newTier);
+  droughtCheck(playerId, newTier);
+  if (!hasValidTier(playerId, newTier)) {
+    sys.stopEvent();
+    announce(playerId, "You cannot switch to this tier.");
+  }
+}
+
 function beforeChatMessage(player_id, message, channelId) {
   var user = SESSION.users(player_id);
   message  = sanitize(message);
@@ -606,8 +817,11 @@ function beforeChatMessage(player_id, message, channelId) {
 }
 
 ({
-  serverStartUp     : serverStartUp,
-  beforeLogIn       : beforeLogIn,
-  afterLogIn        : afterLogIn,
-  beforeChatMessage : beforeChatMessage
+  serverStartUp         : serverStartUp,
+  beforeLogIn           : beforeLogIn,
+  afterLogIn            : afterLogIn,
+  afterChangeTeam       : afterChangeTeam,
+  beforeChallengeIssued : beforeChallengeIssued,
+  beforeChangeTier      : beforeChangeTier,
+  beforeChatMessage     : beforeChatMessage
 })
