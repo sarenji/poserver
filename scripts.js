@@ -185,7 +185,7 @@ addCommand("auth", function(type, token, newAuth) {
   } else if (type === "user") {
     if (newAuth) {
       if (this.authedFor(OWNER)) {
-        changeAuth(token, newAuth, true);
+        changeAuth(token, newAuth);
         announce(this.id, "You set " + token + "'s authority level to " + newAuth + ".");
       } else {
         announce(this.id, "You're not allowed to set other people's auth!");
@@ -563,15 +563,12 @@ function findGroupAuthLevel(auth, list) {
   return arr;
 }
 
-function changeAuth(playerName, newAuth, permanent) {
-  var id = sys.id(playerName);
-  if (id) {
-    sys.changeAuth(id, newAuth);
-    this.auth = newAuth;
+function changeAuth(playerName, newAuth) {
+  var player = getPlayer(playerName);
+  if (player) {
+    player.auth = newAuth;
   }
-  if (permanent === true) {
-    sys.changeDbAuth(playerName, newAuth);
-  }
+  sys.changeDbAuth(playerName, newAuth);
 }
 
 function changeAuthIfLessThan(playerName, newAuth, permanent) {
