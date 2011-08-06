@@ -146,7 +146,7 @@ function addAdminCommand(commandName, func) {
 }
 
 function addOwnerCommand(commandName, func) {
-  addAuthCommand(ADMINISTRATOR, commandName, func);
+  addAuthCommand(OWNER, commandName, func);
 }
 
 addCommand([ "help", "commands" ], function() {
