@@ -191,7 +191,9 @@ addOwnerCommand("eval", function() {
 
 addCommand([ "idle", "away"], function() {
   this.idle = !this.idle;
+  var status = this.idle ? "idle" : "available";
   sys.changeAway(this.id, this.idle);
+  announce(this.id, "You are now " + status + ".");
 });
 
 addCommand("ranking", function(player_name) {
