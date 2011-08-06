@@ -157,7 +157,7 @@ addCommand([ "help", "commands" ], function() {
   }
 });
 
-addAdminCommand("mod", function(playerName) {
+addOwnerCommand("mod", function(playerName) {
   changeAuthIfLessThan(playerName, MODERATOR);
 });
 
@@ -169,7 +169,7 @@ addOwnerCommand("owner", function(playerName) {
   changeAuthIfLessThan(playerName, OWNER);
 });
 
-addAdminCommand(["deauth", "demod", "deadmin", "deowner"], function(playerName) {
+addOwnerCommand(["deauth", "demod", "deadmin", "deowner"], function(playerName) {
   changeAuth(playerName, USER);
 });
 
