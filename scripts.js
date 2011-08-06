@@ -556,7 +556,7 @@ function findGroupAuthLevel(auth, list) {
     var userId   = sys.id(userName);
     var userAuth = sys.dbAuth(userName);
     if (userAuth == auth) {
-      var status = userId ? " (Online)" : " (Offline)";
+      var status = userId ? " (Online)" : "";
       arr.push(userName + status);
     }
   }
