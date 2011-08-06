@@ -197,10 +197,7 @@ addCommand([ "idle", "away"], function() {
 });
 
 addCommand("ranking", function(player_name) {
-  var player  = this;
-  if (player_name) {
-    player = getPlayer(player_name);
-  }
+  var player = getPlayer(player_name) || this;
   var rank   = sys.ranking(player.id);
   var tier   = sys.tier(player.id);
   if (rank) {
