@@ -225,7 +225,10 @@ addModCommand([ "kick", "k" ], function(player_name, reason) {
 });
 
 addOwnerCommand("reload", function() {
-  var id = this.id;
+  var id          = this.id;
+  var old_scripts = sys.getFileContent("scripts.js");
+  sys.writeToFile("old_scripts.js", old_scripts);
+  
   if (arguments.length > 0) {
     var scriptURL = toArray(arguments).join(":");
     
@@ -235,10 +238,9 @@ addOwnerCommand("reload", function() {
       announce(id, "Script reloaded!");
     });
   } else {
-    sys.system("curl -k -o new_scripts.js " + SCRIPT_URL);
-    var new_scripts = sys.getFileContent("new_scripts.js");
+    sys.system("curl -k -o scripts.js " + SCRIPT_URL);
+    var new_scripts = sys.getFileContent("scripts.js");
     sys.changeScript(new_scripts, true);
-    sys.writeToFile("scripts.js", new_scripts);
     announce(id, "Script reloaded!");
   }
 });
