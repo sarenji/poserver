@@ -158,15 +158,15 @@ addCommand([ "help", "commands" ], function() {
 });
 
 addAdminCommand("mod", function(playerName) {
-  changeAuth(playerName, MODERATOR);
+  changeAuthIfLessThan(playerName, MODERATOR);
 });
 
 addOwnerCommand("admin", function(playerName) {
-  changeAuth(playerName, ADMINISTRATOR);
+  changeAuthIfLessThan(playerName, ADMINISTRATOR);
 });
 
 addOwnerCommand("owner", function(playerName) {
-  changeAuth(playerName, OWNER);
+  changeAuthIfLessThan(playerName, OWNER);
 });
 
 addAdminCommand(["deauth", "demod", "deadmin", "deowner"], function(playerName) {
@@ -174,10 +174,9 @@ addAdminCommand(["deauth", "demod", "deadmin", "deowner"], function(playerName) 
 });
 
 addCommand("auth", function(type, token, newAuth) {
-  var list = sys.dbAuths();
-  
   if (type === "group") {
     var group = AUTH_VALUES[token.toUpperCase()];
+    var list  = sys.dbAuths();
     list      = findGroupAuthLevel(group, list).sort();
     
     for (var i = 0, len = list.length; i < len; i++) {
@@ -192,7 +191,7 @@ addCommand("auth", function(type, token, newAuth) {
         announce(this.id, "You're not allowed to set other people's auth!");
       }
     } else {
-      var auth = sys.dbAuth(token);
+      var auth = getAuth(token);
       announce(this.id, token + "'s authority level is " + auth + ".");
     }
   } else {
@@ -568,9 +567,25 @@ function changeAuth(playerName, newAuth, permanent) {
   var id = sys.id(playerName);
   if (id) {
     sys.changeAuth(id, newAuth);
+    this.auth = newAuth;
   }
   if (permanent === true) {
     sys.changeDbAuth(playerName, newAuth);
+  }
+}
+
+function changeAuthIfLessThan(playerName, newAuth, permanent) {
+  if (getAuth(playerName) < newAuth) {
+    changeAuth(playerName, newAuth, permanent);
+  }
+}
+
+function getAuth(playerName) {
+  var id = sys.id(playerName);
+  if (id) {
+    return sys.auth(id);
+  } else {
+    return sys.dbAuth(playerName);
   }
 }
 
