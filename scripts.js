@@ -22,11 +22,11 @@ var AUTH_VALUES = {
 var MODERATOR_MAX_BAN_LENGTH = 3 * 60 * 60; // in seconds
 
 var dreamWorldPokemon = {};
+var silence = false;
 
 /*
 TODO:
 tournaments (w/ channel too)
-wall should hit all channels
 */
 
 function User(id) {
@@ -293,6 +293,14 @@ addModCommand([ "ban", "b" ], function(player_name, length, reason) {
     announce(message);
     ban(player_name, getTime() + length * 1000);
   }
+});
+
+addAdminCommand("silence", function() {
+  silence = true;
+});
+
+addAdminCommand(["unsilence", "desilence"], function() {
+  silence = false;
 });
 
 addAdminCommand(["permban", "permaban", "pb"], function(playerName, reason) {
@@ -849,6 +857,10 @@ function beforeChatMessage(player_id, message, channelId) {
   }
   
   if (user.muted) {
+    return;
+  }
+  
+  if (!user.authedFor(MODERATOR) && silence) {
     return;
   }
   
