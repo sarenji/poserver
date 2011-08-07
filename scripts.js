@@ -297,10 +297,12 @@ addModCommand([ "ban", "b" ], function(player_name, length, reason) {
 
 addAdminCommand("silence", function() {
   silence = true;
+  announce(this.name + " silenced the chat.");
 });
 
 addAdminCommand(["unsilence", "desilence"], function() {
   silence = false;
+  announce(this.name + " lifted the silence on the chat.");
 });
 
 addAdminCommand(["permban", "permaban", "pb"], function(playerName, reason) {
