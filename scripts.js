@@ -19,7 +19,7 @@ var AUTH_VALUES = {
 };
 
 /** Other constants */
-var MODERATOR_MAX_BAN_LENGTH = 3 * 60 * 60; // in seconds
+var MODERATOR_MAX_BAN_LENGTH = 24 * 60 * 60; // in seconds
 
 var dreamWorldPokemon = {};
 var silence = false;
