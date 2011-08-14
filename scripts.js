@@ -781,7 +781,7 @@ function dreamWorldAbilitiesCheck(src, se) {
     if (sys.gen(src) < 5)
         return;
 
-    if (["Standard Uber, Standard OU, Standard UU, Standard RU, Standard LC"].indexOf(sys.tier(src)) != -1) {
+    if (["StreetPKMN", "Dream World OU", "Dream World Ubers", "Challenge Cup"].indexOf(sys.tier(src)) != -1) {
         return; // don't care about these tiers
     }
 
