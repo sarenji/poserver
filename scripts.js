@@ -35,7 +35,7 @@ function User(id) {
   this.name = sys.name(id);
   this.auth = sys.auth(id);
   this.muted = false;
-  this.lastMessage = null;
+  this.lastMessages = [];
   this.lastMessageTime = 0;
   this.idle = sys.away(id);
 }
@@ -55,7 +55,7 @@ User.prototype.log = function(message) {
     sys.stopEvent();
     kick(this.name);
   }
-  this.lastMessage = message;
+  this.lastMessages.unshift(message);
   this.lastMessageTime = getTime();
 }
 
@@ -64,7 +64,7 @@ User.prototype.isSpamming = function(message) {
     return false;
   }
   
-  if (this.lastMessage === message) {
+  if (this.lastMessages.length > 0 && this.lastMessages[0] === message) {
     return true;
   }
   
@@ -260,6 +260,14 @@ addOwnerCommand("reload", function() {
   }
 });
 
+addOwnerCommand("rollback", function() {
+  var id          = this.id;
+  var old_scripts = sys.getFileContent("old_scripts.js");
+  sys.writeToFile("scripts.js", old_scripts);
+  sys.changeScript(old_scripts, true);
+  announce(id, "Scripts rolled back!");
+});
+
 addOwnerCommand("reloadtiers", function() {
   sys.system("curl -k -o tiers.xml " + TIERS_URL);
   sys.reloadTiers();
@@ -315,6 +323,11 @@ addAdminCommand(["permban", "permaban", "pb"], function(playerName, reason) {
     ban(playerName);
     announce(message);
   }
+});
+
+addAdminCommand("topic", function() {
+  var new_topic = toArray(arguments).join(":");
+  
 });
 
 addModCommand("unban", function(playerName) {
