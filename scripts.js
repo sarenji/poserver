@@ -407,7 +407,11 @@ addModCommand("unmute", function(playerName) {
 });
 
 addModCommand("tiers", function() {
-  
+  sys.sendMessage(this.id, "Smogon tiers: http://tinyurl.com/smtiers");
+});
+
+addModCommand("dw", function() {
+  sys.sendMessage(this.id, "Released Dream World content: http://tinyurl.com/dwareas and http://tinyurl.com/dwpkmn");
 });
 
 addCommand("clearpass", function(player_name) {
@@ -864,25 +868,21 @@ function afterChangeTeam(playerId) {
 }
 
 function beforeBattleMatchup(src, dest, clauses, rated, mode) {
-  if (sys.tier(src) != sys.tier(dest)) {
-    announce(src, "You tried to find a battle, but your opponent's tiers did not match yours!");
-    sys.stopEvent();
+  if (sys.tier(src) == sys.tier(dest)) {
+    dreamWorldAbilitiesCheck(src, true);
+    dreamWorldAbilitiesCheck(dest, true);
+    moodyCheck(src, true);
+    moodyCheck(dest, true);
   }
-  dreamWorldAbilitiesCheck(src, true);
-  dreamWorldAbilitiesCheck(dest, true);
-  moodyCheck(src, true);
-  moodyCheck(dest, true);
 }
 
 function beforeChallengeIssued(src, dest, clauses, rated, mode) {
-  if (sys.tier(src) != sys.tier(dest)) {
-    announce(src, "You can only play with people on the same tier!");
-    sys.stopEvent();
+  if (sys.tier(src) == sys.tier(dest)) {
+    dreamWorldAbilitiesCheck(src, true);
+    dreamWorldAbilitiesCheck(dest, true);
+    moodyCheck(src, true);
+    moodyCheck(dest, true);
   }
-  dreamWorldAbilitiesCheck(src, true);
-  dreamWorldAbilitiesCheck(dest, true);
-  moodyCheck(src, true);
-  moodyCheck(dest, true);
 }
 
 function beforeChangeTier(playerId, oldTier, newTier) {
