@@ -56,6 +56,7 @@ User.prototype.log = function(message) {
   if (this.isSpamming(message)) {
     sys.stopEvent();
     kick(this.name);
+    return;
   }
   // todo: remove after running on server
   if (!this.lastMessages) {
@@ -879,7 +880,7 @@ function beforeChangeTier(playerId, oldTier, newTier) {
 function beforeChannelCreated(channelId, channelName, playerId) {
   var user = SESSION.users(playerId);
   if (!user.authedFor(MODERATOR) && channelName != MAIN_CHANNEL) {
-    return false;
+    sys.stopEvent();
   }
 }
 
