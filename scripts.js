@@ -22,7 +22,7 @@ var AUTH_VALUES = {
 var SCRIPTS_URL = "scripts.js";
 var SCRIPTS_BACKUP_URL = "new_" + SCRIPTS_URL;
 var MODERATOR_MAX_BAN_LENGTH = 24 * 60 * 60; // in seconds
-
+var MAIN_CHANNEL = "Dragonspiral Tower";
 var dreamWorldPokemon = {};
 var silence = false;
 
@@ -877,7 +877,7 @@ function beforeChangeTier(playerId, oldTier, newTier) {
 
 function beforeChannelCreated(channelId, channelName, playerId) {
   var user = SESSION.users(playerId);
-  if (!user.authedFor(MODERATOR)) {
+  if (!user.authedFor(MODERATOR) && channelName != MAIN_CHANNEL) {
     return false;
   }
 }
