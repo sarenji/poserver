@@ -391,6 +391,15 @@ addCommand("clearpass", function(player_name) {
   }
 });
 
+// destroys a channel.
+addOwnerCommand("destroy", function() {
+  var channelId = sys.channelId(toArray(arguments).join(":"));
+  var players   = sys.playersOfChannel(channelId);
+  for (var i = 0, len = players.length; i < len; i++) {
+    sys.kick(players[i], channelId);
+  }
+});
+
 /*******************\
 * Tiers/ban lists   *
 \*******************/
@@ -841,6 +850,13 @@ function beforeChangeTier(playerId, oldTier, newTier) {
   */
 }
 
+function beforeChannelCreated(channelId, channelName, playerId) {
+  var user = SESSION.users(playerId);
+  if (!user.authedFor(MODERATOR)) {
+    return false;
+  }
+}
+
 function beforeChatMessage(player_id, message, channelId) {
   var user = SESSION.users(player_id);
   message  = sanitize(message);
@@ -877,5 +893,6 @@ function beforeChatMessage(player_id, message, channelId) {
   afterChangeTeam       : afterChangeTeam,
   beforeChallengeIssued : beforeChallengeIssued,
   beforeChangeTier      : beforeChangeTier,
+  beforeChannelCreated  : beforeChannelCreated,
   beforeChatMessage     : beforeChatMessage
 })
