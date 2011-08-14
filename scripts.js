@@ -415,9 +415,11 @@ addCommand("clearpass", function(player_name) {
 // destroys a channel.
 addOwnerCommand("destroy", function() {
   var channelId = sys.channelId(toArray(arguments).join(":"));
-  var players   = sys.playersOfChannel(channelId);
-  for (var i = 0, len = players.length; i < len; i++) {
-    sys.kick(players[i], channelId);
+  if (channelId) {
+    var players   = sys.playersOfChannel(channelId);
+    for (var i = 0, len = players.length; i < len; i++) {
+      sys.kick(players[i], channelId);
+    }
   }
 });
 
