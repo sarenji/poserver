@@ -74,7 +74,8 @@ User.prototype.isSpamming = function(message) {
     return false;
   }
   
-  if (this.lastMessages.length > 0 && this.lastMessages[0] === message) {
+  // todo: remove this.lastMessages check
+  if (this.lastMessages && this.lastMessages.length > 0 && this.lastMessages[0] === message) {
     return true;
   }
   
