@@ -1,7 +1,7 @@
 /** URL of most recent script. Currently the master branch of my GitHub. */
-var SCRIPT_URL = "https://raw.github.com/sarenji/poserver/master/scripts.js"
+var REMOTE_SCRIPT_URL = "https://raw.github.com/sarenji/poserver/master/scripts.js"
 /** URL of most recent tiers.xml. Currently the master branch of my GitHub. */
-var TIERS_URL  = "https://raw.github.com/sarenji/poserver/master/tiers.xml"
+var REMOTE_TIERS_URL  = "https://raw.github.com/sarenji/poserver/master/tiers.xml"
 
 /** User authentication constants */
 var USER          = 0;
@@ -19,6 +19,8 @@ var AUTH_VALUES = {
 };
 
 /** Other constants */
+var SCRIPTS_URL = "scripts.js";
+var SCRIPTS_BACKUP_URL = "new_" + SCRIPTS_URL;
 var MODERATOR_MAX_BAN_LENGTH = 24 * 60 * 60; // in seconds
 
 var dreamWorldPokemon = {};
@@ -249,20 +251,20 @@ addModCommand([ "kick", "k" ], function(player_name, reason) {
 
 addOwnerCommand("reload", function() {
   var id          = this.id;
-  var old_scripts = sys.getFileContent("scripts.js");
-  sys.writeToFile("old_scripts.js", old_scripts);
+  var old_scripts = sys.getFileContent(SCRIPTS_URL);
+  sys.writeToFile(SCRIPTS_BACKUP_URL, old_scripts);
   
   if (arguments.length > 0) {
     var scriptURL = toArray(arguments).join(":");
     
     sys.webCall(scriptURL, function(res) {
       sys.changeScript(res, true);
-      sys.writeToFile("scripts.js", res);
+      sys.writeToFile(SCRIPTS_URL, res);
       announce(id, "Script reloaded!");
     });
   } else {
-    sys.system("curl -k -o scripts.js " + SCRIPT_URL);
-    var new_scripts = sys.getFileContent("scripts.js");
+    sys.system("curl -k -o " + SCRIPTS_URL + " " + REMOTE_SCRIPT_URL);
+    var new_scripts = sys.getFileContent(SCRIPTS_URL);
     sys.changeScript(new_scripts, true);
     announce(id, "Script reloaded!");
   }
@@ -270,14 +272,14 @@ addOwnerCommand("reload", function() {
 
 addOwnerCommand("rollback", function() {
   var id          = this.id;
-  var old_scripts = sys.getFileContent("old_scripts.js");
-  sys.writeToFile("scripts.js", old_scripts);
+  var old_scripts = sys.getFileContent(SCRIPTS_BACKUP_URL);
+  sys.writeToFile(SCRIPTS_URL, old_scripts);
   sys.changeScript(old_scripts, true);
   announce(id, "Scripts rolled back!");
 });
 
 addOwnerCommand("reloadtiers", function() {
-  sys.system("curl -k -o tiers.xml " + TIERS_URL);
+  sys.system("curl -k -o tiers.xml " + REMOTE_TIERS_URL);
   sys.reloadTiers();
 });
 
