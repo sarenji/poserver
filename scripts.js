@@ -406,12 +406,12 @@ addModCommand("unmute", function(playerName) {
   }
 });
 
-addModCommand("tiers", function() {
-  sys.sendMessage(this.id, "Smogon tiers: http://tinyurl.com/smtiers");
+addCommand("tiers", function() {
+  announce(this.id, "Smogon tiers: http://tinyurl.com/smtiers");
 });
 
-addModCommand("dw", function() {
-  sys.sendMessage(this.id, "Released Dream World content: http://tinyurl.com/dwareas and http://tinyurl.com/dwpkmn");
+addCommand("dw", function() {
+  announce(this.id, "Released Dream World content: http://tinyurl.com/dwareas and http://tinyurl.com/dwpkmn");
 });
 
 addCommand("clearpass", function(player_name) {
