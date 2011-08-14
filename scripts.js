@@ -55,7 +55,15 @@ User.prototype.log = function(message) {
     sys.stopEvent();
     kick(this.name);
   }
+  // todo: remove after running on server
+  if (!this.lastMessages) {
+    this.lastMessages = [];
+  }
+  
   this.lastMessages.unshift(message);
+  if (this.lastMessages.length > 5) {
+    this.lastMessages.pop();
+  }
   this.lastMessageTime = getTime();
 }
 
