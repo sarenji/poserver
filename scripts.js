@@ -406,6 +406,10 @@ addModCommand("unmute", function(playerName) {
   }
 });
 
+addModCommand("tiers", function() {
+  
+});
+
 addCommand("clearpass", function(player_name) {
   if (player_name === undefined) {
     sys.clearPass(this.name);
@@ -859,7 +863,22 @@ function afterChangeTeam(playerId) {
   droughtCheck(playerId);
 }
 
+function beforeBattleMatchup(src, dest, clauses, rated, mode) {
+  if (sys.tier(src) != sys.tier(dest)) {
+    announce(src, "You tried to find a battle, but your opponent's tiers did not match yours!");
+    sys.stopEvent();
+  }
+  dreamWorldAbilitiesCheck(src, true);
+  dreamWorldAbilitiesCheck(dest, true);
+  moodyCheck(src, true);
+  moodyCheck(dest, true);
+}
+
 function beforeChallengeIssued(src, dest, clauses, rated, mode) {
+  if (sys.tier(src) != sys.tier(dest)) {
+    announce(src, "You can only play with people on the same tier!");
+    sys.stopEvent();
+  }
   dreamWorldAbilitiesCheck(src, true);
   dreamWorldAbilitiesCheck(dest, true);
   moodyCheck(src, true);
@@ -918,6 +937,7 @@ function beforeChatMessage(player_id, message, channelId) {
   beforeLogIn           : beforeLogIn,
   afterLogIn            : afterLogIn,
   afterChangeTeam       : afterChangeTeam,
+  beforeBattleMatchup   : beforeBattleMatchup,
   beforeChallengeIssued : beforeChallengeIssued,
   beforeChangeTier      : beforeChangeTier,
   beforeChannelCreated  : beforeChannelCreated,
