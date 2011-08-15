@@ -68,6 +68,7 @@ Tournament.prototype.create = function(user, tier, spots) {
 Tournament.prototype.join = function(user) {
   // check if there's a tournament running.
   if (this.state === TOURNAMENT_INACTIVE) {
+    announce(user.id, "There is no tournament running!");
     return;
   }
   
