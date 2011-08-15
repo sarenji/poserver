@@ -74,8 +74,11 @@ Tournament.prototype.join = function(user) {
   
   // check if player is/was already in tournament.
   if (this.players.indexOf(user.name) !== -1) {
-    var verb = this.losers[user.name] ? "were" : "are";
-    announce(user.id, "You " + verb + " already in the tournament!");
+    announce(user.id, "You are already in the tournament!");
+    return;
+  }
+  if (this.losers[user.name]) {
+    announce(user.id, "You already played in the tournament!");
     return;
   }
   
@@ -202,9 +205,14 @@ Tournament.prototype.dropout = function(user) {
 };
 
 Tournament.prototype.removePlayer = function(userName) {
-  var matchIndex = this.findMatch(userName);
-  var match      = this.matches[matchIndex];
   this.players.splice(this.players.indexOf(userName), 1);
+  
+  var matchIndex = this.findMatch(userName);
+  if (matchIndex === -1) {
+    return;
+  }
+  var match = this.matches[matchIndex];
+  
   if (this.players.length >= this.numSlots) {
     // sub in someone
     var sub  = this.players[this.numSlots - 1];
