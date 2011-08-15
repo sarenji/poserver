@@ -165,7 +165,7 @@ Tournament.prototype.isActive = function() {
 };
 
 return new Tournament();
-)();
+})();
 
 function User(id) {
   this.id = id;
