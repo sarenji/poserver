@@ -98,6 +98,8 @@ Tournament.prototype.tick = function(winner, loser) {
     this.advanceWinner(winner, loser);
     if (this.matchesLeft() === 0) {
       this.advanceRound();
+    } else {
+      announce(winner.name + " won a tournament battle! " + this.matchesLeft() + " matches remain.");
     }
   }
 };
