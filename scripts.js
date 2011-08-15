@@ -581,7 +581,7 @@ addCommand("join", function() {
 });
 
 addModCommand("stop", function() {
-  Tournament.stop();
+  Tournament.stop(this);
 });
 
 /*******************\
