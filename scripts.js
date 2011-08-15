@@ -66,6 +66,11 @@ Tournament.prototype.create = function(user, tier, spots) {
 };
 
 Tournament.prototype.join = function(user) {
+  // check if there's a tournament running.
+  if (this.state === TOURNAMENT_INACTIVE) {
+    return;
+  }
+  
   // check if player is already in tournament.
   if (this.players.indexOf(user.name) != -1) {
     announce(user.id, "You are already in the tournament!");
