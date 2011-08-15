@@ -43,7 +43,7 @@ Tournament.prototype.initialize = function() {
   this.numSpots = 0;
   this.players  = [];
   this.matches  = [];
-  this.joined   = {};
+  this.losers   = {};
 };
 
 Tournament.prototype.create = function(user, tier, spots) {
@@ -66,15 +66,16 @@ Tournament.prototype.create = function(user, tier, spots) {
 };
 
 Tournament.prototype.join = function(user) {
-  // check if there's a tournament running.
+  // check if there's a tournament running first.
   if (this.state === TOURNAMENT_INACTIVE) {
     announce(user.id, "There is no tournament running!");
     return;
   }
   
-  // check if player is already in tournament.
-  if (this.players.indexOf(user.name) != -1) {
-    announce(user.id, "You are already in the tournament!");
+  // check if player is/was already in tournament.
+  if (this.players.indexOf(user.name) !== -1) {
+    var verb = this.losers[user.name] ? "were" : "are";
+    announce(user.id, "You " + verb + " already in the tournament!");
     return;
   }
   
@@ -108,6 +109,7 @@ Tournament.prototype.tick = function(winner, loser) {
 Tournament.prototype.advanceWinner = function(winner, loser) {
   this.removeMatch(winner, loser);
   this.players.splice(this.players.indexOf(loser.name), 1);
+  this.losers[loser.name] = true;
 };
 
 Tournament.prototype.advanceRound = function() {
@@ -142,30 +144,82 @@ Tournament.prototype.makeMatchups = function() {
   }
 };
 
-Tournament.prototype.isTourBattle = function(user1, user2) {
+Tournament.prototype.isTourBattle = function(userName1, userName2) {
   for (var i = 0; i < this.matches.length; i++) {
     var match = this.matches[i];
-    if ((match[0] === user1.name && match[1] === user2.name)
-        || (match[0] === user2.name && match[1] === user1.name)) {
+    if ((match[0] === userName1 && match[1] === userName2)
+        || (match[0] === userName2 && match[1] === userName1)) {
       return true;
     }
   }
   return false;
 };
 
-Tournament.prototype.removeMatch = function(user1, user2) {
+Tournament.prototype.findMatch = function(userName1, userName2) {
   for (var i = 0; i < this.matches.length; i++) {
     var match = this.matches[i];
-    if ((match[0] === user1.name && match[1] === user2.name)
-        || (match[0] === user2.name && match[1] === user1.name)) {
-      return this.matches.splice(i, 1);
+    if (!user2) {
+      if (match[0] === userName1 || match[1] === userName1) {
+        return i;
+      }
+    } else if ((match[0] === userName1 && match[1] === userName2)
+        || (match[0] === userName2 && match[1] === userName1)) {
+      return i;
     }
+  }
+  return -1;
+};
+
+Tournament.prototype.removeMatch = function(userName1, userName2) {
+  var index = this.findMatch(userName1, userName2);
+  if (index !== -1) {
+    this.matches.splice(index, 1);
   }
 };
 
 Tournament.prototype.matchesLeft = function() {
   return this.matches.length;
+};
+
+Tournament.prototype.drop = function(user, playerName) {
+  var index = this.players.indexOf(playerName);
+  if (index !== -1) {
+    this.removePlayer(playerName);
+    announce(user.name + " dropped " + playerName + " from the tournament!");
+  } else {
+    announce(user.id, playerName + " is not in the tournament!");
+  }
 }
+
+Tournament.prototype.dropout = function(user) {
+  var index = this.players.indexOf(user.name);
+  if (index !== -1) {
+    announce(user.name + " dropped out of the tournament!");
+    this.removePlayer(user.name);
+  } else {
+    announce(user.id, "You are not in the tournament!");
+  }
+};
+
+Tournament.prototype.removePlayer = function(userName) {
+  var matchIndex = this.findMatch(userName);
+  var match      = this.matches[matchIndex];
+  this.players.splice(index, 1);
+  if (this.players.length >= this.numSlots) {
+    // sub in someone
+    var sub  = this.players[this.numSlots - 1];
+    if (match[0] === userName) {
+      match[0] = sub;
+    } else {
+      match[1] = sub;
+    }
+    announce(sub + " will be subbing in for " + userName + "!");
+  } else {
+    var opponent = (match[0] === userName) ? match[1] : match[0];
+    this.matches.splice(matchIndex, 1);
+    announce(opponent + " gets a bye unless someone joins!");
+  }
+};
 
 Tournament.prototype.stop = function(user) {
   if (this.state !== TOURNAMENT_INACTIVE) {
@@ -583,13 +637,21 @@ addOwnerCommand("destroy", function() {
   }
 });
 
-// wrappers
+// Tournament wrappers
 addAdminCommand("tour", function(tier, spots) {
   Tournament.create(this, tier, spots);
 });
 
 addCommand(["j", "join"], function() {
   Tournament.join(this);
+});
+
+addCommand("dropout", function() {
+  Tournament.dropout(this);
+});
+
+addModCommand("drop", function(playerName) {
+  Tournament.drop(this, playerName);
 });
 
 addModCommand("stop", function() {
