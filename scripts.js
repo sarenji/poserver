@@ -108,7 +108,7 @@ Tournament.prototype.advanceRound = function() {
     announce("Round " + this.round + " has started! Matchups are:");
     for (var i = 0; i < this.matches.length; i++) {
       var match = this.matches[i];
-      announce(match[0] + " vs. " match[1]);
+      announce(match[0] + " vs. " + match[1]);
     }
   }
 };
