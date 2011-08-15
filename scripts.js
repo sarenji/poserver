@@ -48,7 +48,7 @@ Tournament.prototype.initialize = function() {
 
 Tournament.prototype.create = function(user, tier, spots) {
   // only create new tournament if one is not already made.
-  if (state != TOURNAMENT_INACTIVE) {
+  if (this.state != TOURNAMENT_INACTIVE) {
     announce(user.id, "A tournament is already underway!");
     return false;
   }
@@ -57,7 +57,7 @@ Tournament.prototype.create = function(user, tier, spots) {
   this.initialize();
   this.state    = TOURNAMENT_SIGNUPS;
   this.tier     = tier;
-  this.numSpots = spots;
+  this.numSpots = parseInt(spots, 10);
   
   // print out tournament data for users.
   announce("A " + spots + "-man tournament has started! The tier is " + tier + ".");
@@ -67,7 +67,7 @@ Tournament.prototype.create = function(user, tier, spots) {
 
 Tournament.prototype.join = function(user) {
   // check if player is already in tournament.
-  if (this.players.indexOf(user.name)) {
+  if (this.players.indexOf(user.name) != -1) {
     announce(user.id, "You are already in the tournament!");
     return;
   }
@@ -102,6 +102,7 @@ Tournament.prototype.advanceRound = function() {
   this.round++;
   if (this.players.length === 1) {
     var userName = this.players.pop();
+    this.state = TOURNAMENT_INACTIVE;
     announce(userName + " wins the tournament! Congratulations!");
   } else {
     this.makeMatchups();
@@ -1007,8 +1008,8 @@ function afterChangeTeam(playerId) {
   droughtCheck(playerId);
 }
 
-function afterBattleEnded(winner, loser, desc) {
-  if (Tournament.isActive()) {
+function afterBattleEnded(winner, loser, result, battleId) {
+  if (Tournament.isActive() && result !== "tie") {
     winner = SESSION.users(winner);
     loser  = SESSION.users(loser);
     Tournament.tick(winner, loser);
