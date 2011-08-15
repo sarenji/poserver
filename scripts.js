@@ -26,10 +26,146 @@ var MAIN_CHANNEL = "Dragonspiral Tower";
 var dreamWorldPokemon = {};
 var silence = false;
 
-/*
-TODO:
-tournaments (w/ channel too)
-*/
+var Tournament = (
+
+var TOURNAMENT_INACTIVE = 0;
+var TOURNAMENT_SIGNUPS  = 1;
+var TOURNAMENT_ACTIVE   = 2;
+
+function Tournament() {
+  this.initialize();
+}
+
+Tournament.prototype.initialize = function() {
+  this.tier     = "StreetPKMN";
+  this.state    = TOURNAMENT_INACTIVE;
+  this.round    = 0;
+  this.numSpots = 0;
+  this.players  = [];
+  this.matches  = [];
+  this.joined   = {};
+};
+
+Tournament.prototype.create = function(user, tier, spots) {
+  // only create new tournament if one is not already made.
+  if (state != TOURNAMENT_INACTIVE) {
+    announce(user.id, "A tournament is already underway!");
+    return false;
+  }
+  
+  // initialization
+  this.initialize();
+  this.state    = TOURNAMENT_SIGNUPS;
+  this.tier     = tier;
+  this.numSpots = spots;
+  
+  // print out tournament data for users.
+  announce("A " + spots + "-man tournament has started! The tier is " + tier + ".");
+  announce("Type /join to join the tournament.");
+  return true;
+};
+
+Tournament.prototype.join = function(user) {
+  // check if player is already in tournament.
+  if (this.players.indexOf(user.name)) {
+    announce(user.id, "You are already in the tournament!");
+    return;
+  }
+  
+  // add player to tournament
+  this.players.push(user.name);
+  announce(user.name + " joined the tournament! Now " + this.players.length + "/" + this.numSpots + " filled.");
+  
+  // start tournament if target spots reached.
+  if (this.players.length === this.numSpots) {
+    this.state = TOURNAMENT_ACTIVE;
+    this.advanceRound();
+  }
+};
+
+Tournament.prototype.tick = function(winner, loser) {
+  if (this.isTourBattle(winner, loser)) {
+    this.advanceWinner(winner, loser);
+    if (this.matchesLeft() === 0) {
+      this.advanceRound();
+    }
+  }
+};
+
+// winner is apparently the first parameter.
+Tournament.prototype.advanceWinner = function(winner, loser) {
+  this.removeMatch(winner, loser);
+  this.players.splice(this.players.indexOf(loser.name), 1);
+};
+
+Tournament.prototype.advanceRound = function() {
+  this.round++;
+  if (this.players.length === 1) {
+    var userName = this.players.pop();
+    announce(userName + " wins the tournament! Congratulations!");
+  } else {
+    this.makeMatchups();
+    announce("Round " + this.round + " has started! Matchups are:");
+    for (var i = 0; i < this.matches.length; i++) {
+      var match = this.matches[i];
+      announce(match[0] + " vs. " match[1]);
+    }
+  }
+};
+
+Tournament.prototype.makeMatchups = function() {
+  var len = this.players.length;
+  while (--len > 0) {
+      var rand = Math.floor(Math.random() * (len + 1));
+      var tmp  = this.players[len];
+      this.players[len]  = this.players[rand];
+      this.players[rand] = tmp;
+  }
+  
+  len = Math.min(this.numSpots, this.players.length);
+  this.matches = [];
+  for (var i = 0; i < len; i += 2) {
+    this.matches.push([this.players[i], this.players[i + 1]]);
+  }
+};
+
+Tournament.prototype.isTourBattle = function(user1, user2) {
+  for (var i = 0; i < this.matches.length; i++) {
+    var match = this.matches[i];
+    if ((match[0] === user1.name && match[1] === user2.name)
+        || (match[0] === user2.name && match[1] === user1.name)) {
+      return true;
+    }
+  }
+  return false;
+};
+
+Tournament.prototype.removeMatch = function(user1, user2) {
+  for (var i = 0; i < this.matches.length; i++) {
+    var match = this.matches[i];
+    if ((match[0] === user1.name && match[1] === user2.name)
+        || (match[0] === user2.name && match[1] === user1.name)) {
+      return this.matches.splice(i, 1);
+    }
+  }
+};
+
+Tournament.prototype.matchesLeft = function() {
+  return this.matches.length;
+}
+
+Tournament.prototype.stop = function(user) {
+  this.state = TOURNAMENT_INACTIVE;
+  this.round = 0;
+  announce("The tournament was canceled!");
+};
+
+Tournament.prototype.isActive = function() {
+  return this.state === TOURNAMENT_ACTIVE;
+};
+
+return new Tournament();
+)();
 
 function User(id) {
   this.id = id;
@@ -428,6 +564,15 @@ addOwnerCommand("destroy", function() {
       sys.kick(players[i], channelId);
     }
   }
+});
+
+// wrappers
+addAdminCommand("tour", function(tier, spots) {
+  Tournament.create(this, tier, spots);
+});
+
+addCommand("join", function() {
+  Tournament.join(this);
 });
 
 /*******************\
@@ -862,6 +1007,14 @@ function afterChangeTeam(playerId) {
   droughtCheck(playerId);
 }
 
+function afterBattleEnded(winner, loser, desc) {
+  if (Tournament.isActive()) {
+    winner = SESSION.users(winner);
+    loser  = SESSION.users(loser);
+    Tournament.tick(winner, loser);
+  }
+}
+
 function beforeBattleMatchup(src, dest, clauses, rated, mode) {
   if (sys.tier(src) == sys.tier(dest)) {
     dreamWorldAbilitiesCheck(src, true);
@@ -931,6 +1084,7 @@ function beforeChatMessage(player_id, message, channelId) {
   serverStartUp         : serverStartUp,
   beforeLogIn           : beforeLogIn,
   afterLogIn            : afterLogIn,
+  afterBattleEnded      : afterBattleEnded,
   afterChangeTeam       : afterChangeTeam,
   beforeBattleMatchup   : beforeBattleMatchup,
   beforeChallengeIssued : beforeChallengeIssued,
