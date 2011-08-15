@@ -194,8 +194,8 @@ Tournament.prototype.drop = function(user, playerName) {
 Tournament.prototype.dropout = function(user) {
   var index = this.players.indexOf(user.name);
   if (index !== -1) {
-    announce(user.name + " dropped out of the tournament!");
     this.removePlayer(user.name);
+    announce(user.name + " dropped out of the tournament!");
   } else {
     announce(user.id, "You are not in the tournament!");
   }
@@ -204,7 +204,7 @@ Tournament.prototype.dropout = function(user) {
 Tournament.prototype.removePlayer = function(userName) {
   var matchIndex = this.findMatch(userName);
   var match      = this.matches[matchIndex];
-  this.players.splice(index, 1);
+  this.players.splice(this.players.indexOf(userName), 1);
   if (this.players.length >= this.numSlots) {
     // sub in someone
     var sub  = this.players[this.numSlots - 1];
