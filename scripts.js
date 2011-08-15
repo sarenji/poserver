@@ -79,7 +79,11 @@ Tournament.prototype.join = function(user) {
   
   // add player to tournament
   this.players.push(user.name);
-  announce(user.name + " joined the tournament! Now " + this.players.length + "/" + this.numSpots + " filled.");
+  if (this.players.length > this.numSpots) {
+    announce(user.name + " joined the tournament as substitute #" + (this.players.length - this.numSpots) + "!");
+  } else {
+    announce(user.name + " joined the tournament! Now " + this.players.length + "/" + this.numSpots + " filled.");
+  }
   
   // start tournament if target spots reached.
   if (this.players.length === this.numSpots) {
