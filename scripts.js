@@ -26,7 +26,7 @@ var MAIN_CHANNEL = "Dragonspiral Tower";
 var dreamWorldPokemon = {};
 var silence = false;
 
-var Tournament = (
+var Tournament = (function() {
 
 var TOURNAMENT_INACTIVE = 0;
 var TOURNAMENT_SIGNUPS  = 1;
