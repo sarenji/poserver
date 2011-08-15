@@ -156,9 +156,13 @@ Tournament.prototype.matchesLeft = function() {
 }
 
 Tournament.prototype.stop = function(user) {
-  this.state = TOURNAMENT_INACTIVE;
-  this.round = 0;
-  announce("The tournament was canceled!");
+  if (this.state !== TOURNAMENT_INACTIVE) {
+    this.state = TOURNAMENT_INACTIVE;
+    this.round = 0;
+    announce("The tournament was canceled!");
+  } else {
+    announce(user.id, "There is no tournament running!");
+  }
 };
 
 Tournament.prototype.isActive = function() {
@@ -574,6 +578,10 @@ addAdminCommand("tour", function(tier, spots) {
 
 addCommand("join", function() {
   Tournament.join(this);
+});
+
+addModCommand("stop", function() {
+  Tournament.stop();
 });
 
 /*******************\
