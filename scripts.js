@@ -197,8 +197,8 @@ Tournament.prototype.drop = function(user, playerName) {
 Tournament.prototype.dropout = function(user) {
   var index = this.players.indexOf(user.name);
   if (index !== -1) {
-    this.removePlayer(user.name);
     announce(user.name + " dropped out of the tournament!");
+    this.removePlayer(user.name);
   } else {
     announce(user.id, "You are not in the tournament!");
   }
