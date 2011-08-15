@@ -158,7 +158,7 @@ Tournament.prototype.isTourBattle = function(userName1, userName2) {
 Tournament.prototype.findMatch = function(userName1, userName2) {
   for (var i = 0; i < this.matches.length; i++) {
     var match = this.matches[i];
-    if (!user2) {
+    if (!userName2) {
       if (match[0] === userName1 || match[1] === userName1) {
         return i;
       }
