@@ -576,7 +576,7 @@ addAdminCommand("tour", function(tier, spots) {
   Tournament.create(this, tier, spots);
 });
 
-addCommand("join", function() {
+addCommand(["j", "join"], function() {
   Tournament.join(this);
 });
 
