@@ -87,6 +87,7 @@ Tournament.prototype.join = function(user) {
   if (this.players.length > this.numSpots) {
     announce(user.name + " joined the tournament as substitute #" + (this.players.length - this.numSpots) + "!");
   } else {
+    // add check for .isActive; sub that person instead.
     announce(user.name + " joined the tournament! Now " + this.players.length + "/" + this.numSpots + " filled.");
   }
   
@@ -103,16 +104,15 @@ Tournament.prototype.tick = function(winner, loser) {
     if (this.matchesLeft() === 0) {
       this.advanceRound();
     } else {
-      announce(winner.name + " won a tournament battle! " + this.matchesLeft() + " matches remain.");
+      announce(winner + " won a tournament battle! " + this.matchesLeft() + " matches remain.");
     }
   }
 };
 
-// winner is apparently the first parameter.
 Tournament.prototype.advanceWinner = function(winner, loser) {
   this.removeMatch(winner, loser);
-  this.players.splice(this.players.indexOf(loser.name), 1);
-  this.losers[loser.name] = true;
+  this.players.splice(this.players.indexOf(loser), 1);
+  this.losers[loser] = true;
 };
 
 Tournament.prototype.advanceRound = function() {
