@@ -950,20 +950,23 @@ function getAuth(playerName) {
 * Chat helpers      *
 \*******************/
 function announce(player_id, message, channelId) {
-  if (typeof(player_id) === "number" || /^\d+$/.test(player_id)) {
+  var length = arguments.length;
+  if (length === 1) {
+    message = player_id;
+    sys.sendAll("*** " + message);
+  } else if (length === 2) {
+    if (typeof(player_id) !== "number" && !(/^\d+$/.test(player_id))) {
+      channelId = message;
+      message   = player_id;
+      player_id = undefined;
+    }
     if (channelId) {
-      sys.sendAll(player_id, "*** " + message, channelId);
+      sys.sendAll("*** " + message, channelId);
     } else {
       sys.sendAll(player_id, "*** " + message);
     }
   } else {
-    channelId = message;
-    message   = player_id;
-    if (channelId) {
-      sys.sendAll("*** " + message, channelId);
-    } else {
-      sys.sendAll("*** " + message);
-    }
+    sys.sendAll(player_id, "*** " + message, channelId);
   }
 }
 
