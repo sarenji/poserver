@@ -279,7 +279,7 @@ Tournament.prototype.removePlayer = function(userName) {
     this.announce(substitute + " will be subbing in for " + userName + "!");
   } else {
     var match    = matches[0];
-    var opponent = match[0] === userName ? match[1] : match[0];
+    var opponent = match[0] === undefined ? match[1] : match[0];
     this.announce(opponent + " gets a bye unless someone joins!");
   }
   
