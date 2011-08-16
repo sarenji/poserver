@@ -199,7 +199,6 @@ Tournament.prototype.removeMatch = function(userName1, userName2) {
 };
 
 Tournament.prototype.matchesLeft = function() {
-  for
   return this.matches.length;
 };
 
