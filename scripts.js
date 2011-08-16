@@ -91,7 +91,7 @@ Tournament.prototype.join = function(user) {
   }
   
   // start tournament if target spots reached.
-  if (this.players.length === this.numSpots) {
+  if (this.players.length === this.numSpots && !this.isActive()) {
     this.state = TOURNAMENT_ACTIVE;
     this.advanceRound();
   }
@@ -132,7 +132,19 @@ Tournament.prototype.advanceRound = function() {
 };
 
 Tournament.prototype.makeMatchups = function() {
-  var len = this.players.length;
+  var len  = this.players.length;
+  var seen = {};
+  var players = this.players;
+  for (var i = 0; i < len; i++) {
+    var player = this.players[i];
+    if (!seen[player]) {
+      seen[player] = true;
+      players.push(player);
+    }
+  }
+  this.players = players;
+  
+  // randomize
   while (--len > 0) {
       var rand = Math.floor(Math.random() * (len + 1));
       var tmp  = this.players[len];
@@ -142,8 +154,14 @@ Tournament.prototype.makeMatchups = function() {
   
   len = Math.min(this.numSpots, this.players.length);
   this.matches = [];
-  for (var i = 0; i < len; i += 2) {
-    this.matches.push([this.players[i], this.players[i + 1]]);
+  if (this.players.length === 3) {
+    this.matches.push([this.players[0], this.players[1]]);
+    this.matches.push([this.players[1], this.players[2]]);
+    this.matches.push([this.players[0], this.players[2]]);
+  } else {
+    for (var i = 0; i < len; i += 2) {
+      this.matches.push([this.players[i], this.players[i + 1]]);
+    }
   }
 };
 
@@ -187,8 +205,8 @@ Tournament.prototype.matchesLeft = function() {
 Tournament.prototype.drop = function(user, playerName) {
   var index = this.players.indexOf(playerName);
   if (index !== -1) {
-    this.removePlayer(playerName);
     announce(user.name + " dropped " + playerName + " from the tournament!");
+    this.removePlayer(playerName);
   } else {
     announce(user.id, playerName + " is not in the tournament!");
   }
