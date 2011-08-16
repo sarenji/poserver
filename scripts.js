@@ -280,11 +280,11 @@ Tournament.prototype.removePlayer = function(userName) {
 Tournament.prototype.substituteIn = function(userName) {
   for (var i = 0; i < this.matches.length; i++) {
     var match = this.matches[i];
-    if (match[0] === userName) {
-      match[0] = sub;
+    if (match[0] === undefined) {
+      match[0] = userName;
       return match[1];
     } else {
-      match[1] = sub;
+      match[1] = userName;
       return match[0];
     }
   }
