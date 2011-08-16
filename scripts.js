@@ -37,19 +37,26 @@ function Tournament() {
 }
 
 Tournament.prototype.initialize = function() {
-  this.tier     = "StreetPKMN";
-  this.state    = TOURNAMENT_INACTIVE;
-  this.round    = 0;
-  this.numSpots = 0;
-  this.players  = [];
-  this.matches  = [];
-  this.losers   = {};
+  this.tier      = "StreetPKMN";
+  this.state     = TOURNAMENT_INACTIVE;
+  this.round     = 0;
+  this.numSpots  = 0;
+  this.players   = [];
+  this.matches   = [];
+  this.losers    = {};
+  this.channelId = sys.channelId("Tournaments");
 };
+
+Tournament.prototype.announce = function() {
+  var args = toArray(arguments);
+  args.push(this.channelId);
+  announce.apply(null, args);
+}
 
 Tournament.prototype.create = function(user, tier, spots) {
   // only create new tournament if one is not already made.
   if (this.state != TOURNAMENT_INACTIVE) {
-    announce(user.id, "A tournament is already underway!");
+    this.announce(user.id, "A tournament is already underway!");
     return false;
   }
   
@@ -60,38 +67,38 @@ Tournament.prototype.create = function(user, tier, spots) {
   this.numSpots = parseInt(spots, 10);
   
   // print out tournament data for users.
-  announce("A " + spots + "-man tournament has started! The tier is " + tier + ".");
-  announce("Type /join to join the tournament.");
+  this.announce("A " + spots + "-man tournament has started! The tier is " + tier + ".");
+  this.announce("Type /join to join the tournament.");
   return true;
 };
 
 Tournament.prototype.join = function(user) {
   // check if there's a tournament running first.
   if (this.state === TOURNAMENT_INACTIVE) {
-    announce(user.id, "There is no tournament running!");
+    this.announce(user.id, "There is no tournament running!");
     return;
   }
   
   // check if player is/was already in tournament.
   if (this.players.indexOf(user.name) !== -1) {
-    announce(user.id, "You are already in the tournament!");
+    this.announce(user.id, "You are already in the tournament!");
     return;
   }
   if (this.losers[user.name]) {
-    announce(user.id, "You already played in the tournament!");
+    this.announce(user.id, "You already played in the tournament!");
     return;
   }
   
   // add player to tournament
   this.players.push(user.name);
   if (this.players.length > this.numSpots) {
-    announce(user.name + " joined the tournament as substitute #" + (this.players.length - this.numSpots) + "!");
+    this.announce(user.name + " joined the tournament as substitute #" + (this.players.length - this.numSpots) + "!");
   } else if (this.isActive()) {
     var opponent = this.substituteIn(user.name);
-    announce(user.name + " joined the tournament!");
-    announce(user.name + " vs. " + opponent);
+    this.announce(user.name + " joined the tournament!");
+    this.announce(user.name + " vs. " + opponent);
   } else {
-    announce(user.name + " joined the tournament! Now " + this.players.length + "/" + this.numSpots + " filled.");
+    this.announce(user.name + " joined the tournament! Now " + this.players.length + "/" + this.numSpots + " filled.");
   }
   
   // start tournament if target spots reached.
@@ -107,7 +114,7 @@ Tournament.prototype.tick = function(winner, loser) {
     if (this.matchesLeft() === 0) {
       this.advanceRound();
     } else {
-      announce(winner + " won a tournament battle! " + this.matchesLeft() + " matches remain.");
+      this.announce(winner + " won a tournament battle! " + this.matchesLeft() + " matches remain.");
     }
   }
 };
@@ -123,13 +130,13 @@ Tournament.prototype.advanceRound = function() {
   if (this.players.length === 1) {
     var userName = this.players.pop();
     this.state = TOURNAMENT_INACTIVE;
-    announce(userName + " wins the tournament! Congratulations!");
+    this.announce(userName + " wins the tournament! Congratulations!");
   } else {
     this.makeMatchups();
-    announce("Round " + this.round + " has started! Matchups are:");
+    this.announce("Round " + this.round + " has started! Matchups are:");
     for (var i = 0; i < this.matches.length; i++) {
       var match = this.matches[i];
-      announce(match[0] + " vs. " + match[1]);
+      this.announce(match[0] + " vs. " + match[1]);
     }
   }
 };
@@ -228,20 +235,20 @@ Tournament.prototype.matchesLeft = function() {
 Tournament.prototype.drop = function(user, playerName) {
   var index = this.players.indexOf(playerName);
   if (index !== -1) {
-    announce(user.name + " dropped " + playerName + " from the tournament!");
+    this.announce(user.name + " dropped " + playerName + " from the tournament!");
     this.removePlayer(playerName);
   } else {
-    announce(user.id, playerName + " is not in the tournament!");
+    this.announce(user.id, playerName + " is not in the tournament!");
   }
 }
 
 Tournament.prototype.dropout = function(user) {
   var index = this.players.indexOf(user.name);
   if (index !== -1) {
-    announce(user.name + " dropped out of the tournament!");
+    this.announce(user.name + " dropped out of the tournament!");
     this.removePlayer(user.name);
   } else {
-    announce(user.id, "You are not in the tournament!");
+    this.announce(user.id, "You are not in the tournament!");
   }
 };
 
@@ -268,11 +275,11 @@ Tournament.prototype.removePlayer = function(userName) {
   if (this.players.length >= this.numSpots) {
     var substitute = this.players[this.numSpots - 1];
     this.substituteIn(substitute);
-    announce(substitute + " will be subbing in for " + userName + "!");
+    this.announce(substitute + " will be subbing in for " + userName + "!");
   } else {
     var match    = matches[0];
     var opponent = match[0] === userName ? match[1] : match[0];
-    announce(opponent + " gets a bye unless someone joins!");
+    this.announce(opponent + " gets a bye unless someone joins!");
   }
 };
 
@@ -295,9 +302,9 @@ Tournament.prototype.stop = function(user) {
   if (this.state !== TOURNAMENT_INACTIVE) {
     this.state = TOURNAMENT_INACTIVE;
     this.round = 0;
-    announce("The tournament was canceled!");
+    this.announce("The tournament was canceled!");
   } else {
-    announce(user.id, "There is no tournament running!");
+    this.announce(user.id, "There is no tournament running!");
   }
 };
 
@@ -936,12 +943,21 @@ function getAuth(playerName) {
 /*******************\
 * Chat helpers      *
 \*******************/
-function announce(player_id, message) {
-  if (message === undefined) {
-    message = player_id;
-    sys.sendAll("*** " + message);
+function announce(player_id, message, channelId) {
+  if (typeof(player_id) === "number" || /^\d+$/.test(player_id)) {
+    if (channelId) {
+      sys.sendAll(player_id, "*** " + message, channelId);
+    } else {
+      sys.sendAll(player_id, "*** " + message);
+    }
   } else {
-    sys.sendMessage(player_id, "*** " + message);
+    channelId = message;
+    message   = player_id;
+    if (channelId) {
+      sys.sendAll("*** " + message, channelId);
+    } else {
+      sys.sendAll("*** " + message);
+    }
   }
 }
 
@@ -1006,6 +1022,9 @@ function serverStartUp() {
   });
   
   loadDreamWorldPokemon();
+  
+  // create Tournaments channel
+  sys.createChannel("Tournaments");
 }
 
 function beforeLogIn(player_id) {
@@ -1233,15 +1252,24 @@ function beforeChatMessage(player_id, message, channelId) {
   sys.sendAll(user.name + ": " + message, channelId);
 }
 
+// persist Tournaments channel
+function beforeChannelDestroyed(channelId) {
+  var channelName = sys.channel(channelId);
+  if (channelName === "Tournaments") {
+    sys.stopEvent();
+  }
+}
+
 ({
-  serverStartUp         : serverStartUp,
-  beforeLogIn           : beforeLogIn,
-  afterLogIn            : afterLogIn,
-  afterBattleEnded      : afterBattleEnded,
-  afterChangeTeam       : afterChangeTeam,
-  beforeBattleMatchup   : beforeBattleMatchup,
-  beforeChallengeIssued : beforeChallengeIssued,
-  beforeChangeTier      : beforeChangeTier,
-  beforeChannelCreated  : beforeChannelCreated,
-  beforeChatMessage     : beforeChatMessage
+  serverStartUp          : serverStartUp,
+  beforeLogIn            : beforeLogIn,
+  afterLogIn             : afterLogIn,
+  afterBattleEnded       : afterBattleEnded,
+  afterChangeTeam        : afterChangeTeam,
+  beforeBattleMatchup    : beforeBattleMatchup,
+  beforeChallengeIssued  : beforeChallengeIssued,
+  beforeChannelDestroyed : beforeChannelDestroyed,
+  beforeChangeTier       : beforeChangeTier,
+  beforeChannelCreated   : beforeChannelCreated,
+  beforeChatMessage      : beforeChatMessage
 })
