@@ -231,9 +231,9 @@ Tournament.prototype.removePlayer = function(userName) {
   }
   var match = this.matches[matchIndex];
   
-  if (this.players.length >= this.numSlots) {
+  if (this.players.length >= this.numSpots) {
     // sub in someone
-    var sub  = this.players[this.numSlots - 1];
+    var sub  = this.players[this.numSpots - 1];
     if (match[0] === userName) {
       match[0] = sub;
     } else {
