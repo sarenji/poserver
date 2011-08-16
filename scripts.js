@@ -166,14 +166,7 @@ Tournament.prototype.makeMatchups = function() {
 };
 
 Tournament.prototype.isTourBattle = function(userName1, userName2) {
-  for (var i = 0; i < this.matches.length; i++) {
-    var match = this.matches[i];
-    if ((match[0] === userName1 && match[1] === userName2)
-        || (match[0] === userName2 && match[1] === userName1)) {
-      return true;
-    }
-  }
-  return false;
+  return this.findMatch(userName1, userName2) !== -1;
 };
 
 Tournament.prototype.findMatch = function(userName1, userName2) {
@@ -1126,7 +1119,7 @@ function afterBattleEnded(winner, loser, result, battleId) {
   if (Tournament.isActive() && result !== "tie") {
     winner = SESSION.users(winner);
     loser  = SESSION.users(loser);
-    Tournament.tick(winner, loser);
+    Tournament.tick(winner.name, loser.name);
   }
 }
 
