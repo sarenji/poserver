@@ -134,7 +134,7 @@ Tournament.prototype.advanceRound = function() {
 Tournament.prototype.makeMatchups = function() {
   var len  = this.players.length;
   var seen = {};
-  var players = this.players;
+  var players = [];
   for (var i = 0; i < len; i++) {
     var player = this.players[i];
     if (!seen[player]) {
@@ -199,6 +199,7 @@ Tournament.prototype.removeMatch = function(userName1, userName2) {
 };
 
 Tournament.prototype.matchesLeft = function() {
+  for
   return this.matches.length;
 };
 
@@ -241,8 +242,14 @@ Tournament.prototype.removePlayer = function(userName) {
     }
     announce(sub + " will be subbing in for " + userName + "!");
   } else {
-    var opponent = (match[0] === userName) ? match[1] : match[0];
-    this.matches.splice(matchIndex, 1);
+    var opponent;
+    if (match[0] === userName) {
+      opponent = match[1];
+      match[0] = undefined;
+    } else {
+      opponent = match[0];
+      match[1] = undefined;
+    }
     announce(opponent + " gets a bye unless someone joins!");
   }
 };
