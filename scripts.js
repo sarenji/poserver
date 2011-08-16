@@ -960,13 +960,13 @@ function announce(player_id, message, channelId) {
       message   = player_id;
       player_id = undefined;
     }
-    if (channelId) {
+    if (channelId !== undefined) {
       sys.sendAll("*** " + message, channelId);
     } else {
-      sys.sendAll(player_id, "*** " + message);
+      sys.sendMessage(player_id, "*** " + message);
     }
   } else {
-    sys.sendAll(player_id, "*** " + message, channelId);
+    sys.sendMessage(player_id, "*** " + message, channelId);
   }
 }
 
