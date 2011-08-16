@@ -86,8 +86,11 @@ Tournament.prototype.join = function(user) {
   this.players.push(user.name);
   if (this.players.length > this.numSpots) {
     announce(user.name + " joined the tournament as substitute #" + (this.players.length - this.numSpots) + "!");
+  } else if (this.isActive()) {
+    var opponent = this.substituteIn(user.name);
+    announce(user.name + " joined the tournament!");
+    announce(user.name + " vs. " + opponent);
   } else {
-    // add check for .isActive; sub that person instead.
     announce(user.name + " joined the tournament! Now " + this.players.length + "/" + this.numSpots + " filled.");
   }
   
@@ -184,6 +187,33 @@ Tournament.prototype.findMatch = function(userName1, userName2) {
   return -1;
 };
 
+Tournament.prototype.findMatches = function(userName1, userName2) {
+  var matches = [];
+  for (var i = 0; i < this.matches.length; i++) {
+    var match = this.matches[i];
+    if (!userName2) {
+      if (match[0] === userName1 || match[1] === userName1) {
+        matches.push(match);
+      }
+    } else if ((match[0] === userName1 && match[1] === userName2)
+        || (match[0] === userName2 && match[1] === userName1)) {
+      matches.push(match);
+    }
+  }
+  return matches;
+};
+
+Tournament.prototype.findUnpairedMatches = function() {
+  var matches = [];
+  for (var i = 0; i < this.matches.length; i++) {
+    var match = this.matches[i];
+    if (match[0] === undefined || match[1] === undefined) {
+      matches.push(match);
+    }
+  }
+  return matches;
+};
+
 Tournament.prototype.removeMatch = function(userName1, userName2) {
   var index = this.findMatch(userName1, userName2);
   if (index !== -1) {
@@ -218,33 +248,48 @@ Tournament.prototype.dropout = function(user) {
 Tournament.prototype.removePlayer = function(userName) {
   this.players.splice(this.players.indexOf(userName), 1);
   
-  var matchIndex = this.findMatch(userName);
-  if (matchIndex === -1) {
+  // find the player's matches.
+  var matches = this.findMatches(userName);
+  if (matches.length === 0) {
     return;
   }
-  var match = this.matches[matchIndex];
   
-  if (this.players.length >= this.numSpots) {
-    // sub in someone
-    var sub  = this.players[this.numSpots - 1];
+  // remove player from matches
+  for (var i = 0; i < matches.length; i++) {
+    var match = matches[i];
     if (match[0] === userName) {
-      match[0] = sub;
-    } else {
-      match[1] = sub;
-    }
-    announce(sub + " will be subbing in for " + userName + "!");
-  } else {
-    var opponent;
-    if (match[0] === userName) {
-      opponent = match[1];
       match[0] = undefined;
     } else {
-      opponent = match[0];
       match[1] = undefined;
     }
+  }
+  
+  // either sub or ask for a new sub.
+  if (this.players.length >= this.numSpots) {
+    var substitute = this.players[this.numSpots - 1];
+    this.substituteIn(substitute);
+    announce(substitute + " will be subbing in for " + userName + "!");
+  } else {
+    var match    = matches[0];
+    var opponent = match[0] === userName ? match[1] : match[0];
     announce(opponent + " gets a bye unless someone joins!");
   }
 };
+
+// returns opponent
+Tournament.prototype.substituteIn = function(userName) {
+  for (var i = 0; i < this.matches.length; i++) {
+    var match = this.matches[i];
+    if (match[0] === userName) {
+      match[0] = sub;
+      return match[1];
+    } else {
+      match[1] = sub;
+      return match[0];
+    }
+  }
+  return undefined;
+}
 
 Tournament.prototype.stop = function(user) {
   if (this.state !== TOURNAMENT_INACTIVE) {
