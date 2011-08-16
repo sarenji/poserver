@@ -1226,9 +1226,11 @@ function beforeChangeTier(playerId, oldTier, newTier) {
 }
 
 function beforeChannelCreated(channelId, channelName, playerId) {
-  var user = SESSION.users(playerId);
-  if (!user.authedFor(MODERATOR) && channelName != MAIN_CHANNEL) {
-    sys.stopEvent();
+  if (playerId !== undefined) {
+    var user = SESSION.users(playerId);
+    if (!user.authedFor(MODERATOR) && channelName != MAIN_CHANNEL) {
+      sys.stopEvent();
+    }
   }
 }
 
