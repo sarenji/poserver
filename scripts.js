@@ -229,7 +229,8 @@ Tournament.prototype.removeMatch = function(userName1, userName2) {
 };
 
 Tournament.prototype.matchesLeft = function() {
-  return this.matches.length;
+  var numUnpaired = this.findUnpairedMatches().length;
+  return this.matches.length - numUnpaired;
 };
 
 Tournament.prototype.drop = function(user, playerName) {
@@ -280,6 +281,11 @@ Tournament.prototype.removePlayer = function(userName) {
     var match    = matches[0];
     var opponent = match[0] === userName ? match[1] : match[0];
     this.announce(opponent + " gets a bye unless someone joins!");
+  }
+  
+  // advance round if there are no more matches.
+  if (this.matchesLeft() === 0) {
+    this.advanceRound();
   }
 };
 
