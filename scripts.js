@@ -73,7 +73,7 @@ Tournament.prototype.create = function(user, tier, spots) {
   this.numSpots = parseInt(spots, 10);
   
   // print out tournament data for users.
-  announce("A " + spots + "-man #tournament has started! The tier is " + tier + ".");
+  announce("A " + spots + "-man tournament has started in #Tournaments! The tier is " + tier + ".");
   this.announce("Type /join to join the tournament.");
   return true;
 };
@@ -152,7 +152,7 @@ Tournament.prototype.advanceRound = function() {
 };
 
 Tournament.prototype.viewRound = function(user) {
-  var table = "<table border='1' width='300'>";
+  var table = "<table border='1' cellpadding='5'>";
   table += "<thead><tr><th colspan='2'>Round " + this.round + "</th></tr></thead><tbody>";
   for (var i = 0; i < this.matches.length; i++) {
     var match = this.matches[i];
