@@ -73,8 +73,8 @@ Tournament.prototype.create = function(user, tier, spots) {
   this.numSpots = parseInt(spots, 10);
   
   // print out tournament data for users.
-  announce("A " + spots + "-man tournament has started in #Tournaments! The tier is " + tier + ".");
-  this.announce("Type /join to join the tournament.");
+  announce(user.name + " started a " + spots + "-man tournament in #Tournaments! The tier is " + tier + ".");
+  announce("Type /join to join the tournament after joining #Tournaments.");
   return true;
 };
 
@@ -109,12 +109,20 @@ Tournament.prototype.start = function(user) {
       this.announce(user.id, "There is already an active tournament!");
     } else {
       this.state = TOURNAMENT_ACTIVE;
-      this.numSpots *= 2;
       this.advanceRound();
     }
   } else {
     this.announce(user.id, "There aren't enough people to start the tournament!");
   }
+};
+
+Tournament.prototype.changecount = function(user, newNum) {
+  if (this.state !== TOURNAMENT_SIGNUPS) {
+    this.announce(user.id, "The tournament is not in the signup stage!");
+    return;
+  }
+  this.numSpots = newNum;
+  this.announce("The tournament is now " + newNum + "-man.");
 };
 
 Tournament.prototype.tick = function(winner, loser) {
@@ -135,7 +143,9 @@ Tournament.prototype.advanceWinner = function(winner, loser) {
 
 Tournament.prototype.advanceRound = function() {
   this.round++;
-  this.numSpots = Math.floor(this.numSpots / 2);
+  if (this.round > 1) {
+    this.numSpots = Math.floor(this.numSpots / 2);
+  }
   if (this.players.length === 1) {
     var userName = this.players.pop();
     this.state = TOURNAMENT_INACTIVE;
@@ -148,6 +158,23 @@ Tournament.prototype.advanceRound = function() {
 };
 
 Tournament.prototype.viewRound = function(user) {
+  if (this.state === TOURNAMENT_INACTIVE) {
+    announce(user.id, "There is no active tournament!");
+    return;
+  } else if (this.state === TOURNAMENT_SIGNUPS) {
+    announce(user.id, "The " + this.numSpots + "-man " + this.tier + " tournament is still accepting signups!");
+    announce(user.id, "");
+    for (var i = 0; i < this.players.length; i++) {
+      if (i < this.numSpots) {
+        announce(user.id, "Player: " + this.players[i]);
+      } else {
+        announce(user.id, "Sub: " + this.players[i]);
+      }
+    }
+    announce(user.id, "");
+    announce(user.id, "If you want to join, type /join in #Tournaments!");
+    return;
+  }
   var table = "<table border='1' cellpadding='5'>";
   table += "<thead><tr><th colspan='2'>Round " + this.round + "</th></tr></thead><tbody>";
   for (var i = 0; i < this.matches.length; i++) {
@@ -956,10 +983,11 @@ function findGroupAuthLevel(auth, list) {
 
 function changeAuth(playerName, newAuth) {
   var player = getPlayer(playerName);
+  sys.changeDbAuth(playerName, newAuth);
   if (player) {
     player.auth = newAuth;
+    sys.changeAuth(player.id, newAuth);
   }
-  sys.changeDbAuth(playerName, newAuth);
 }
 
 function changeAuthIfLessThan(playerName, newAuth, permanent) {
