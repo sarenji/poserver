@@ -79,6 +79,7 @@ Tournament.prototype.join = function(user) {
     return;
   } else if (this.state === TOURNAMENT_ACTIVE) {
     this.announce(user.id, "You cannot join this tournament now!");
+    return;
   }
   
   // check if player is/was already in tournament.
@@ -139,15 +140,23 @@ Tournament.prototype.advanceRound = function() {
     announce(userName + " wins the tournament! Congratulations!");
   } else {
     this.makeMatchups();
-    this.announceRound();
+    this.announce("Round " + this.round + " has started! Matchups are:");
+    this.viewRound();
   }
 };
 
-Tournament.prototype.announceRound = function() {
-  this.announce("Round " + this.round + " has started! Matchups are:");
+Tournament.prototype.viewRound = function(user) {
+  var table = "<table border='1'>";
+  table += "<thead><tr><th colspan='2'>" + this.round + "</th></tr></thead><tbody>";
   for (var i = 0; i < this.matches.length; i++) {
     var match = this.matches[i];
-    this.announce(match[0] + " vs. " + match[1]);
+    table += "<tr><td>" + match[0] + "</td><td>" + match[1] + "</td></tr>";
+  }
+  table += "</tbody></table>";
+  if (user) {
+    this.announce(user.id, table);
+  } else {
+    this.announce(table);
   }
 };
 
@@ -743,6 +752,10 @@ addCommand(["j", "join"], function() {
 
 addCommand("dropout", function() {
   Tournament.dropout(this);
+});
+
+addCommand("viewround", function() {
+  Tournament.viewRound(this);
 });
 
 addAdminCommand("drop", function(playerName) {
