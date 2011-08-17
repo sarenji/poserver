@@ -1366,10 +1366,12 @@ function beforeChannelDestroyed(channelId) {
 }
 
 function beforeChannelJoin(playerId, channelId) {
-  var channel = sys.channel(channelId);
-  var user    = SESSION.users(playerId);
-  if (!user.authedFor(MODERATOR) && channel === "Staff") {
-    sys.stopEvent();
+  if (playerId !== undefined) {
+    var channel = sys.channel(channelId);
+    var user    = SESSION.users(playerId);
+    if (!user.authedFor(MODERATOR) && channel === "Staff") {
+      sys.stopEvent();
+    }
   }
 }
 
