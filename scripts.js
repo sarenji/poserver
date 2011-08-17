@@ -174,7 +174,7 @@ Tournament.prototype.makeMatchups = function() {
   
   len = Math.min(this.numSpots, this.players.length);
   this.matches = [];
-  if (this.players.length === 3) {
+  if (len === 3) {
     this.matches.push([this.players[0], this.players[1]]);
     this.matches.push([this.players[1], this.players[2]]);
     this.matches.push([this.players[0], this.players[2]]);
