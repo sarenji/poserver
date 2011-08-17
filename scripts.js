@@ -160,9 +160,9 @@ Tournament.prototype.viewRound = function(user) {
   }
   table += "</tbody></table>";
   if (user) {
-    this.announce(user.id, table);
+    this.announceHTML(user.id, table);
   } else {
-    this.announce(table);
+    this.announceHTML(table);
   }
 };
 
