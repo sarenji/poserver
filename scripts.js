@@ -77,6 +77,8 @@ Tournament.prototype.join = function(user) {
   if (this.state === TOURNAMENT_INACTIVE) {
     this.announce(user.id, "There is no tournament running!");
     return;
+  } else if (this.state === TOURNAMENT_ACTIVE) {
+    this.announce(user.id, "You cannot join this tournament now!");
   }
   
   // check if player is/was already in tournament.
@@ -93,18 +95,22 @@ Tournament.prototype.join = function(user) {
   this.players.push(user.name);
   if (this.players.length > this.numSpots) {
     this.announce(user.name + " joined the tournament as substitute #" + (this.players.length - this.numSpots) + "!");
-  } else if (this.isActive()) {
-    var opponent = this.substituteIn(user.name);
-    this.announce(user.name + " joined the tournament!");
-    this.announce(user.name + " vs. " + opponent);
   } else {
     this.announce(user.name + " joined the tournament! Now " + this.players.length + "/" + this.numSpots + " filled.");
   }
-  
-  // start tournament if target spots reached.
-  if (this.players.length === this.numSpots && !this.isActive()) {
-    this.state = TOURNAMENT_ACTIVE;
-    this.advanceRound();
+};
+
+Tournament.prototype.start = function(user) {
+  if (this.players.length >= this.numSpots) {
+    if (this.state === TOURNAMENT_ACTIVE) {
+      this.announce(user.id, "There is already an active tournament!");
+    } else {
+      this.state = TOURNAMENT_ACTIVE;
+      this.numSpots *= 2;
+      this.advanceRound();
+    }
+  } else {
+    this.announce(user.id, "There aren't enough people to start the tournament!");
   }
 };
 
@@ -121,28 +127,32 @@ Tournament.prototype.tick = function(winner, loser) {
 
 Tournament.prototype.advanceWinner = function(winner, loser) {
   this.removeMatch(winner, loser);
-  this.players.splice(this.players.indexOf(loser), 1);
-  this.losers[loser] = true;
+  this.removePlayer(loser);
 };
 
 Tournament.prototype.advanceRound = function() {
   this.round++;
+  this.numSpots = Math.floor(this.numSpots / 2);
   if (this.players.length === 1) {
     var userName = this.players.pop();
     this.state = TOURNAMENT_INACTIVE;
     this.announce(userName + " wins the tournament! Congratulations!");
   } else {
     this.makeMatchups();
-    this.announce("Round " + this.round + " has started! Matchups are:");
-    for (var i = 0; i < this.matches.length; i++) {
-      var match = this.matches[i];
-      this.announce(match[0] + " vs. " + match[1]);
-    }
+    this.announceRound();
+  }
+};
+
+Tournament.prototype.announceRound = function() {
+  this.announce("Round " + this.round + " has started! Matchups are:");
+  for (var i = 0; i < this.matches.length; i++) {
+    var match = this.matches[i];
+    this.announce(match[0] + " vs. " + match[1]);
   }
 };
 
 Tournament.prototype.makeMatchups = function() {
-  var len  = this.players.length;
+  var len  = Math.min(this.players.length, this.numSpots);
   var seen = {};
   var players = [];
   for (var i = 0; i < len; i++) {
@@ -255,6 +265,7 @@ Tournament.prototype.dropout = function(user) {
 
 Tournament.prototype.removePlayer = function(userName) {
   this.players.splice(this.players.indexOf(userName), 1);
+  this.losers[userName] = true;
   
   // find the player's matches.
   var matches = this.findMatches(userName);
@@ -272,7 +283,7 @@ Tournament.prototype.removePlayer = function(userName) {
     }
   }
   
-  // either sub or ask for a new sub.
+  // either sub or give a bye.
   if (this.players.length >= this.numSpots) {
     var substitute = this.players[this.numSpots - 1];
     this.substituteIn(substitute);
@@ -280,12 +291,7 @@ Tournament.prototype.removePlayer = function(userName) {
   } else {
     var match    = matches[0];
     var opponent = match[0] === undefined ? match[1] : match[0];
-    this.announce(opponent + " gets a bye unless someone joins!");
-  }
-  
-  // advance round if there are no more matches.
-  if (this.matchesLeft() === 0) {
-    this.advanceRound();
+    this.announce(opponent + " gets a bye!");
   }
 };
 
@@ -733,11 +739,15 @@ addCommand("dropout", function() {
   Tournament.dropout(this);
 });
 
-addModCommand("drop", function(playerName) {
+addAdminCommand("drop", function(playerName) {
   Tournament.drop(this, playerName);
 });
 
-addModCommand("stop", function() {
+addAdminCommand("start", function() {
+  Tournament.start(this);
+});
+
+addAdminCommand("stop", function() {
   Tournament.stop(this);
 });
 
