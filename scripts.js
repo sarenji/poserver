@@ -1369,7 +1369,7 @@ function beforeChannelJoin(playerId, channelId) {
   if (playerId !== undefined) {
     var channel = sys.channel(channelId);
     var user    = SESSION.users(playerId);
-    if (!user.authedFor(MODERATOR) && channel === "Staff") {
+    if (user && !user.authedFor(MODERATOR) && channel === "Staff") {
       sys.stopEvent();
     }
   }
