@@ -93,10 +93,6 @@ Tournament.prototype.join = function(user) {
     this.announce(user.id, "You are already in the tournament!");
     return;
   }
-  if (this.losers[user.name]) {
-    this.announce(user.id, "You already played in the tournament!");
-    return;
-  }
   
   // add player to tournament
   this.players.push(user.name);
@@ -772,7 +768,7 @@ addAdminCommand("start", function() {
   Tournament.start(this);
 });
 
-addAdminCommand("stop", function() {
+addAdminCommand(["cancel", "stop"], function() {
   Tournament.stop(this);
 });
 
