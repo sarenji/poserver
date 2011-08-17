@@ -67,7 +67,7 @@ Tournament.prototype.create = function(user, tier, spots) {
   this.numSpots = parseInt(spots, 10);
   
   // print out tournament data for users.
-  this.announce("A " + spots + "-man tournament has started! The tier is " + tier + ".");
+  announce("A " + spots + "-man tournament has started! The tier is " + tier + ".");
   this.announce("Type /join to join the tournament.");
   return true;
 };
@@ -136,7 +136,7 @@ Tournament.prototype.advanceRound = function() {
   if (this.players.length === 1) {
     var userName = this.players.pop();
     this.state = TOURNAMENT_INACTIVE;
-    this.announce(userName + " wins the tournament! Congratulations!");
+    announce(userName + " wins the tournament! Congratulations!");
   } else {
     this.makeMatchups();
     this.announceRound();
