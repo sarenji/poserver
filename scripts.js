@@ -263,7 +263,7 @@ Tournament.prototype.drop = function(user, playerName) {
   if (index !== -1) {
     this.announce(user.name + " dropped " + playerName + " from the tournament!");
     this.removePlayer(playerName);
-    if (this.matchesLeft() === 0) {
+    if (this.isActive() && this.matchesLeft() === 0) {
       this.advanceRound();
     }
   } else {
@@ -276,7 +276,7 @@ Tournament.prototype.dropout = function(user) {
   if (index !== -1) {
     this.announce(user.name + " dropped out of the tournament!");
     this.removePlayer(user.name);
-    if (this.matchesLeft() === 0) {
+    if (this.isActive() && this.matchesLeft() === 0) {
       this.advanceRound();
     }
   } else {
