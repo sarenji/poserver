@@ -152,8 +152,8 @@ Tournament.prototype.advanceRound = function() {
 };
 
 Tournament.prototype.viewRound = function(user) {
-  var table = "<table border='1'>";
-  table += "<thead><tr><th colspan='2'>" + this.round + "</th></tr></thead><tbody>";
+  var table = "<table border='1' width='300'>";
+  table += "<thead><tr><th colspan='2'>Round " + this.round + "</th></tr></thead><tbody>";
   for (var i = 0; i < this.matches.length; i++) {
     var match = this.matches[i];
     table += "<tr><td>" + match[0] + "</td><td>" + match[1] + "</td></tr>";
