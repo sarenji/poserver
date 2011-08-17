@@ -783,8 +783,12 @@ addCommand("dropout", function() {
   Tournament.dropout(this);
 });
 
-addCommand("viewround", function() {
+addCommand(["view", "viewround"], function() {
   Tournament.viewRound(this);
+});
+
+addAdminCommand("changecount", function(newNum) {
+  Tournament.changecount(this, newNum);
 });
 
 addAdminCommand("drop", function(playerName) {
