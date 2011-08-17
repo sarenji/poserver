@@ -155,7 +155,7 @@ Tournament.prototype.makeMatchups = function() {
   var len  = Math.min(this.players.length, this.numSpots);
   var seen = {};
   var players = [];
-  for (var i = 0; i < len; i++) {
+  for (var i = 0; i < this.players.length; i++) {
     var player = this.players[i];
     if (!seen[player]) {
       seen[player] = true;
@@ -248,6 +248,9 @@ Tournament.prototype.drop = function(user, playerName) {
   if (index !== -1) {
     this.announce(user.name + " dropped " + playerName + " from the tournament!");
     this.removePlayer(playerName);
+    if (this.matchesLeft() === 0) {
+      this.advanceRound();
+    }
   } else {
     this.announce(user.id, playerName + " is not in the tournament!");
   }
@@ -258,6 +261,9 @@ Tournament.prototype.dropout = function(user) {
   if (index !== -1) {
     this.announce(user.name + " dropped out of the tournament!");
     this.removePlayer(user.name);
+    if (this.matchesLeft() === 0) {
+      this.advanceRound();
+    }
   } else {
     this.announce(user.id, "You are not in the tournament!");
   }
