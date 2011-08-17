@@ -1116,8 +1116,8 @@ function serverStartUp() {
   
   loadDreamWorldPokemon();
   
-  // create Tournaments channel
   sys.createChannel("Tournaments");
+  sys.createChannel("Staff");
 }
 
 function beforeLogIn(player_id) {
@@ -1150,6 +1150,15 @@ function afterLogIn(player_id) {
   } else {
     deleteValue(key);
   }
+  
+  joinChannels(user);
+}
+
+function joinChannels(user) {
+  if (user.authedFor(MODERATOR)) {
+    sys.putInChannel(user.id, sys.channelId("Staff"));
+  }
+  sys.putInChannel(user.id, sys.channelId("Tournaments"));
 }
 
 function droughtCheck(src, tier){
@@ -1347,10 +1356,19 @@ function beforeChatMessage(player_id, message, channelId) {
   sys.sendAll(user.name + ": " + message, channelId);
 }
 
-// persist Tournaments channel
+// persist Tournaments/Staff channel
 function beforeChannelDestroyed(channelId) {
-  var channelName = sys.channel(channelId);
-  if (channelName === "Tournaments") {
+  var channelName    = sys.channel(channelId);
+  var indestructible = [ "Staff", "Tournaments" ];
+  if (indestructible.indexOf(channelName) !== -1) {
+    sys.stopEvent();
+  }
+}
+
+function beforeChannelJoin(playerId, channelId) {
+  var channel = sys.channel(channelId);
+  var user    = SESSION.users(playerId);
+  if (!user.authedFor(MODERATOR) && channel === "Staff") {
     sys.stopEvent();
   }
 }
@@ -1364,6 +1382,7 @@ function beforeChannelDestroyed(channelId) {
   beforeBattleMatchup    : beforeBattleMatchup,
   beforeChallengeIssued  : beforeChallengeIssued,
   beforeChannelDestroyed : beforeChannelDestroyed,
+  beforeChannelJoin      : beforeChannelJoin,
   beforeChangeTier       : beforeChangeTier,
   beforeChannelCreated   : beforeChannelCreated,
   beforeChatMessage      : beforeChatMessage
