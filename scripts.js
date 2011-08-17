@@ -51,7 +51,13 @@ Tournament.prototype.announce = function() {
   var args = toArray(arguments);
   args.push(this.channelId);
   announce.apply(null, args);
-}
+};
+
+Tournament.prototype.announceHTML = function() {
+  var args = toArray(arguments);
+  args.push(this.channelId);
+  announceHTML.apply(null, args);
+};
 
 Tournament.prototype.create = function(user, tier, spots) {
   // only create new tournament if one is not already made.
@@ -67,7 +73,7 @@ Tournament.prototype.create = function(user, tier, spots) {
   this.numSpots = parseInt(spots, 10);
   
   // print out tournament data for users.
-  announce("A " + spots + "-man tournament has started! The tier is " + tier + ".");
+  announce("A " + spots + "-man #tournament has started! The tier is " + tier + ".");
   this.announce("Type /join to join the tournament.");
   return true;
 };
@@ -996,6 +1002,27 @@ function announce(player_id, message, channelId) {
     }
   } else {
     sys.sendMessage(player_id, "*** " + message, channelId);
+  }
+}
+
+function announceHTML(player_id, message, channelId) {
+  var length = arguments.length;
+  if (length === 1) {
+    message = player_id;
+    sys.sendHtmlAll("*** " + message);
+  } else if (length === 2) {
+    if (typeof(player_id) !== "number" && !(/^\d+$/.test(player_id))) {
+      channelId = message;
+      message   = player_id;
+      player_id = undefined;
+    }
+    if (channelId !== undefined) {
+      sys.sendHtmlAll("*** " + message, channelId);
+    } else {
+      sys.sendHtmlMessage(player_id, "*** " + message);
+    }
+  } else {
+    sys.sendHtmlMessage(player_id, "*** " + message, channelId);
   }
 }
 
