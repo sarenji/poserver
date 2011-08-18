@@ -181,7 +181,7 @@ Tournament.prototype.viewRound = function(user) {
     announce(user.id, "If you want to join, type /join in #Tournaments!");
     return;
   }
-  var table = "<center><table border='1' cellpadding='5' style='background-color: #BFEFFF;'>";
+  var table = "<center><table border='1' cellpadding='5'>";
   table += "<thead><tr><th colspan='2'>Round " + this.round + "</th></tr></thead><tbody>";
   for (var i = 0; i < this.matches.length; i++) {
     var match = this.matches[i];
@@ -1315,8 +1315,8 @@ function afterBattleStarted(source, target, clauses, rated, mode) {
       Tournament.announce(source.id, "This battle will count for the tournament!");
       Tournament.announce(target.id, "This battle will count for the tournament!");
     } else {
-      Tournament.announceHTML(source.id, "This battle isn't in the Tournament's tier! This battle <b>won't</b> count!");
-      Tournament.announceHTML(target.id, "This battle isn't in the Tournament's tier! This battle <b>won't</b> count!");
+      Tournament.announceHTML(source.id, "<span style='color: red; font-weight: bold;'>This battle isn't in the Tournament's tier! This battle <b>won't</b> count!</span>");
+      Tournament.announceHTML(target.id, "<span style='color: red; font-weight: bold;'>This battle isn't in the Tournament's tier! This battle <b>won't</b> count!</span>");
     }
   }
 }
