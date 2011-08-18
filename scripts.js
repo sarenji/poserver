@@ -74,13 +74,12 @@ Tournament.prototype.create = function(user, tier, spots) {
   this.numSpots = parseInt(spots, 10);
   
   // print out tournament data for users.
-  announce("----------------------------------------------");
-  announce(user.name + " started a tournament in #Tournaments!");
-  announce("Tier: " + this.tier);
-  announce("Players: " + this.numSpots);
-  announce("Single Elimination");
-  announce("Type /join to join the tournament after joining #Tournaments.");
-  announce("----------------------------------------------");
+  var table = "<center><table>";
+  table += "<tr><td colspan='2'>" + user.name + " started a new tournament in #Tournaments!</td></tr>";
+  table += "<tr><td><b>Tier:</b> " + this.tier + "</td>";
+  table += "<td><b>Players:</b> " + this.numSpots + "</td></tr>";
+  table += "</table></center>";
+  announceHTML(table);
   return true;
 };
 
@@ -195,13 +194,13 @@ Tournament.prototype.viewRound = function(user) {
     announce(user.id, "If you want to join, type /join in #Tournaments!");
     return;
   }
-  var table = "<table border='1' cellpadding='5'>";
+  var table = "<center><table border='1' cellpadding='5'>";
   table += "<thead><tr><th colspan='2'>Round " + this.round + "</th></tr></thead><tbody>";
   for (var i = 0; i < this.matches.length; i++) {
     var match = this.matches[i];
     table += "<tr><td>" + match[0] + "</td><td>" + match[1] + "</td></tr>";
   }
-  table += "</tbody></table>";
+  table += "</tbody></table></center>";
   if (user) {
     this.announceHTML(user.id, table);
     if (this.players.length > this.numSpots) {
@@ -1325,14 +1324,16 @@ function beforeBattleMatchup(src, dest, clauses, rated, mode) {
   }
 }
 
-function beforeBattleStarted(source, target, clauses, rated, mode) {
+function afterBattleStarted(source, target, clauses, rated, mode) {
   source = SESSION.users(source);
   target = SESSION.users(target);
   if (Tournament.isActive()) {
     if (source.tier === target.tier && source.tier === Tournament.tier) {
       Tournament.announce(source.id, "This battle will count for the tournament!");
+      Tournament.announce(target.id, "This battle will count for the tournament!");
     } else {
       Tournament.announceHTML(source.id, "This battle isn't in the Tournament's tier! This battle <b>won't</b> count!");
+      Tournament.announceHTML(target.id, "This battle isn't in the Tournament's tier! This battle <b>won't</b> count!");
     }
   }
 }
@@ -1428,11 +1429,11 @@ function beforeChannelJoin(playerId, channelId) {
   serverStartUp          : serverStartUp,
   beforeLogIn            : beforeLogIn,
   afterLogIn             : afterLogIn,
+  afterBattleStarted     : afterBattleStarted,
   afterBattleEnded       : afterBattleEnded,
   afterChangeTeam        : afterChangeTeam,
   afterChannelJoin       : afterChannelJoin,
   beforeBattleMatchup    : beforeBattleMatchup,
-  beforeBattleStarted    : beforeBattleStarted,
   beforeChallengeIssued  : beforeChallengeIssued,
   beforeChannelDestroyed : beforeChannelDestroyed,
   beforeChannelJoin      : beforeChannelJoin,
