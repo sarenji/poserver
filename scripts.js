@@ -42,6 +42,7 @@ Tournament.prototype.initialize = function() {
   this.round     = 0;
   this.numSpots  = 0;
   this.players   = [];
+  this.pairings  = [];
   this.matches   = [];
   this.losers    = {};
   this.channelId = sys.channelId("Tournaments");
@@ -203,10 +204,14 @@ Tournament.prototype.viewRound = function(user) {
   table += "</tbody></table>";
   if (user) {
     this.announceHTML(user.id, table);
-    this.announce(user.id, "Subs: " + this.players.slice(this.numSpots).join(", "));
+    if (this.players.length > this.numSpots) {
+      this.announce(user.id, "Subs: " + this.players.slice(this.numSpots).join(", "));
+    }
   } else {
     this.announceHTML(table);
-    this.announce("Subs: " + this.players.slice(this.numSpots).join(", "));
+    if (this.players.length > this.numSpots) {
+      this.announce("Subs: " + this.players.slice(this.numSpots).join(", "));
+    }
   }
 };
 
@@ -1305,7 +1310,9 @@ function afterBattleEnded(winner, loser, result, battleId) {
   if (Tournament.isActive() && result !== "tie") {
     winner = SESSION.users(winner);
     loser  = SESSION.users(loser);
-    Tournament.tick(winner.name, loser.name);
+    if (winner.tier === loser.tier && winner.tier === Tournament.tier) {
+      Tournament.tick(winner.name, loser.name);
+    }
   }
 }
 
@@ -1385,6 +1392,16 @@ function beforeChannelDestroyed(channelId) {
   }
 }
 
+function afterChannelJoin(playerId, channelId) {
+  if (playerId !== undefined) {
+    var channel = sys.channel(channelId);
+    var user    = SESSION.users(playerId);
+    if (Tournament.isActive()) {
+      Tournament.viewRound(user);
+    }
+  }
+}
+
 function beforeChannelJoin(playerId, channelId) {
   if (playerId !== undefined) {
     var channel = sys.channel(channelId);
@@ -1401,6 +1418,7 @@ function beforeChannelJoin(playerId, channelId) {
   afterLogIn             : afterLogIn,
   afterBattleEnded       : afterBattleEnded,
   afterChangeTeam        : afterChangeTeam,
+  afterChannelJoin       : afterChannelJoin,
   beforeBattleMatchup    : beforeBattleMatchup,
   beforeChallengeIssued  : beforeChallengeIssued,
   beforeChannelDestroyed : beforeChannelDestroyed,
