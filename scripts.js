@@ -176,8 +176,6 @@ Tournament.prototype.viewRound = function(user) {
         announce(user.id, "Sub: " + this.players[i]);
       }
     }
-    announce(user.id, "");
-    announce(user.id, "If you want to join, type /join in #Tournaments!");
     return;
   }
   var table = "<center><table border='1' cellpadding='5'>";
@@ -1308,7 +1306,13 @@ function beforeBattleMatchup(src, dest, clauses, rated, mode) {
   }
 }
 
-function afterBattleStarted(sourceId, targetId, clauses, rated, mode) {
+function beforeChallengeIssued(sourceId, targetId, clauses, rated, mode) {
+  if (sys.tier(sourceId) == sys.tier(targetId)) {
+    dreamWorldAbilitiesCheck(sourceId, true);
+    dreamWorldAbilitiesCheck(targetId, true);
+    moodyCheck(sourceId, true);
+    moodyCheck(targetId, true);
+  }
   var source = sys.name(sourceId);
   var target = sys.name(targetId);
   if (Tournament.isActive() && Tournament.isTourBattle(source, target)) {
@@ -1316,18 +1320,10 @@ function afterBattleStarted(sourceId, targetId, clauses, rated, mode) {
       Tournament.announce(sourceId, "This battle will count for the tournament!");
       Tournament.announce(targetId, "This battle will count for the tournament!");
     } else {
-      Tournament.announceHTML(sourceId, "<span style='color: red; font-weight: bold;'>This battle isn't in the Tournament's tier! This battle <b>won't</b> count!</span>");
-      Tournament.announceHTML(targetId, "<span style='color: red; font-weight: bold;'>This battle isn't in the Tournament's tier! This battle <b>won't</b> count!</span>");
+      Tournament.announceHTML(sourceId, "<span style='color: red; font-weight: bold;'>This battle isn't in " + Tournament.tier + "! This battle was stopped.");
+      Tournament.announceHTML(targetId, "<span style='color: red; font-weight: bold;'>This battle isn't in " + Tournament.tier + "! This battle was stopped.");
+      sys.stopEvent();
     }
-  }
-}
-
-function beforeChallengeIssued(src, dest, clauses, rated, mode) {
-  if (sys.tier(src) == sys.tier(dest)) {
-    dreamWorldAbilitiesCheck(src, true);
-    dreamWorldAbilitiesCheck(dest, true);
-    moodyCheck(src, true);
-    moodyCheck(dest, true);
   }
 }
 
@@ -1422,7 +1418,6 @@ function afterChangeTier(playerId, oldTier, newTier) {
   serverStartUp          : serverStartUp,
   beforeLogIn            : beforeLogIn,
   afterLogIn             : afterLogIn,
-  afterBattleStarted     : afterBattleStarted,
   afterBattleEnded       : afterBattleEnded,
   afterChangeTeam        : afterChangeTeam,
   afterChannelJoin       : afterChannelJoin,
