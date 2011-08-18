@@ -1321,7 +1321,6 @@ function beforeChallengeIssued(sourceId, targetId, clauses, rated, mode) {
       Tournament.announce(targetId, "This battle will count for the tournament!");
     } else {
       Tournament.announceHTML(sourceId, "<span style='color: red; font-weight: bold;'>This battle isn't in " + Tournament.tier + "! This battle was stopped.");
-      Tournament.announceHTML(targetId, "<span style='color: red; font-weight: bold;'>This battle isn't in " + Tournament.tier + "! This battle was stopped.");
       sys.stopEvent();
     }
   }
