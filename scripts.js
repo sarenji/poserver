@@ -73,8 +73,13 @@ Tournament.prototype.create = function(user, tier, spots) {
   this.numSpots = parseInt(spots, 10);
   
   // print out tournament data for users.
-  announce(user.name + " started a " + spots + "-man tournament in #Tournaments! The tier is " + tier + ".");
+  announce("----------------------------------------------");
+  announce(user.name + " started a tournament in #Tournaments!"
+  announce("Tier: " + this.tier);
+  announce("Players: " + this.numSpots);
+  announce("Single Elimination");
   announce("Type /join to join the tournament after joining #Tournaments.");
+  announce("----------------------------------------------");
   return true;
 };
 
@@ -83,7 +88,7 @@ Tournament.prototype.join = function(user) {
   if (this.state === TOURNAMENT_INACTIVE) {
     this.announce(user.id, "There is no tournament running!");
     return;
-  } else if (this.state === TOURNAMENT_ACTIVE) {
+  } else if (this.isActive()) {
     this.announce(user.id, "You cannot join this tournament now!");
     return;
   }
