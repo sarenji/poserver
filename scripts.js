@@ -330,7 +330,7 @@ Tournament.prototype.removePlayer = function(userName) {
     var match = matches[i];
     if (match[0] === userName) {
       match[0] = undefined;
-    } else {
+    } else if (match[1] === userName) {
       match[1] = undefined;
     }
   }
@@ -354,7 +354,7 @@ Tournament.prototype.substituteIn = function(userName) {
     if (match[0] === undefined) {
       match[0] = userName;
       return match[1];
-    } else {
+    } else if (match[1] === undefined) {
       match[1] = userName;
       return match[0];
     }
