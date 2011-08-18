@@ -149,7 +149,7 @@ Tournament.prototype.advanceRound = function() {
   if (this.numSpots === 0) {
     this.announce("No one wins the tournament! Wait, how did this even happen?");
   } else if (this.numSpots === 1) {
-    var userName = this.players.pop();
+    var userName = this.players.shift();
     this.state = TOURNAMENT_INACTIVE;
     announce(userName + " wins the tournament! Congratulations!");
   } else {
