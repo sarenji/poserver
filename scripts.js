@@ -158,7 +158,6 @@ Tournament.prototype.advanceRound = function() {
     announce(userName + " wins the tournament! Congratulations!");
   } else {
     this.makeMatchups();
-    this.announce("Round " + this.round + " has started! Matchups are:");
     this.viewRound();
   }
 };
@@ -182,7 +181,7 @@ Tournament.prototype.viewRound = function(user) {
     return;
   }
   var table = "<center><table border='1' cellpadding='5'>";
-  table += "<thead><tr><th colspan='2'>Round " + this.round + "</th></tr></thead><tbody>";
+  table += "<thead><tr><th colspan='2'>Round " + this.round + " &mdash; " + this.tier + "</th></tr></thead><tbody>";
   for (var i = 0; i < this.matches.length; i++) {
     var match = this.matches[i];
     table += "<tr><td>" + match[0] + "</td><td>" + match[1] + "</td></tr>";
