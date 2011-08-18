@@ -108,6 +108,9 @@ Tournament.prototype.join = function(user) {
     this.announce(user.name + " joined the tournament as substitute #" + (this.players.length - this.numSpots) + "!");
   } else if (this.isActive()) {
     this.announce(user.name + " joined the tournament!");
+    var substitute = user.name;
+    var opponent   = this.substituteIn(substitute);
+    this.announce(substitute + " is now vs. " + opponent + "!");
   } else {
     this.announce(user.name + " joined the tournament! Now " + this.players.length + "/" + this.numSpots + " filled.");
   }
