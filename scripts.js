@@ -451,7 +451,9 @@ var help = [
   [
     "** BASIC USER COMMANDS",
     "/ranking -- See your own ranking.",
-    "/clearpass -- Clear your own password",
+    "/dw -- See a list of released Dream World Pokemon.",
+    "/tiers -- See a link to Smogon's Tiers.",
+    "/clearpass -- Clear your own password.",
     "/auth group:name"
   ], [
     "** MODERATOR COMMANDS",
@@ -469,7 +471,9 @@ var help = [
   ], [
     "** ADMINISTRATOR COMMANDS",
     "/ban user -- bans user permanently.",
+    "/ban user:0y0w0d0h0m0s -- bans the user for the entered time.",
     "/b is aliased to /ban."
+    "/mute user:0y0w0d0h0m0s -- mutes the user for the entered time."
   ], [
     "** OWNER COMMANDS",
     "/clearpass user -- Clear user's password."
