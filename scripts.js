@@ -74,7 +74,7 @@ Tournament.prototype.create = function(user, tier, spots) {
   
   // print out tournament data for users.
   announce("----------------------------------------------");
-  announce(user.name + " started a tournament in #Tournaments!"
+  announce(user.name + " started a tournament in #Tournaments!");
   announce("Tier: " + this.tier);
   announce("Players: " + this.numSpots);
   announce("Single Elimination");
@@ -88,7 +88,7 @@ Tournament.prototype.join = function(user) {
   if (this.state === TOURNAMENT_INACTIVE) {
     this.announce(user.id, "There is no tournament running!");
     return;
-  } else if (this.isActive()) {
+  } else if (this.round > 1) {
     this.announce(user.id, "You cannot join this tournament now!");
     return;
   }
@@ -97,14 +97,25 @@ Tournament.prototype.join = function(user) {
   if (this.players.indexOf(user.name) !== -1) {
     this.announce(user.id, "You are already in the tournament!");
     return;
+  } else if (this.losers[user.name]) {
+    this.announce(user.id, "You already lost in this tournament!");
+    return;
   }
   
   // add player to tournament
   this.players.push(user.name);
   if (this.players.length > this.numSpots) {
     this.announce(user.name + " joined the tournament as substitute #" + (this.players.length - this.numSpots) + "!");
+  } else if (this.isActive()) {
+    this.announce(user.name + " joined the tournament!");
   } else {
     this.announce(user.name + " joined the tournament! Now " + this.players.length + "/" + this.numSpots + " filled.");
+  }
+  
+  // start tour when applicable
+  if (this.players.length === this.numSpots && !this.isActive()) {
+    this.state = TOURNAMENT_ACTIVE;
+    this.advanceRound();
   }
 };
 
@@ -144,6 +155,7 @@ Tournament.prototype.tick = function(winner, loser) {
 Tournament.prototype.advanceWinner = function(winner, loser) {
   this.removeMatch(winner, loser);
   this.removePlayer(loser);
+  this.losers[loser] = true;
 };
 
 Tournament.prototype.advanceRound = function() {
@@ -318,7 +330,6 @@ Tournament.prototype.dropout = function(user) {
 
 Tournament.prototype.removePlayer = function(userName) {
   this.players.splice(this.players.indexOf(userName), 1);
-  this.losers[userName] = true;
   
   // find the player's matches.
   var matches = this.findMatches(userName);
