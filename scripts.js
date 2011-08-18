@@ -1325,6 +1325,18 @@ function beforeBattleMatchup(src, dest, clauses, rated, mode) {
   }
 }
 
+function beforeBattleStarted(source, target, clauses, rated, mode) {
+  source = SESSION.users(source);
+  target = SESSION.users(target);
+  if (Tournament.isActive()) {
+    if (source.tier === target.tier && source.tier === Tournament.tier) {
+      Tournament.announce(source.id, "This battle will count for the tournament!");
+    } else {
+      Tournament.announceHTML(source.id, "This battle isn't in the Tournament's tier! This battle <b>won't</b> count!");
+    }
+  }
+}
+
 function beforeChallengeIssued(src, dest, clauses, rated, mode) {
   if (sys.tier(src) == sys.tier(dest)) {
     dreamWorldAbilitiesCheck(src, true);
@@ -1420,6 +1432,7 @@ function beforeChannelJoin(playerId, channelId) {
   afterChangeTeam        : afterChangeTeam,
   afterChannelJoin       : afterChannelJoin,
   beforeBattleMatchup    : beforeBattleMatchup,
+  beforeBattleStarted    : beforeBattleStarted,
   beforeChallengeIssued  : beforeChallengeIssued,
   beforeChannelDestroyed : beforeChannelDestroyed,
   beforeChannelJoin      : beforeChannelJoin,
