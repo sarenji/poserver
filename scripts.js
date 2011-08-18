@@ -1290,11 +1290,11 @@ function afterChangeTeam(playerId) {
   droughtCheck(playerId);
 }
 
-function afterBattleEnded(winner, loser, result, battleId) {
+function afterBattleEnded(winnerId, loserId, result, battleId) {
   if (Tournament.isActive() && result !== "tie") {
-    winner = SESSION.users(winner);
-    loser  = SESSION.users(loser);
-    if (winner.tier === loser.tier && winner.tier === Tournament.tier) {
+    winner = SESSION.users(winnerId);
+    loser  = SESSION.users(loserId);
+    if (sys.tier(winnerId) === sys.tier(loserId) && sys.tier(winnerId) === Tournament.tier) {
       Tournament.tick(winner.name, loser.name);
     }
   }
@@ -1310,15 +1310,13 @@ function beforeBattleMatchup(src, dest, clauses, rated, mode) {
 }
 
 function afterBattleStarted(source, target, clauses, rated, mode) {
-  source = SESSION.users(source);
-  target = SESSION.users(target);
   if (Tournament.isActive()) {
-    if (source.tier === target.tier && source.tier === Tournament.tier) {
-      Tournament.announce(source.id, "This battle will count for the tournament!");
-      Tournament.announce(target.id, "This battle will count for the tournament!");
+    if (sys.tier(source) === sys.tier(target) && sys.tier(source) === Tournament.tier) {
+      Tournament.announce(source, "This battle will count for the tournament!");
+      Tournament.announce(target, "This battle will count for the tournament!");
     } else {
-      Tournament.announceHTML(source.id, "<span style='color: red; font-weight: bold;'>This battle isn't in the Tournament's tier! This battle <b>won't</b> count!</span>");
-      Tournament.announceHTML(target.id, "<span style='color: red; font-weight: bold;'>This battle isn't in the Tournament's tier! This battle <b>won't</b> count!</span>");
+      Tournament.announceHTML(source, "<span style='color: red; font-weight: bold;'>This battle isn't in the Tournament's tier! This battle <b>won't</b> count!</span>");
+      Tournament.announceHTML(target, "<span style='color: red; font-weight: bold;'>This battle isn't in the Tournament's tier! This battle <b>won't</b> count!</span>");
     }
   }
 }
