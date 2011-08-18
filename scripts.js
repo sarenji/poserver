@@ -391,6 +391,7 @@ function User(id) {
   this.lastMessages = [];
   this.lastMessageTime = 0;
   this.idle = sys.away(id);
+  this.tier = sys.tier(id);
 }
 
 User.prototype.authedFor = function(auth) {
@@ -1282,6 +1283,7 @@ function moodyCheck(src, se) {
 function afterChangeTeam(playerId) {
   var user = SESSION.users(playerId);
   user.name = sys.name(playerId);
+  user.tier = sys.tier(playerId);
   dreamWorldAbilitiesCheck(playerId, false);
   moodyCheck(playerId, false);
   swiftSwimCheck(playerId);
@@ -1408,6 +1410,15 @@ function beforeChannelJoin(playerId, channelId) {
   }
 }
 
+function afterChangeTier(playerId, oldTier, newTier) {
+  if (playerId !== undefined) {
+    var user = SESSION.users(playerId);
+    if (user) {
+      user.tier = newTier;
+    }
+  }
+}
+
 ({
   serverStartUp          : serverStartUp,
   beforeLogIn            : beforeLogIn,
@@ -1416,6 +1427,7 @@ function beforeChannelJoin(playerId, channelId) {
   afterBattleEnded       : afterBattleEnded,
   afterChangeTeam        : afterChangeTeam,
   afterChannelJoin       : afterChannelJoin,
+  afterChangeTier        : afterChangeTier,
   beforeBattleMatchup    : beforeBattleMatchup,
   beforeChallengeIssued  : beforeChallengeIssued,
   beforeChannelDestroyed : beforeChannelDestroyed,
