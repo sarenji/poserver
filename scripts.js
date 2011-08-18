@@ -1309,14 +1309,16 @@ function beforeBattleMatchup(src, dest, clauses, rated, mode) {
   }
 }
 
-function afterBattleStarted(source, target, clauses, rated, mode) {
-  if (Tournament.isActive()) {
-    if (sys.tier(source) === sys.tier(target) && sys.tier(source) === Tournament.tier) {
-      Tournament.announce(source, "This battle will count for the tournament!");
-      Tournament.announce(target, "This battle will count for the tournament!");
+function afterBattleStarted(sourceId, targetId, clauses, rated, mode) {
+  var source = sys.name(sourceId);
+  var target = sys.name(targetId);
+  if (Tournament.isActive() && Tournament.isTourBattle(source, target)) {
+    if (sys.tier(sourceId) === sys.tier(targetId) && sys.tier(sourceId) === Tournament.tier) {
+      Tournament.announce(sourceId, "This battle will count for the tournament!");
+      Tournament.announce(targetId, "This battle will count for the tournament!");
     } else {
-      Tournament.announceHTML(source, "<span style='color: red; font-weight: bold;'>This battle isn't in the Tournament's tier! This battle <b>won't</b> count!</span>");
-      Tournament.announceHTML(target, "<span style='color: red; font-weight: bold;'>This battle isn't in the Tournament's tier! This battle <b>won't</b> count!</span>");
+      Tournament.announceHTML(sourceId, "<span style='color: red; font-weight: bold;'>This battle isn't in the Tournament's tier! This battle <b>won't</b> count!</span>");
+      Tournament.announceHTML(targetId, "<span style='color: red; font-weight: bold;'>This battle isn't in the Tournament's tier! This battle <b>won't</b> count!</span>");
     }
   }
 }
