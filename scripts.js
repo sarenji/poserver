@@ -1392,7 +1392,7 @@ function afterChannelJoin(playerId, channelId) {
   if (playerId !== undefined) {
     var channel = sys.channel(channelId);
     var user    = SESSION.users(playerId);
-    if (Tournament.isActive()) {
+    if (user && Tournament.isActive()) {
       Tournament.viewRound(user);
     }
   }
