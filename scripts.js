@@ -74,8 +74,8 @@ Tournament.prototype.create = function(user, tier, spots) {
   this.numSpots = parseInt(spots, 10);
   
   // print out tournament data for users.
-  var table = "<center><table>";
-  table += "<tr><td colspan='2'>" + user.name + " started a new tournament in #Tournaments!</td></tr>";
+  var table = "<center><table cellpadding='5' border='1'>";
+  table += "<tr><td colspan='2'>" + user.name + " started a new tournament in #Tournaments! </td></tr>";
   table += "<tr><td><b>Tier:</b> " + this.tier + "</td>";
   table += "<td><b>Players:</b> " + this.numSpots + "</td></tr>";
   table += "</table></center>";
