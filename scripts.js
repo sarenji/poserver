@@ -119,19 +119,6 @@ Tournament.prototype.join = function(user) {
   }
 };
 
-Tournament.prototype.start = function(user) {
-  if (this.players.length >= this.numSpots) {
-    if (this.state === TOURNAMENT_ACTIVE) {
-      this.announce(user.id, "There is already an active tournament!");
-    } else {
-      this.state = TOURNAMENT_ACTIVE;
-      this.advanceRound();
-    }
-  } else {
-    this.announce(user.id, "There aren't enough people to start the tournament!");
-  }
-};
-
 Tournament.prototype.changecount = function(user, newNum) {
   if (this.state !== TOURNAMENT_SIGNUPS) {
     this.announce(user.id, "The tournament is not in the signup stage!");
@@ -817,10 +804,6 @@ addAdminCommand("changecount", function(newNum) {
 
 addAdminCommand("drop", function(playerName) {
   Tournament.drop(this, playerName);
-});
-
-addAdminCommand("start", function() {
-  Tournament.start(this);
 });
 
 addAdminCommand(["cancel", "stop"], function() {
