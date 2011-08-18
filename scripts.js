@@ -146,7 +146,9 @@ Tournament.prototype.advanceRound = function() {
   if (this.round > 1) {
     this.numSpots = Math.floor(this.numSpots / 2);
   }
-  if (this.players.length === 1) {
+  if (this.numSpots === 0) {
+    this.announce("No one wins the tournament! Wait, how did this even happen?");
+  } else if (this.numSpots === 1) {
     var userName = this.players.pop();
     this.state = TOURNAMENT_INACTIVE;
     announce(userName + " wins the tournament! Congratulations!");
@@ -184,8 +186,10 @@ Tournament.prototype.viewRound = function(user) {
   table += "</tbody></table>";
   if (user) {
     this.announceHTML(user.id, table);
+    this.announce(user.id, "Subs: " + this.players.slice(this.numSpots).join(", "));
   } else {
     this.announceHTML(table);
+    this.announce("Subs: " + this.players.slice(this.numSpots).join(", "));
   }
 };
 
