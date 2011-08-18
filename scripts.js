@@ -74,8 +74,8 @@ Tournament.prototype.create = function(user, tier, spots) {
   this.numSpots = parseInt(spots, 10);
   
   // print out tournament data for users.
-  var table = "<center><table cellpadding='5' border='1' style='background-color: #BCD4E6;'>";
-  table += "<tr><td colspan='2'><b>" + user.name + " started a new tournament in #Tournaments !</b></td></tr>";
+  var table = "<center><table cellpadding='5' border='1' style='background-color: #BFEFFF;'>";
+  table += "<tr><td colspan='2'><b>" + user.name + " started a new tournament in #Tournaments!</b></td></tr>";
   table += "<tr><td><b>Tier:</b> " + this.tier + "</td>";
   table += "<td><b>Players:</b> " + this.numSpots + "</td></tr>";
   table += "</table></center>";
@@ -194,7 +194,7 @@ Tournament.prototype.viewRound = function(user) {
     announce(user.id, "If you want to join, type /join in #Tournaments!");
     return;
   }
-  var table = "<center><table border='1' cellpadding='5' style='background-color: #BCD4E6;'>";
+  var table = "<center><table border='1' cellpadding='5' style='background-color: #BFEFFF;'>";
   table += "<thead><tr><th colspan='2'>Round " + this.round + "</th></tr></thead><tbody>";
   for (var i = 0; i < this.matches.length; i++) {
     var match = this.matches[i];
