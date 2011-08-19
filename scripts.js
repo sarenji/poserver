@@ -106,9 +106,9 @@ Tournament.prototype.join = function(user) {
   // add player to tournament
   this.players.push(user.name);
   this.subIndex++;
-  if (this.players.length > this.numSpots) {
+  if (this.players.length > this.numSpots || (this.isActive() && this.players.length > this.subIndex)) {
     this.subIndex--;
-    this.announce(user.name + " joined the tournament as substitute #" + (this.players.length - this.numSpots) + "!");
+    this.announce(user.name + " joined the tournament as substitute #" + (this.players.length - this.subIndex) + "!");
   } else if (this.isActive()) {
     this.announce(user.name + " joined the tournament!");
     var substitute = user.name;
