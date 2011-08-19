@@ -257,7 +257,7 @@ Tournament.prototype.makeMatchups = function() {
       this.matches.push([this.players[i], this.players[i + 1]]);
       this.pairings.push([this.players[i], this.players[i + 1]]);
     }
-    if (len % 2 === 0) {
+    if (len % 2 === 1) {
       this.matches.push([this.players[len - 1], undefined]);
       this.pairings.push([this.players[len - 1], undefined]);
     }
