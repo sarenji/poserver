@@ -37,16 +37,16 @@ function Tournament() {
 }
 
 Tournament.prototype.initialize = function() {
-  this.tier      = "StreetPKMN";
-  this.state     = TOURNAMENT_INACTIVE;
-  this.round     = 0;
-  this.numSpots  = 0;
-  this.players   = [];
-  this.pairings  = [];
-  this.matches   = [];
-  this.subIndex  = 0;
-  this.losers    = {};
-  this.channelId = sys.channelId("Tournaments");
+  this.tier       = "StreetPKMN";
+  this.state      = TOURNAMENT_INACTIVE;
+  this.round      = 0;
+  this.numSpots   = 0;
+  this.players    = [];
+  this.pairings   = [];
+  this.matches    = [];
+  this.numPlayers = 0;
+  this.losers     = {};
+  this.channelId  = sys.channelId("Tournaments");
 };
 
 Tournament.prototype.announce = function() {
@@ -105,16 +105,16 @@ Tournament.prototype.join = function(user) {
   
   // add player to tournament
   this.players.push(user.name);
-  this.subIndex++;
-  if (this.players.length > this.numSpots || (this.isActive() && this.players.length > this.subIndex)) {
-    this.subIndex--;
-    this.announce(user.name + " joined the tournament as substitute #" + (this.players.length - this.subIndex) + "!");
+  if (this.players.length > this.numSpots || (this.isActive() && this.players.length > this.numPlayers)) {
+    this.announce(user.name + " joined the tournament as substitute #" + (this.players.length - this.numPlayers) + "!");
   } else if (this.isActive()) {
     this.announce(user.name + " joined the tournament!");
     var substitute = user.name;
     var opponent   = this.substituteIn(substitute);
+    this.numPlayers++;
     this.announce(substitute + " is now vs. " + opponent + "!");
   } else {
+    this.numPlayers++;
     this.announce(user.name + " joined the tournament! Now " + this.players.length + "/" + this.numSpots + " filled.");
   }
   
@@ -193,13 +193,13 @@ Tournament.prototype.viewRound = function(user) {
   table += "</tbody></table></center>";
   if (user) {
     this.announceHTML(user.id, table);
-    if (this.players.length > this.subIndex) {
-      this.announce(user.id, "Subs: " + this.players.slice(this.subIndex).join(", "));
+    if (this.players.length > this.numPlayers) {
+      this.announce(user.id, "Subs: " + this.players.slice(this.numPlayers).join(", "));
     }
   } else {
     this.announceHTML(table);
-    if (this.players.length > this.subIndex) {
-      this.announce("Subs: " + this.players.slice(this.subIndex).join(", "));
+    if (this.players.length > this.numPlayers) {
+      this.announce("Subs: " + this.players.slice(this.numPlayers).join(", "));
     }
   }
 };
@@ -349,8 +349,11 @@ Tournament.prototype.dropout = function(user) {
 };
 
 Tournament.prototype.removePlayer = function(userName) {
-  this.players.splice(this.players.indexOf(userName), 1);
-  this.subIndex--;
+  var index = this.players.indexOf(userName);
+  this.players.splice(index, 1);
+  if (index < this.numPlayers) {
+    this.numPlayers--;
+  }
   
   // find the player's matches.
   var matches = this.findMatches(userName);
@@ -369,10 +372,10 @@ Tournament.prototype.removePlayer = function(userName) {
   }
   
   // either sub or give a bye.
-  if (this.players.length > this.subIndex) {
-    var substitute = this.players[this.subIndex];
+  if (this.players.length > this.numPlayers) {
+    var substitute = this.players[this.numPlayers];
     var opponent   = this.substituteIn(substitute);
-    this.subIndex++;
+    this.numPlayers++;
     this.announce(substitute + " will be subbing in for " + userName + "!");
     this.announce("New match: " + substitute + " vs. " + opponent + "!");
   } else {
