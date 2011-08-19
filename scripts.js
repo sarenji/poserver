@@ -454,7 +454,12 @@ var help = [
     "/dw -- See a list of released Dream World Pokemon.",
     "/tiers -- See a link to Smogon's Tiers.",
     "/clearpass -- Clear your own password.",
-    "/auth group:name"
+    "/auth group:name",
+    "/idle -- Sets your status to idle, which blocks challenges.",
+    "* TOURNAMENT COMMANDS",
+    "/join -- Enters you into a tournament if one is running.",
+    "/dropout -- Removes you from a tournament.",
+    "/viewround -- Shows the current round's matchups and subtitutes."
   ], [
     "** MODERATOR COMMANDS",
     "/kick user",
@@ -470,13 +475,23 @@ var help = [
     "/wall message"
   ], [
     "** ADMINISTRATOR COMMANDS",
-    "/ban user -- bans user permanently.",
+    "/ban user -- bans user for 1 day.",
     "/ban user:0y0w0d0h0m0s -- bans the user for the entered time.",
     "/b is aliased to /ban."
-    "/mute user:0y0w0d0h0m0s -- mutes the user for the entered time."
+    "/mute user:0y0w0d0h0m0s -- mutes the user for the entered time.",
+    "/silence -- Silences the entire chat.",
+    "/unsilence -- Lifes silence.",
+    "/permaban -- Pb is aliased to permaban; permanentely bans a user.",
+    "/topic -- Changes the topic.",
+    "* TOURNAMENT COMMANDS",
+    "/tour tier:participants -- Starts a tournament.",
+    "/drop user -- Removes the user from the tournament.",
+    "/stop -- Stops the current tournament.",
+    "/changecount -- Changes the number of participants in a tournament."  
   ], [
     "** OWNER COMMANDS",
-    "/clearpass user -- Clear user's password."
+    "/clearpass user -- Clear user's password.",
+    "/destroy channel -- Deletes a channel."
   ]
 ];
 
