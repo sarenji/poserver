@@ -369,7 +369,7 @@ Tournament.prototype.removePlayer = function(userName) {
   }
   
   // either sub or give a bye.
-  if (this.players.length >= this.numSpots) {
+  if (this.players.length > this.subIndex) {
     var substitute = this.players[this.subIndex];
     var opponent   = this.substituteIn(substitute);
     this.announce(substitute + " will be subbing in for " + userName + "!");
