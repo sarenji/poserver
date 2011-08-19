@@ -507,12 +507,11 @@ var help = [
     "/idle -- Sets your status to idle, which blocks challenges. Aliased to /away.",
     "* TOURNAMENT COMMANDS",
     "/join -- Enters you into a tournament if one is running.",
-    "/dropout -- Removes you from a tournament.",
+    "/drop -- Removes yourself from a tournament. Aliased to /dropout.",
     "/viewround -- Shows the current round's matchups and subtitutes."
   ], [
     "** MODERATOR COMMANDS",
-    "/kick user",
-    "/k is aliased to /kick.",
+    "/kick user -- kicks user from the server. Aliased to /k.",
     "/ban user -- bans user for " + MODERATOR_MAX_BAN_LENGTH / 60 / 60 + " hours.",
     "/ban user:duration -- duration is in hours. Maximum of " + MODERATOR_MAX_BAN_LENGTH / 60 / 60 + " hours.",
     "/b is aliased to /ban.",
@@ -530,11 +529,11 @@ var help = [
     "/mute user:1y2M3w4d5h6m7s -- mutes the user for the entered time.",
     "/silence -- Silences the entire chat.",
     "/unsilence -- Lifts silence.",
-    "/permaban -- Permanently bans a user. Aliased to /pb and /permban",
+    "/permaban -- Permanently bans a user. Aliased to /pb and /permban.",
     "/topic -- Changes the topic.",
     "* TOURNAMENT COMMANDS",
     "/tour tier:participants -- Starts a tournament.",
-    "/drop user -- Removes the user from the tournament.",
+    "/drop user -- Removes the user from the tournament. Aliased to /dropout.",
     "/stop -- Stops the current tournament. Aliased to /cancel",
     "/changecount -- Changes the number of participants in a tournament."  
   ], [
