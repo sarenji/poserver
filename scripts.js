@@ -216,15 +216,17 @@ Tournament.prototype.prettyStringMatch = function(match) {
   var left  = match[0];
   var right = match[1];
   if (left === undefined) {
-    left = "bye!";
+    left  = "<del>bye!</del>";
     right = "<b>" + right +"</b>";
   } else if (right === undefined) {
-    right = "bye!";
-    left = "<b>" + left +"</b>";
+    left  = "<b>" + left +"</b>";
+    right = "<del>bye!</del>";
   } else if (this.losers[left]) {
+    left  = "<del>" + left + "<del>";
     right = "<b>" + right +"</b>";
   } else if (this.losers[right]) {
-    left = "<b>" + left +"</b>";
+    left  = "<b>" + left +"</b>";
+    right = "<del>" + right + "<del>";
   }
   return "<tr><td>" + left + "</td><td>" + right + "</td></tr>";
 };
