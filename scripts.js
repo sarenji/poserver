@@ -155,6 +155,18 @@ Tournament.prototype.tick = function(winner, loser) {
   }
 };
 
+Tournament.prototype.forceWin = function(user, forcedWinner) {
+  var index = this.findMatch(forcedWinner);
+  if (index !== -1) {
+    var match = this.matches[index];
+    var loser = match[0] === forcedWinner ? match[1] : match[0];
+    this.announce(user.name + " forced " + forcedWinner + " to take the win!");
+    this.advanceWinner(forcedWinner, loser);
+  } else {
+    this.announce(user.id, forcedWinner + " does not have a match!");
+  }
+};
+
 Tournament.prototype.advanceWinner = function(winner, loser) {
   this.removeMatch(winner, loser);
   this.removePlayer(loser);
@@ -874,6 +886,10 @@ addCommand(["view", "viewround"], function() {
 
 addAdminCommand("changecount", function(newNum) {
   Tournament.changecount(this, newNum);
+});
+
+addAdminCommand("forcewin", function(userName) {
+  Tournament.forceWin(this, userName);
 });
 
 addAdminCommand(["cancel", "stop"], function() {
