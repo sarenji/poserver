@@ -193,13 +193,13 @@ Tournament.prototype.viewRound = function(user) {
   table += "</tbody></table></center>";
   if (user) {
     this.announceHTML(user.id, table);
-    if (this.players.length > this.numSpots) {
-      this.announce(user.id, "Subs: " + this.players.slice(this.numSpots).join(", "));
+    if (this.players.length > this.subIndex) {
+      this.announce(user.id, "Subs: " + this.players.slice(this.subIndex).join(", "));
     }
   } else {
     this.announceHTML(table);
-    if (this.players.length > this.numSpots) {
-      this.announce("Subs: " + this.players.slice(this.numSpots).join(", "));
+    if (this.players.length > this.subIndex) {
+      this.announce("Subs: " + this.players.slice(this.subIndex).join(", "));
     }
   }
 };
@@ -372,6 +372,7 @@ Tournament.prototype.removePlayer = function(userName) {
   if (this.players.length > this.subIndex) {
     var substitute = this.players[this.subIndex];
     var opponent   = this.substituteIn(substitute);
+    this.subIndex++;
     this.announce(substitute + " will be subbing in for " + userName + "!");
     this.announce("New match: " + substitute + " vs. " + opponent + "!");
   } else {
