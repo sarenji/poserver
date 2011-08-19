@@ -113,14 +113,16 @@ Tournament.prototype.join = function(user) {
   
   // add player to tournament
   this.players.push(user.name);
-  if (this.players.length > this.numSpots || (this.isActive() && this.players.length > this.numPlayers)) {
-    this.announce(user.name + " joined the tournament as substitute #" + (this.players.length - this.numPlayers) + "!");
-  } else if (this.isActive()) {
+  if (this.isActive() && this.findUnpairedMatches().length > 0) {
+    // replace a bye
     this.announce(user.name + " joined the tournament!");
     var substitute = user.name;
     var opponent   = this.substituteIn(substitute);
     this.numPlayers++;
     this.announce(substitute + " is now vs. " + opponent + "!");
+  } else if (this.players.length > this.numSpots || (this.isActive() && this.players.length > this.numPlayers)) {
+    // add a sub
+    this.announce(user.name + " joined the tournament as substitute #" + (this.players.length - this.numPlayers) + "!");
   } else {
     this.numPlayers++;
     this.announce(user.name + " joined the tournament! Now " + this.players.length + "/" + this.numSpots + " filled.");
@@ -391,20 +393,22 @@ Tournament.prototype.removePlayer = function(userName) {
 
 // returns opponent
 Tournament.prototype.substituteIn = function(userName) {
-  this.replaceWith(this.pairings, undefined, userName);
-  return this.replaceWith(this.matches, undefined, userName);
+  this.replaceWith(this.pairings, undefined, userName, true);
+  return this.replaceWith(this.matches, undefined, userName, true);
 }
 
-Tournament.prototype.replaceWith = function(array, user, withUser) {
+Tournament.prototype.replaceWith = function(array, user, withUser, returnNow) {
   var opponent = undefined;
   for (var i = 0; i < array.length; i++) {
     var match = array[i];
     if (match[0] === user) {
       match[0] = withUser;
       opponent = match[1];
+      if (returnNow) return opponent;
     } else if (match[1] === user) {
       match[1] = withUser;
       opponent = match[0];
+      if (returnNow) return opponent;
     }
   }
   return opponent;
@@ -855,8 +859,14 @@ addCommand(["j", "join"], function() {
   Tournament.join(this);
 });
 
-addCommand("dropout", function() {
-  Tournament.dropout(this);
+addCommand(["drop", "dropout"], function(userName) {
+  if (userName) {
+    if (this.authedFor(ADMINISTRATOR)) {
+      Tournament.drop(this, userName);
+    }
+  } else {
+    Tournament.dropout(this);
+  }
 });
 
 addCommand(["view", "viewround"], function() {
@@ -865,10 +875,6 @@ addCommand(["view", "viewround"], function() {
 
 addAdminCommand("changecount", function(newNum) {
   Tournament.changecount(this, newNum);
-});
-
-addAdminCommand("drop", function(playerName) {
-  Tournament.drop(this, playerName);
 });
 
 addAdminCommand(["cancel", "stop"], function() {
