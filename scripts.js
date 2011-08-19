@@ -372,14 +372,8 @@ Tournament.prototype.removePlayer = function(userName) {
   }
   
   // remove player from matches
-  for (var i = 0; i < matches.length; i++) {
-    var match = matches[i];
-    if (match[0] === userName) {
-      match[0] = undefined;
-    } else if (match[1] === userName) {
-      match[1] = undefined;
-    }
-  }
+  this.replaceWith(matches, userName, undefined);
+  this.replaceWith(this.pairings, userName, undefined);
   
   // either sub or give a bye.
   if (this.players.length > this.numPlayers) {
@@ -397,17 +391,23 @@ Tournament.prototype.removePlayer = function(userName) {
 
 // returns opponent
 Tournament.prototype.substituteIn = function(userName) {
-  for (var i = 0; i < this.matches.length; i++) {
-    var match = this.matches[i];
-    if (match[0] === undefined) {
-      match[0] = userName;
-      return match[1];
-    } else if (match[1] === undefined) {
-      match[1] = userName;
-      return match[0];
+  this.replaceWith(this.pairings, undefined, userName);
+  return this.replaceWith(this.matches, undefined, userName);
+}
+
+Tournament.prototype.replaceWith = function(array, user, withUser) {
+  var opponent = undefined;
+  for (var i = 0; i < array.length; i++) {
+    var match = array[i];
+    if (match[0] === user) {
+      match[0] = withUser;
+      opponent = match[1];
+    } else if (match[1] === user) {
+      match[1] = withUser;
+      opponent = match[0];
     }
   }
-  return undefined;
+  return opponent;
 }
 
 Tournament.prototype.stop = function(user) {
