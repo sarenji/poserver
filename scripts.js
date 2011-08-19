@@ -142,6 +142,12 @@ Tournament.prototype.changecount = function(user, newNum) {
   }
   this.numSpots = newNum;
   this.announce("The tournament is now " + newNum + "-man.");
+
+  // start tour when applicable
+  if (this.players.length >= this.numSpots) {
+    this.state = TOURNAMENT_ACTIVE;
+    this.advanceRound();
+  }
 };
 
 Tournament.prototype.tick = function(winner, loser) {
