@@ -62,6 +62,14 @@ Tournament.prototype.announceHTML = function() {
 };
 
 Tournament.prototype.create = function(user, tier, spots) {
+  // validate tier
+  var tierList = sys.getTierList();
+  if (tierList.indexOf(tier) === -1) {
+    this.announce(user.id, tier + " is not a valid tier!");
+    this.announce(user.id, "Valid tiers are: " + tierList.join(", "));
+    return false;
+  }
+
   // only create new tournament if one is not already made.
   if (this.state != TOURNAMENT_INACTIVE) {
     this.announce(user.id, "A tournament is already underway!");
