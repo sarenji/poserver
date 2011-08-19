@@ -44,6 +44,7 @@ Tournament.prototype.initialize = function() {
   this.players   = [];
   this.pairings  = [];
   this.matches   = [];
+  this.subIndex  = 0;
   this.losers    = {};
   this.channelId = sys.channelId("Tournaments");
 };
@@ -104,7 +105,9 @@ Tournament.prototype.join = function(user) {
   
   // add player to tournament
   this.players.push(user.name);
+  this.subIndex++;
   if (this.players.length > this.numSpots) {
+    this.subIndex--;
     this.announce(user.name + " joined the tournament as substitute #" + (this.players.length - this.numSpots) + "!");
   } else if (this.isActive()) {
     this.announce(user.name + " joined the tournament!");
@@ -321,6 +324,7 @@ Tournament.prototype.dropout = function(user) {
 
 Tournament.prototype.removePlayer = function(userName) {
   this.players.splice(this.players.indexOf(userName), 1);
+  this.subIndex--;
   
   // find the player's matches.
   var matches = this.findMatches(userName);
@@ -340,9 +344,10 @@ Tournament.prototype.removePlayer = function(userName) {
   
   // either sub or give a bye.
   if (this.players.length >= this.numSpots) {
-    var substitute = this.players[this.numSpots - 1];
-    this.substituteIn(substitute);
+    var substitute = this.players[this.subIndex];
+    var opponent   = this.substituteIn(substitute);
     this.announce(substitute + " will be subbing in for " + userName + "!");
+    this.announce("New match: " + substitute + " vs. " + opponent + "!");
   } else {
     var match    = matches[0];
     var opponent = match[0] === undefined ? match[1] : match[0];
