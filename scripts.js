@@ -216,17 +216,17 @@ Tournament.prototype.prettyStringMatch = function(match) {
   var left  = match[0];
   var right = match[1];
   if (left === undefined) {
-    left  = "<del>bye!</del>";
+    left  = "<s>bye!</s>";
     right = "<b>" + right +"</b>";
   } else if (right === undefined) {
     left  = "<b>" + left +"</b>";
-    right = "<del>bye!</del>";
+    right = "<s>bye!</s>";
   } else if (this.losers[left]) {
-    left  = "<del>" + left + "<del>";
+    left  = "<s>" + left + "</s>";
     right = "<b>" + right +"</b>";
   } else if (this.losers[right]) {
     left  = "<b>" + left +"</b>";
-    right = "<del>" + right + "<del>";
+    right = "<s>" + right + "</s>";
   }
   return "<tr><td>" + left + "</td><td>" + right + "</td></tr>";
 };
