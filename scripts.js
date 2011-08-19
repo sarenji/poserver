@@ -508,7 +508,7 @@ var help = [
     "** ADMINISTRATOR COMMANDS",
     "/ban user -- bans user for 1 day.",
     "/ban user:1y2M3w4d5h6m7s -- bans the user for the entered time.",
-    "/b is aliased to /ban."
+    "/b is aliased to /ban.",
     "/mute user:1y2M3w4d5h6m7s -- mutes the user for the entered time.",
     "/silence -- Silences the entire chat.",
     "/unsilence -- Lifts silence.",
