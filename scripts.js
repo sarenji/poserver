@@ -186,9 +186,9 @@ Tournament.prototype.viewRound = function(user) {
   }
   var table = "<center><table border='1' cellpadding='5'>";
   table += "<thead><tr><th colspan='2'>Round " + this.round + " &mdash; " + this.tier + "</th></tr></thead><tbody>";
-  for (var i = 0; i < this.matches.length; i++) {
-    var match = this.matches[i];
-    table += "<tr><td>" + match[0] + "</td><td>" + match[1] + "</td></tr>";
+  for (var i = 0; i < this.pairings.length; i++) {
+    var match = this.pairings[i];
+    table += this.prettyStringMatch(match);
   }
   table += "</tbody></table></center>";
   if (user) {
@@ -202,6 +202,23 @@ Tournament.prototype.viewRound = function(user) {
       this.announce("Subs: " + this.players.slice(this.numSpots).join(", "));
     }
   }
+};
+
+Tournament.prototype.prettyStringMatch = function(match) {
+  var left  = match[0];
+  var right = match[1];
+  if (left === undefined) {
+    left = "bye!";
+    right = "<b>" + right +"</b>";
+  } else if (right === undefined) {
+    right = "bye!";
+    left = "<b>" + left +"</b>";
+  } else if (this.losers[left]) {
+    right = "<b>" + right +"</b>";
+  } else if (this.losers[right]) {
+    left = "<b>" + left +"</b>";
+  }
+  return "<tr><td>" + left + "</td><td>" + right + "</td></tr>";
 };
 
 Tournament.prototype.makeMatchups = function() {
@@ -226,14 +243,23 @@ Tournament.prototype.makeMatchups = function() {
   }
   
   len = Math.min(this.numSpots, this.players.length);
-  this.matches = [];
+  this.matches  = [];
+  this.pairings = [];
   if (len === 3) {
     this.matches.push([this.players[0], this.players[1]]);
     this.matches.push([this.players[1], this.players[2]]);
     this.matches.push([this.players[0], this.players[2]]);
+    this.pairings.push([this.players[0], this.players[1]]);
+    this.pairings.push([this.players[1], this.players[2]]);
+    this.pairings.push([this.players[0], this.players[2]]);
   } else {
     for (var i = 0; i < len; i += 2) {
       this.matches.push([this.players[i], this.players[i + 1]]);
+      this.pairings.push([this.players[i], this.players[i + 1]]);
+    }
+    if (len % 2 === 0) {
+      this.matches.push([this.players[len - 1], undefined]);
+      this.pairings.push([this.players[len - 1], undefined]);
     }
   }
 };
