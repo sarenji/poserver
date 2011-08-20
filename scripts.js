@@ -168,6 +168,9 @@ Tournament.prototype.forceWin = function(user, forcedWinner) {
     var loser = match[0] === forcedWinner ? match[1] : match[0];
     this.announce(user.name + " forced " + forcedWinner + " to take the win!");
     this.advanceWinner(forcedWinner, loser);
+    if (this.matchesLeft() === 0) {
+      this.advanceRound();
+    }
   } else {
     this.announce(user.id, forcedWinner + " does not have a match!");
   }
