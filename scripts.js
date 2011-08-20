@@ -140,7 +140,7 @@ Tournament.prototype.changecount = function(user, newNum) {
     this.announce(user.id, "The tournament is not in the signup stage!");
     return;
   }
-  this.numSpots = newNum;
+  this.numSpots = parseInt(newNum, 10);
   this.announce("The tournament is now " + newNum + "-man.");
 
   // start tour when applicable
