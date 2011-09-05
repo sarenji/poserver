@@ -871,7 +871,7 @@ addOwnerCommand("destroy", function() {
 });
 
 // Tournament wrappers
-addAdminCommand("tour", function(tier, spots) {
+addModCommand("tour", function(tier, spots) {
   Tournament.create(this, tier, spots);
 });
 
@@ -893,15 +893,15 @@ addCommand(["view", "viewround"], function() {
   Tournament.viewRound(this);
 });
 
-addAdminCommand("changecount", function(newNum) {
+addModCommand("changecount", function(newNum) {
   Tournament.changecount(this, newNum);
 });
 
-addAdminCommand("forcewin", function(userName) {
+addModCommand("forcewin", function(userName) {
   Tournament.forceWin(this, userName);
 });
 
-addAdminCommand(["cancel", "stop"], function() {
+addModCommand(["cancel", "stop"], function() {
   Tournament.stop(this);
 });
 
