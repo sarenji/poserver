@@ -500,6 +500,9 @@ User.prototype.isSpamming = function(message) {
   if (timeDelta(this.lastMessageTime) < 50) {
     return true;
   }
+  if (this.lastMessages && this.lastMessages.length > 0 && this.lastMessages[0] === message) {
+    return true;
+  }
   return false;
 }
 
