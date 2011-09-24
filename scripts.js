@@ -1385,6 +1385,11 @@ function afterChangeTeam(playerId) {
   moodyCheck(playerId, false);
   swiftSwimCheck(playerId);
   droughtCheck(playerId);
+
+  if (/[^\w-\[\]\. ]/g.test(user.name)) {
+    announce(playerId, "Please do not use special characters in your name.");
+    kick(user.name);
+  }
 }
 
 function afterBattleEnded(winnerId, loserId, result, battleId) {
