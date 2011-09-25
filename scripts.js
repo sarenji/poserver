@@ -503,6 +503,15 @@ User.prototype.isSpamming = function(message) {
   // repeated links
   var matches = message.match(/http\:\/\//gi);
   if (matches && matches.length >= 2) {
+    var key = makeKey(this.name, "chat:last-links");
+    if (getTime() - getValue(key) < 30 * 1000) {
+      var banLength = 30 * 60; // 30 mins
+      ban(this.name, banLength * 1000);
+      announce(this.name + " was automatically banned for " + prettyPrintTime(banLength) + ". (Too many links.)");
+    } else {
+      announce(this.name + " was automatically kicked for link spamming.");
+    }
+    setValue(key, getTime());
     return true;
   }
   if (this.lastMessages.length > 0) {
