@@ -475,14 +475,14 @@ User.prototype.run = function(command, args) {
 }
 
 User.prototype.log = function(message) {
+  // why is this needed?
+  if (!this.lastMessages) {
+    this.lastMessages = [];
+  }
   if (this.isSpamming(message)) {
     sys.stopEvent();
     kick(this.name);
     return;
-  }
-  // todo: remove after running on server
-  if (!this.lastMessages) {
-    this.lastMessages = [];
   }
   
   this.lastMessages.unshift(message);
@@ -500,7 +500,7 @@ User.prototype.isSpamming = function(message) {
   if (timeDelta(this.lastMessageTime) < 50) {
     return true;
   }
-  if (this.lastMessages && this.lastMessages.length > 0 && this.lastMessages[0] === message) {
+  if (this.lastMessages.length > 0 && this.lastMessages[0] === message) {
     return true;
   }
   if (this.lastMessages[0].match(/http:\/\//gi).length >= 2) {
