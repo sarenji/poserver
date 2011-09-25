@@ -503,7 +503,7 @@ User.prototype.isSpamming = function(message) {
   if (this.lastMessages.length > 0 && this.lastMessages[0] === message) {
     return true;
   }
-  if (this.lastMessages[0].match(/http:\/\//gi).length >= 2) {
+  if (this.lastMessages.length > 0 && this.lastMessages[0].match(/http:\/\//gi).length >= 2) {
     return true;
   }
   return false;
