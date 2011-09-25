@@ -504,7 +504,7 @@ User.prototype.isSpamming = function(message) {
   // repeated links
   var matches = message.match(/http\:\/\//gi);
   if (matches && matches.length >= 2) {
-    var key = makeKey(this.ip, "chat:last-links");
+    var key = makeKey(this.name, "chat:last-links");
     if (getTime() - getValue(key) < 30 * 1000) {
       var banLength = 5 * 60; // 5 mins
       ban(this.name, getTime() + banLength * 1000);
@@ -800,15 +800,14 @@ addAdminCommand("topic", function() {
 
 addModCommand("unban", function(playerName) {
   var auth    = parseInt(sys.dbAuth(playerName), 10);
-  var ip      = sys.dbIp(playerName);
-  var ipKey   = makeKey(ip, "ban:expires");
   var nameKey = makeKey(playerName, "ban:expires");
   if (this.outranks(auth)) {
+    var ip = sys.dbIp(playerName);
     if (ip === undefined) {
       announce(this.id, "No such user!");
-    } else if (getValue(ipKey) || getValue(nameKey)) {
-      unbanByKey(ipKey);
-      unbanByKey(nameKey);
+    } else if (getValue(nameKey)) {
+      sys.unban(playerName);
+      deleteValue(nameKey);
       announce(this.name + " unbanned " + playerName + ".");
     } else {
       announce(this.id, "This player is not banned!");
@@ -999,9 +998,12 @@ function kick(playerName) {
 }
 
 function ban(playerName, expires) {
-  var ip = sys.dbIp(playerName);
-  banByKey(playerName, playerName, expires);
-  banByKey(ip, playerName, expires);
+  var banKey = makeKey(playerName, "ban:expires");
+  setValue(banKey, expires || 0);
+  kick(playerName);
+  if (!expires) {
+    sys.ban(playerName);
+  }
 }
 
 /*******************\
@@ -1023,30 +1025,6 @@ function setValue(key, value) {
 
 function deleteValue(key) {
   sys.removeVal(key);
-}
-
-function banByKey(key, playerName, expires) {
-  var banKey = makeKey(key, "ban:expires");
-  setValue(banKey, expires || 0);
-  if (sys.id(playerName)) {
-    kick(playerName);
-    if (!expires) {
-      sys.ban(playerName);
-    }
-  }
-}
-
-function unbanByKey(key) {
-  var value   = getValue(key) || "0";
-  var expires = parseInt(value, 10);
-  if (expires > 0) {
-    if (expires > getTime()) {
-      sys.stopEvent();
-      return;
-    } else {
-      deleteValue(key);
-    }
-  }
 }
 
 /*******************\
@@ -1267,16 +1245,23 @@ function serverStartUp() {
 
 function beforeLogIn(player_id) {
   var player_name = sys.name(player_id);
-  var player_ip   = sys.dbIp(player_name);
   if (/[^\w-\[\]\. ]/g.test(player_name)) {
     announce(player_id, "Please do not use special characters in your name.");
     sys.stopEvent();
     return;
   }
   
-  // unban users if applicable
-  unbanByKey(makeKey(player_ip, "ban:expires"));
-  unbanByKey(makeKey(player_name, "ban:expires"));
+  // unban users
+  var expireKey = makeKey(player_name, "ban:expires");
+  var expires   = parseInt(getValue(expireKey), 10);
+  if (expires > 0) {
+    if (expires > getTime()) {
+      sys.stopEvent();
+      return;
+    } else {
+      deleteValue(expireKey);
+    }
+  }
 }
 
 function afterLogIn(player_id) {
