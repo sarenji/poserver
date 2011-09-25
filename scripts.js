@@ -506,7 +506,7 @@ User.prototype.isSpamming = function(message) {
   if (matches && matches.length >= 2) {
     var key = makeKey(this.ip, "chat:last-links");
     if (getTime() - getValue(key) < 30 * 1000) {
-      var banLength = 30 * 60; // 30 mins
+      var banLength = 5 * 60; // 5 mins
       ban(this.name, getTime() + banLength * 1000);
       announce(this.name + " was automatically banned for " + prettyPrintTime(banLength) + ". (Too many links.)");
     } else {
