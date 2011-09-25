@@ -482,7 +482,7 @@ User.prototype.log = function(message) {
   if (this.isSpamming(message)) {
     sys.stopEvent();
     kick(this.name);
-    return;
+    return false;
   }
   
   this.lastMessages.unshift(message);
@@ -490,6 +490,7 @@ User.prototype.log = function(message) {
     this.lastMessages.pop();
   }
   this.lastMessageTime = getTime();
+  return true;
 }
 
 User.prototype.isSpamming = function(message) {
@@ -506,7 +507,7 @@ User.prototype.isSpamming = function(message) {
     var key = makeKey(this.name, "chat:last-links");
     if (getTime() - getValue(key) < 30 * 1000) {
       var banLength = 30 * 60; // 30 mins
-      ban(this.name, banLength * 1000);
+      ban(this.name, getTime() + banLength * 1000);
       announce(this.name + " was automatically banned for " + prettyPrintTime(banLength) + ". (Too many links.)");
     } else {
       announce(this.name + " was automatically kicked for link spamming.");
@@ -1508,7 +1509,10 @@ function beforeChatMessage(player_id, message, channelId) {
     return;
   }
   
-  user.log(message);
+  if (!user.log(message)) {
+    // is spamming
+    return;
+  }
   sys.sendAll(user.name + ": " + message, channelId);
 }
 
