@@ -500,11 +500,17 @@ User.prototype.isSpamming = function(message) {
   if (timeDelta(this.lastMessageTime) < 50) {
     return true;
   }
-  if (this.lastMessages.length > 0 && this.lastMessages[0] === message) {
-    return true;
-  }
-  if (this.lastMessages.length > 0 && this.lastMessages[0].match(/http:\/\//gi).length >= 2) {
-    return true;
+  if (this.lastMessages.length > 0) {
+    // repeated messages
+    if (this.lastMessages[0] === message) {
+      return true;
+    }
+
+    // repeated links
+    var matches = this.lastMessages[0].match(/http:\/\//gi);
+    if (matches && matches.length >= 2) {
+      return true;
+    }
   }
   return false;
 }
