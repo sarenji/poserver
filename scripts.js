@@ -486,7 +486,6 @@ User.prototype.log = function(message) {
   }
 
   if (this.cantTalk(message)) {
-    kick(this.name);
     return false;
   }
   
@@ -515,6 +514,7 @@ User.prototype.cantTalk = function(message) {
       ban(this.name, getTime() + banLength * 1000);
       announce(this.name + " was automatically banned for " + prettyPrintTime(banLength) + ". (Too many links.)");
     } else {
+      kick(this.name);
       announce(this.name + " was automatically kicked for saying one too many links.");
     }
     setValue(key, getTime());
@@ -523,6 +523,7 @@ User.prototype.cantTalk = function(message) {
   if (this.lastMessages.length > 0) {
     // repeated messages
     if (this.lastMessages[0] === message) {
+      kick(this.name);
       return true;
     }
   }
