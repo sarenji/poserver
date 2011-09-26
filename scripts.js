@@ -527,7 +527,7 @@ User.prototype.cantTalk = function(message) {
       return true;
     }
   }
-  if ((this.ratedBattles === 0 || !this.registered) && getTime() - this.firstSeen < 24 * 60 * 60 * 1000) {
+  if ((this.ratedBattles === 0 && !this.registered) && getTime() - this.firstSeen < 24 * 60 * 60 * 1000) {
     announce(this.id, "Sorry, you haven't been on this server long enough to talk.");
     return true;
   }
