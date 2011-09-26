@@ -527,8 +527,8 @@ User.prototype.cantTalk = function(message) {
       return true;
     }
   }
-  if ((this.ratedBattles === 0 && !this.registered) || getTime() - this.firstSeen < 1 * 60 * 60 * 1000) {
-    announce(this.id, "Play some battles or register your nick, then wait an hour to talk.");
+  if ((this.ratedBattles === 0 && !this.registered)) {
+    announce(this.id, "Play some battles or register your nick.");
     return true;
   }
   return false;
