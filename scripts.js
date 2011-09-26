@@ -506,7 +506,7 @@ User.prototype.cantTalk = function(message) {
     return true;
   }
   // repeated links
-  var matches = message.match(/http\:\/\//gi);
+  var matches = message.match(/https?\:\/\//gi);
   if (matches && matches.length >= 2) {
     var key = makeKey(this.name, "chat:last-links");
     if (getTime() - getValue(key) < 30 * 1000) {
