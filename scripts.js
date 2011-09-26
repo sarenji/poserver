@@ -484,11 +484,8 @@ User.prototype.log = function(message) {
   if (!this.lastMessages) {
     this.lastMessages = [];
   }
-  if ((this.ratedBattles === 0 || !this.registered) && getTime() - this.firstSeen < 24 * 60 * 60 * 1000) {
-    announce(this.id, "Sorry, you haven't been on this server long enough to talk.");
-    return false;
-  }
-  if (this.isSpamming(message)) {
+
+  if (this.cantTalk(message)) {
     kick(this.name);
     return false;
   }
@@ -501,7 +498,7 @@ User.prototype.log = function(message) {
   return true;
 }
 
-User.prototype.isSpamming = function(message) {
+User.prototype.cantTalk = function(message) {
   if (this.authedFor(MODERATOR)) {
     return false;
   }
@@ -528,6 +525,10 @@ User.prototype.isSpamming = function(message) {
     if (this.lastMessages[0] === message) {
       return true;
     }
+  }
+  if ((this.ratedBattles === 0 || !this.registered) && getTime() - this.firstSeen < 24 * 60 * 60 * 1000) {
+    announce(this.id, "Sorry, you haven't been on this server long enough to talk.");
+    return true;
   }
   return false;
 }
