@@ -457,11 +457,16 @@ function User(id) {
   this.ip = sys.ip(id);
   this.name = sys.name(id);
   this.auth = sys.auth(id);
+  this.registered = sys.dbRegistered(this.name);
   this.muted = false;
   this.lastMessages = [];
   this.lastMessageTime = 0;
   this.idle = sys.away(id);
   this.tier = sys.tier(id);
+  this.ratedBattles = sys.ratedBattles(this.id) || 0;
+  var key = makeKey(this.name, "first-seen");
+  this.firstSeen = getValue(key, getTime());
+  setValue(key, this.firstSeen);
 }
 
 User.prototype.authedFor = function(auth) {
@@ -479,8 +484,11 @@ User.prototype.log = function(message) {
   if (!this.lastMessages) {
     this.lastMessages = [];
   }
+  if ((this.ratedBattles === 0 || !this.registered) && getTime() - this.firstSeen < 24 * 60 * 60 * 1000) {
+    announce(this.id, "Sorry, you haven't been on this server long enough to talk.");
+    return false;
+  }
   if (this.isSpamming(message)) {
-    sys.stopEvent();
     kick(this.name);
     return false;
   }
@@ -1495,7 +1503,7 @@ function beforeChatMessage(player_id, message, channelId) {
   }
   
   if (!user.log(message)) {
-    // is spamming
+    // can't talk
     return;
   }
   sys.sendAll(user.name + ": " + message, channelId);
