@@ -236,12 +236,12 @@ Abra
 Kadabra
 Alakazam
 Drowsee
-HYpno
+Hypno
 Mr. Mime
 Mime Jr.
 Spinarak
 Ariados
-Wobbufett
+Wobbuffet
 Wynaut
 Snubble
 Granbull
@@ -255,7 +255,7 @@ Kirlia
 Gardevoir
 Gallade
 Sableye
-Mawlie
+Mawile
 Meditite
 Medicham
 Volbeat
