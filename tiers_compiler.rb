@@ -53,4 +53,6 @@ def create_xml
   result
 end
 
-puts create_xml
+File.open 'tiers.xml', 'w' do |f|
+  f.write create_xml
+end
