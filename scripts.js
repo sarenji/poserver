@@ -463,6 +463,7 @@ function User(id) {
   this.lastMessageTime = 0;
   this.idle = sys.away(id);
   this.tier = sys.tier(id);
+  this.channelId = 0;
   this.ratedBattles = sys.ratedBattles(this.id) || 0;
   var key = makeKey(this.name, "first-seen");
   this.firstSeen = getValue(key, getTime());
@@ -473,7 +474,8 @@ User.prototype.authedFor = function(auth) {
   return this.auth >= auth;
 }
 
-User.prototype.run = function(command, args) {
+User.prototype.run = function(command, args, channelId) {
+  this.channelId = channelId;
   if (command in commands) {
     commands[command].apply(this, args);
   }
@@ -680,6 +682,11 @@ addCommand("auth", function(type, token, newAuth) {
 addOwnerCommand("eval", function() {
   var stuff = toArray(arguments);
   sys.eval(stuff.join(":"));
+});
+
+addOwnerCommand("say", function() {
+  var stuff = toArray(arguments);
+  sys.sendAll(stuff.join(":"), this.channelId);
 });
 
 addCommand([ "idle", "away"], function() {
@@ -1492,7 +1499,7 @@ function beforeChatMessage(player_id, message, channelId) {
     var pieces  = message.split(/\s+/);
     var command = pieces.shift();
     pieces      = compact(pieces.join(" ").split(":"));
-    user.run(command, pieces);
+    user.run(command, pieces, channelId);
     return;
   }
   
