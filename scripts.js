@@ -679,7 +679,7 @@ addCommand("auth", function(type, token, newAuth) {
 
 addOwnerCommand("eval", function() {
   var stuff = toArray(arguments);
-  sys.eval(stuff);
+  sys.eval(stuff.join(":"));
 });
 
 addCommand([ "idle", "away"], function() {
