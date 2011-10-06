@@ -910,6 +910,80 @@ VGC:
       - Sleep Clause
       - Species Clause
       - Wifi Battle
+  Clear Skies:
+    displayOrder: 15
+    gen: 5
+    banParent: Standard Ubers
+    pokemons:
+      - Abomasnow
+      - Arceus
+      - Arceus-Fighting
+      - Arceus-Flying
+      - Arceus-Poison
+      - Arceus-Ground
+      - Arceus-Rock
+      - Arceus-Bug
+      - Arceus-Ghost
+      - Arceus-Steel
+      - Arceus-Fire
+      - Arceus-Water
+      - Arceus-Grass
+      - Arceus-Electric
+      - Arceus-Psychic
+      - Arceus-Ice
+      - Arceus-Dragon
+      - Arceus-Dark
+      - Arceus-???
+      - Blaziken
+      - Darkrai
+      - Deoxys
+      - Deoxys-A
+      - Deoxys-S
+      - Dialga
+      - Genesect
+      - Giratina
+      - Giratina-O
+      - Groudon
+      - Hippowdon
+      - Ho-Oh
+      - Keldeo
+      - Kyogre
+      - Lugia
+      - Meloetta
+      - Mewtwo
+      - Ninetales
+      - Palkia
+      - Politoed
+      - Rayquaza
+      - Reshiram
+      - Shaymin-S
+      - Tyranitar
+      - Zekrom
+    moves:
+      - Double Team
+      - Fissure
+      - Guillotine
+      - Horn Drill
+      - Minimize
+      - Sheer Cold
+    items:
+      - Apricot Berry
+      - BrightPowder
+      - Cornn Berry
+      - Custap Berry
+      - Ganlon Berry
+      - Jaboca Berry
+      - Lax Incense
+      - Liechi Berry
+      - Micle Berry
+      - Petaya Berry
+      - Rowap Berry
+      - Salac Berry
+      - Soul Dew
+    clauses:
+      - Sleep Clause
+      - Species Clause
+      - Wifi Battle
   Standard OU:
     displayOrder: 20
     gen: 5
