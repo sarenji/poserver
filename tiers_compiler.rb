@@ -2,7 +2,7 @@ require 'yaml'
 require 'builder'
 
 def cherry_pick(hash, data, attribute_name, opts={}, &block)
-  attribute = data.delete attribute_name.to_s || opts[:default]
+  attribute = data.delete(attribute_name.to_s) || opts[:default]
   raise "'#{attribute_name}' attribute not provided in #{data}." if opts[:required] and attribute.nil?
   attribute = block.call(attribute) if block_given?
   hash.store(attribute_name, attribute) if attribute
@@ -18,9 +18,11 @@ def parse_category(xml, category_name, data)
 end
 
 def parse_tier_attributes(tier_name, data)
-  hash = {}
+  hash = {:name => tier_name}
   cherry_pick hash, data, :displayOrder, :required => true
+  cherry_pick hash, data, :gen, :default => 0
   cherry_pick hash, data, :maxLevel, :default => 100
+  cherry_pick hash, data, :banMode, :default => "ban"
   cherry_pick hash, data, :mode, :default => 0
   cherry_pick hash, data, :banParent, :default => ""
   cherry_pick hash, data, :numberOfPokemons, :default => 6
@@ -42,7 +44,6 @@ def create_xml
     YAML::load(open('tiers.yaml')).each do |category_name, data|
       hash = {:name => category_name}
       cherry_pick hash, data, :displayOrder, :required => true
-      cherry_pick hash, data, :gen
       result = category.category(hash) do |category|
         parse_category category, category_name, data
       end
