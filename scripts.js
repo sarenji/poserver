@@ -690,7 +690,7 @@ addModCommand("say", function() {
   if (this.authedFor(SAY_LEVEL)) {
     var stuff = toArray(arguments).join(":");
     sys.sendAll(stuff, this.channelId);
-    sys.sendAll(this.name + ": " + stuff, sys.channelId("Staff"));
+    announce(this.name + "said, '" + stuff + "'", sys.channelId("Staff"));
   }
 });
 
