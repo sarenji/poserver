@@ -253,7 +253,9 @@ Tournament.prototype.prettyStringMatch = function(match) {
     left  = "<b>" + left +"</b>";
     right = "<s>" + right + "</s>";
   }
-  return "<tr><td>" + left + "</td><td>" + right + "</td></tr>";
+  var leftStyle  = sys.battling(left)  ? "background: #9AEDC6" : "";
+  var rightStyle = sys.battling(right) ? "background: #9AEDC6" : "";
+  return "<tr><td style='" + leftStyle +"'>" + left + "</td><td style='" + rightStyle + "'>" + right + "</td></tr>";
 };
 
 Tournament.prototype.makeMatchups = function() {
