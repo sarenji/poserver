@@ -18,6 +18,8 @@ var AUTH_VALUES = {
   USER          : USER
 };
 
+var SAY_LEVEL = OWNER;
+
 /** Other constants */
 var SCRIPTS_URL = "scripts.js";
 var SCRIPTS_BACKUP_URL = "new_" + SCRIPTS_URL;
@@ -684,9 +686,23 @@ addOwnerCommand("eval", function() {
   sys.eval(stuff.join(":"));
 });
 
-addOwnerCommand("say", function() {
-  var stuff = toArray(arguments);
-  sys.sendAll(stuff.join(":"), this.channelId);
+addModCommand("say", function() {
+  if (this.authedFor(SAY_LEVEL)) {
+    var stuff = toArray(arguments).join(":");
+    sys.sendAll(stuff, this.channelId);
+    sys.sendAll(this.name + ": " + stuff, sys.channelId("Staff"));
+  }
+});
+
+addModCommand("saylevel", function(level) {
+  if (!level) {
+    announce(this.id, "Current say level is " + SAY_LEVEL);
+  } else if (this.authedFor(SAY_LEVEL)) {
+    level = parseInt(level, 10);
+    level = Math.min(level, OWNER);
+    SAY_LEVEL = level;
+    announce(this.id, "Say level set to " + level);
+  }
 });
 
 addCommand([ "idle", "away"], function() {
