@@ -919,7 +919,7 @@ addCommand(["j", "join"], function() {
 
 addCommand(["drop", "dropout"], function(userName) {
   if (userName) {
-    if (this.authedFor(ADMINISTRATOR)) {
+    if (this.authedFor(MODERATOR)) {
       Tournament.drop(this, userName);
     }
   } else {
