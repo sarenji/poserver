@@ -418,7 +418,22 @@ Tournament.prototype.removePlayer = function(userName) {
 Tournament.prototype.substituteIn = function(userName) {
   this.replaceWith(this.pairings, undefined, userName, true);
   return this.replaceWith(this.matches, undefined, userName, true);
-}
+};
+
+Tournament.prototype.substitute = function(userName, substitute) {
+  // remove substitute from list of players if applicable.
+  var index = this.players.indexOf(substitute);
+  if (index >= 0) this.players.splice(index, 1);
+
+  // substitute old player with new
+  this.replaceWith(matches, userName, undefined);
+  this.replaceWith(this.pairings, userName, undefined);
+  var opponent = this.substituteIn(substitute);
+
+  // announce that a substitute took place
+  this.announce(substitute + " will be subbing in for " + userName + "!");
+  this.announce("New match: " + substitute + " vs. " + opponent + "!");
+};
 
 Tournament.prototype.replaceWith = function(array, user, withUser, returnNow) {
   var opponent = undefined;
@@ -435,7 +450,7 @@ Tournament.prototype.replaceWith = function(array, user, withUser, returnNow) {
     }
   }
   return opponent;
-}
+};
 
 Tournament.prototype.stop = function(user) {
   if (this.state !== TOURNAMENT_INACTIVE) {
@@ -953,6 +968,10 @@ addModCommand("changecount", function(newNum) {
 
 addModCommand("forcewin", function(userName) {
   Tournament.forceWin(this, userName);
+});
+
+addModCommand(["sub", "substitute"], function(userName, substitute) {
+  Tournament.substitute(userName, substitute);
 });
 
 addModCommand(["cancel", "stop"], function() {
