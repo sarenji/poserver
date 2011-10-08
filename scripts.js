@@ -708,6 +708,8 @@ addModCommand("say", function() {
     var stuff = toArray(arguments).join(":");
     sys.sendAll(stuff, this.channelId);
     announce(this.name + " said, '" + stuff + "'", sys.channelId("Staff"));
+  } else {
+    announce(this.id, "Current say level is higher than your level.");
   }
 });
 
