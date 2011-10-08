@@ -240,21 +240,28 @@ Tournament.prototype.viewRound = function(user) {
 Tournament.prototype.prettyStringMatch = function(match) {
   var left  = match[0];
   var right = match[1];
+  var leftStyle = "";
+  var rightStyle ="";
   if (left === undefined) {
     left  = "<s>bye!</s>";
     right = "<b>" + right +"</b>";
+    leftStyle = rightStyle = "background: #ccc";
   } else if (right === undefined) {
     left  = "<b>" + left +"</b>";
     right = "<s>bye!</s>";
+    leftStyle = rightStyle = "background: #ccc";
   } else if (this.losers[left]) {
     left  = "<s>" + left + "</s>";
     right = "<b>" + right +"</b>";
+    leftStyle = rightStyle = "background: #ccc";
   } else if (this.losers[right]) {
     left  = "<b>" + left +"</b>";
     right = "<s>" + right + "</s>";
+    leftStyle = rightStyle = "background: #ccc";
+  } else {
+    leftStyle  = sys.battling(sys.id(left))  ? "background: #9AEDC6" : leftStyle;
+    rightStyle = sys.battling(sys.id(right)) ? "background: #9AEDC6" : rightStyle;
   }
-  var leftStyle  = sys.battling(sys.id(left))  ? "background: #9AEDC6" : "";
-  var rightStyle = sys.battling(sys.id(right)) ? "background: #9AEDC6" : "";
   return "<tr><td style='" + leftStyle +"'>" + left + "</td><td style='" + rightStyle + "'>" + right + "</td></tr>";
 };
 
