@@ -426,7 +426,7 @@ Tournament.prototype.substitute = function(userName, substitute) {
   if (index >= 0) this.players.splice(index, 1);
 
   // substitute old player with new
-  this.replaceWith(matches, userName, undefined);
+  this.replaceWith(this.matches, userName, undefined);
   this.replaceWith(this.pairings, userName, undefined);
   var opponent = this.substituteIn(substitute);
 
