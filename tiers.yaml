@@ -943,6 +943,7 @@ VGC:
       - Giratina
       - Giratina-O
       - Groudon
+      - Hippopotas
       - Hippowdon
       - Ho-Oh
       - Keldeo
@@ -956,7 +957,9 @@ VGC:
       - Rayquaza
       - Reshiram
       - Shaymin-S
+      - Snover 
       - Tyranitar
+      - Vulpix
       - Zekrom
     moves:
       - Double Team
