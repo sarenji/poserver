@@ -1014,6 +1014,7 @@ VGC:
       - Deoxys
       - Deoxys-A
       - Dialga
+      - Excadrill
       - Garchomp
       - Genesect
       - Giratina
@@ -1030,6 +1031,7 @@ VGC:
       - Rayquaza
       - Reshiram
       - Shaymin-S
+      - Thundurus
       - Zekrom
     moves:
       - Double Team
