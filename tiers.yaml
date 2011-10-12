@@ -13,6 +13,23 @@ Other:
     gen: 5
     pokemons:
       - Arceus
+      - Arceus-Fighting
+      - Arceus-Flying
+      - Arceus-Poison
+      - Arceus-Ground
+      - Arceus-Rock
+      - Arceus-Bug
+      - Arceus-Ghost
+      - Arceus-Steel
+      - Arceus-Fire
+      - Arceus-Water
+      - Arceus-Grass
+      - Arceus-Electric
+      - Arceus-Psychic
+      - Arceus-Ice
+      - Arceus-Dragon
+      - Arceus-Dark
+      - Arceus-???
       - Celebi
       - Chatot
       - Darkrai
@@ -33,6 +50,7 @@ Other:
       - Lugia
       - Manaphy
       - Meloetta
+      - Meloetta-S
       - Mew
       - Mewtwo
       - Palkia
@@ -132,6 +150,23 @@ Other:
     gen: 5
     pokemons:
       - Arceus
+      - Arceus-Fighting
+      - Arceus-Flying
+      - Arceus-Poison
+      - Arceus-Ground
+      - Arceus-Rock
+      - Arceus-Bug
+      - Arceus-Ghost
+      - Arceus-Steel
+      - Arceus-Fire
+      - Arceus-Water
+      - Arceus-Grass
+      - Arceus-Electric
+      - Arceus-Psychic
+      - Arceus-Ice
+      - Arceus-Dragon
+      - Arceus-Dark
+      - Arceus-???
       - Blaziken
       - Darkrai
       - Deoxys
@@ -176,6 +211,23 @@ VGC:
     numberOfPokemons: 4
     pokemons:
       - Arceus
+      - Arceus-Fighting
+      - Arceus-Flying
+      - Arceus-Poison
+      - Arceus-Ground
+      - Arceus-Rock
+      - Arceus-Bug
+      - Arceus-Ghost
+      - Arceus-Steel
+      - Arceus-Fire
+      - Arceus-Water
+      - Arceus-Grass
+      - Arceus-Electric
+      - Arceus-Psychic
+      - Arceus-Ice
+      - Arceus-Dragon
+      - Arceus-Dark
+      - Arceus-???
       - Celebi
       - Darkrai
       - Deoxys
@@ -195,6 +247,7 @@ VGC:
       - Lugia
       - Manaphy
       - Meloetta
+      - Meloetta-S
       - Mew
       - Mewtwo
       - Palkia
@@ -247,6 +300,23 @@ VGC:
       - Arbok
       - Arcanine
       - Arceus
+      - Arceus-Fighting
+      - Arceus-Flying
+      - Arceus-Poison
+      - Arceus-Ground
+      - Arceus-Rock
+      - Arceus-Bug
+      - Arceus-Ghost
+      - Arceus-Steel
+      - Arceus-Fire
+      - Arceus-Water
+      - Arceus-Grass
+      - Arceus-Electric
+      - Arceus-Psychic
+      - Arceus-Ice
+      - Arceus-Dragon
+      - Arceus-Dark
+      - Arceus-???
       - Ariados
       - Armaldo
       - Aron
@@ -802,6 +872,23 @@ VGC:
     gen: 4
     pokemons:
       - Arceus
+      - Arceus-Fighting
+      - Arceus-Flying
+      - Arceus-Poison
+      - Arceus-Ground
+      - Arceus-Rock
+      - Arceus-Bug
+      - Arceus-Ghost
+      - Arceus-Steel
+      - Arceus-Fire
+      - Arceus-Water
+      - Arceus-Grass
+      - Arceus-Electric
+      - Arceus-Psychic
+      - Arceus-Ice
+      - Arceus-Dragon
+      - Arceus-Dark
+      - Arceus-???
       - Celebi
       - Darkrai
       - Deoxys
@@ -816,6 +903,23 @@ VGC:
       - Shaymin-S
     restrictedPokemons:
       - Arceus
+      - Arceus-Fighting
+      - Arceus-Flying
+      - Arceus-Poison
+      - Arceus-Ground
+      - Arceus-Rock
+      - Arceus-Bug
+      - Arceus-Ghost
+      - Arceus-Steel
+      - Arceus-Fire
+      - Arceus-Water
+      - Arceus-Grass
+      - Arceus-Electric
+      - Arceus-Psychic
+      - Arceus-Ice
+      - Arceus-Dragon
+      - Arceus-Dark
+      - Arceus-???
       - Celebi
       - Darkrai
       - Deoxys
@@ -848,6 +952,23 @@ VGC:
     gen: 4
     pokemons:
       - Arceus
+      - Arceus-Fighting
+      - Arceus-Flying
+      - Arceus-Poison
+      - Arceus-Ground
+      - Arceus-Rock
+      - Arceus-Bug
+      - Arceus-Ghost
+      - Arceus-Steel
+      - Arceus-Fire
+      - Arceus-Water
+      - Arceus-Grass
+      - Arceus-Electric
+      - Arceus-Psychic
+      - Arceus-Ice
+      - Arceus-Dragon
+      - Arceus-Dark
+      - Arceus-???
       - Celebi
       - Darkrai
       - Deoxys
@@ -885,6 +1006,7 @@ VGC:
       - Genesect
       - Keldeo
       - Meloetta
+      - Meloetta-S
     moves:
       - Double Team
       - Fissure
@@ -1026,6 +1148,7 @@ VGC:
       - Lugia
       - Manaphy
       - Meloetta
+      - Meloetta-S
       - Mewtwo
       - Palkia
       - Rayquaza
@@ -1229,8 +1352,94 @@ VGC:
       - Sleep Clause
       - Species Clause
       - Wifi Battle
-  Standard LC:
+  Standard NU:
     displayOrder: 50
+    gen: 5
+    banParent: Standard RU
+    pokemons:
+      - Charizard
+      - Sandslash
+      - Clefable
+      - Venomoth
+      - Primeape
+      - Alakazam
+      - Victreebel
+      - Hitmonlee
+      - Hitmonchan
+      - Scyther
+      - Omastar
+      - Kabutops
+      - Moltres
+      - Typhlosion
+      - Feraligatr
+      - Gligar
+      - Steelix
+      - Qwilfish
+      - Entei
+      - Sceptile
+      - Ludicolo
+      - Hariyama
+      - Aggron
+      - Medicham
+      - Manectric
+      - Sharpedo
+      - Crawdaunt
+      - Claydol
+      - Honchkrow
+      - Munchlax
+      - Drapion
+      - Tangrowth
+      - Electivire
+      - Yanmega
+      - Porygon-Z
+      - Gallade
+      - Dusknoir
+      - Rotom
+      - Uxie
+      - Rotom-C
+      - Lilligant
+      - Krookodile
+      - Crustle
+      - Cofagrigus
+      - Archeops
+      - Sawsbuck
+      - Sawsbuck-Summer
+      - Sawsbuck-Autumn
+      - Sawsbuck-Winter
+      - Galvantula
+      - Ferroseed
+      - Accelgor
+      - Bouffalant
+      - Mandibuzz
+      - Durant
+    moves:
+      - Double Team
+      - Fissure
+      - Guillotine
+      - Horn Drill
+      - Minimize
+      - Sheer Cold
+    items:
+      - Apricot Berry
+      - BrightPowder
+      - Cornn Berry
+      - Custap Berry
+      - Ganlon Berry
+      - Jaboca Berry
+      - Lax Incense
+      - Liechi Berry
+      - Micle Berry
+      - Petaya Berry
+      - Rowap Berry
+      - Salac Berry
+      - Soul Dew
+    clauses:
+      - Self-KO Clause
+      - Sleep Clause
+      - Species Clause
+      - Wifi Battle
+  Standard LC:
+    displayOrder: 60
     gen: 5
     maxLevel: 5
     pokemons:
@@ -1388,6 +1597,7 @@ VGC:
       - Garchomp
       - Gardevoir
       - Gastrodon
+      - Gastrodon-East
       - Genesect
       - Gengar
       - Gigalith
@@ -1502,8 +1712,8 @@ VGC:
       - Medicham
       - Meditite
       - Meganium
-      - Aria Meloetta
-      - Pirouette Meloetta
+      - Meloetta
+      - Meloetta-S
       - Mesprit
       - Metagross
       - Metang
@@ -1590,6 +1800,9 @@ VGC:
       - Sandslash
       - Sawk
       - Sawsbuck
+      - Sawsbuck-Summer
+      - Sawsbuck-Autumn
+      - Sawsbuck-Winter
       - Sceptile
       - Scizor
       - Scolipede
@@ -1779,6 +1992,23 @@ VGC:
     gen: 4
     pokemons:
       - Arceus
+      - Arceus-Fighting
+      - Arceus-Flying
+      - Arceus-Poison
+      - Arceus-Ground
+      - Arceus-Rock
+      - Arceus-Bug
+      - Arceus-Ghost
+      - Arceus-Steel
+      - Arceus-Fire
+      - Arceus-Water
+      - Arceus-Grass
+      - Arceus-Electric
+      - Arceus-Psychic
+      - Arceus-Ice
+      - Arceus-Dragon
+      - Arceus-Dark
+      - Arceus-???
       - Darkrai
       - Deoxys
       - Deoxys-A
@@ -1904,6 +2134,23 @@ VGC:
       - Arbok
       - Arcanine
       - Arceus
+      - Arceus-Fighting
+      - Arceus-Flying
+      - Arceus-Poison
+      - Arceus-Ground
+      - Arceus-Rock
+      - Arceus-Bug
+      - Arceus-Ghost
+      - Arceus-Steel
+      - Arceus-Fire
+      - Arceus-Water
+      - Arceus-Grass
+      - Arceus-Electric
+      - Arceus-Psychic
+      - Arceus-Ice
+      - Arceus-Dragon
+      - Arceus-Dark
+      - Arceus-???
       - Ariados
       - Armaldo
       - Articuno
