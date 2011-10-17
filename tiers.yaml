@@ -196,6 +196,7 @@ Other:
     items:
       - BrightPowder
       - Lax Incense
+      - Soul Dew
     clauses:
       - Sleep Clause
       - Species Clause
@@ -2741,3 +2742,4 @@ VGC:
     clauses:
       - Sleep Clause
       - Species Clause
+
