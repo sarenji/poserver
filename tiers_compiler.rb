@@ -41,7 +41,7 @@ def create_xml
   builder = Builder::XmlMarkup.new(:indent => 2)
 
   result = builder.category(:displayOrder => 0) do |category|
-    YAML::load(open('tiers.yaml')).each do |category_name, data|
+    YAML::load(open('tiers.yml')).each do |category_name, data|
       hash = {:name => category_name}
       cherry_pick hash, data, :displayOrder, :required => true
       result = category.category(hash) do |category|
