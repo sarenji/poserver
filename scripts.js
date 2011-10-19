@@ -799,7 +799,9 @@ addOwnerCommand("reloadtiers", function() {
   announce(this.id, "Fetching tiers.yml...");
   sys.system("curl -k -o tiers.yml " + REMOTE_TIERS_URL);
   announce(this.id, "Compiling tiers.yml into tiers.xml...");
-  sys.system("ruby tiers_compiler.rb");
+  // NOTE: Specific to the windows server.
+  // This just runs ruby tiers_compiler.rb
+  sys.system("tiers_compiler.bat");
   announce(this.id, "Reloading tiers.xml on server...");
   sys.reloadTiers();
 });
