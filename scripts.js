@@ -1,7 +1,7 @@
 /** URL of most recent script. Currently the master branch of my GitHub. */
 var REMOTE_SCRIPT_URL = "https://raw.github.com/sarenji/poserver/master/scripts.js"
-/** URL of most recent tiers.xml. Currently the master branch of my GitHub. */
-var REMOTE_TIERS_URL  = "https://raw.github.com/sarenji/poserver/master/tiers.xml"
+/** URL of most recent tiers.yml. Currently the master branch of my GitHub. */
+var REMOTE_TIERS_URL  = "https://raw.github.com/sarenji/poserver/master/tiers.yml"
 
 /** User authentication constants */
 var USER          = 0;
@@ -796,7 +796,11 @@ addOwnerCommand("rollback", function() {
 });
 
 addOwnerCommand("reloadtiers", function() {
-  sys.system("curl -k -o tiers.xml " + REMOTE_TIERS_URL);
+  announce(this.id, "Fetching tiers.yml...");
+  sys.system("curl -k -o tiers.yml " + REMOTE_TIERS_URL);
+  announce(this.id, "Compiling tiers.yml into tiers.xml...");
+  sys.system("ruby tiers_compiler.rb");
+  announce(this.id, "Reloading tiers.xml on server...");
   sys.reloadTiers();
 });
 
