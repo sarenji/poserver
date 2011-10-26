@@ -1359,6 +1359,7 @@ VGC:
     gen: 5
     banParent: Standard RU
     pokemons:
+      - Alakazam 
       - Charizard
       - Sandslash
       - Clefable
@@ -1404,6 +1405,7 @@ VGC:
       - Crustle
       - Cofagrigus
       - Archeops
+      - Sableye
       - Sawsbuck
       - Sawsbuck-Summer
       - Sawsbuck-Autumn
