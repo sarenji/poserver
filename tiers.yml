@@ -1271,6 +1271,7 @@ VGC:
     pokemons:
       - Abomasnow
       - Aerodactyl
+      - Alakazam 
       - Ambipom
       - Arcanine
       - Azelf
@@ -1310,6 +1311,7 @@ VGC:
       - Rhyperior
       - Roserade
       - Rotom-H
+      - Sableye 
       - Shaymin
       - Sigilyph
       - Slowbro
@@ -1359,7 +1361,6 @@ VGC:
     gen: 5
     banParent: Standard RU
     pokemons:
-      - Alakazam 
       - Charizard
       - Sandslash
       - Clefable
@@ -1405,7 +1406,6 @@ VGC:
       - Crustle
       - Cofagrigus
       - Archeops
-      - Sableye
       - Sawsbuck
       - Sawsbuck-Summer
       - Sawsbuck-Autumn
