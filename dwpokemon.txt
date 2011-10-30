@@ -51,8 +51,6 @@ Taillow
 Swellow
 Surskit
 Masquerain
-Bidoof
-Bibarel
 Shinx
 Luxio
 Luxray
@@ -92,7 +90,9 @@ Espeon
 Umbreon
 Leafeon
 Glaceon
-Eevee
+Porygon
+Porygon2
+Porygon-Z
 Bulbasaur
 Charmander
 Squirtle
@@ -130,6 +130,8 @@ Pidgeotto
 Pidgeot
 Spearow
 Fearow
+Pikachu
+Raichu
 Zubat
 Golbat
 Crobat
@@ -167,6 +169,8 @@ Seadra
 Kingdra
 Goldeen
 Seaking
+Staryu
+Starmie
 Magikarp
 Gyarados
 Omanyte
@@ -177,8 +181,6 @@ Wooper
 Quagsire
 Qwilfish
 Corsola
-Remoraid
-Octillery
 Mantine
 Mantyke
 Carvanha
@@ -219,7 +221,6 @@ Poliwag
 Poliwrath
 Politoed
 Poliwhirl
-Vulpix
 Ninetales
 Musharna
 Munna
@@ -247,7 +248,6 @@ Snubble
 Granbull
 Houndour
 Houndoom
-Smeargle
 Smoochum
 Jynx
 Ralts
