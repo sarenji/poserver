@@ -1281,9 +1281,12 @@ VGC:
       - Blastoise
       - Celebi
       - Chansey
+      - Chandelure
       - Cobalion
       - Cresselia
       - Crobat
+      - Darmanitan
+      - Darmanitan-D
       - Deoxys-D
       - Donphan
       - Dusclops
@@ -1307,6 +1310,7 @@ VGC:
       - Mismagius
       - Nidoking
       - Nidoqueen
+      - Porygon2
       - Raikou
       - Registeel
       - Rhyperior
@@ -1321,12 +1325,14 @@ VGC:
       - Staraptor
       - Stoutland
       - Suicune
+      - Tornadus
       - Togekiss
       - Umbreon
       - Venomoth
       - Victini
       - Vulpix
       - Weavile
+      - Whimsicott
       - Xatu
       - Yanmega
       - Zapdos
