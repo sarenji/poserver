@@ -268,11 +268,11 @@ Tournament.prototype.prettyStringMatch = function(match) {
 
 Tournament.prototype.getBackgroundStyle = function(playerName) {
   if (!sys.id(playerName)) {
-    return "background: #f55";
+    return "background: #f33";
   } else if (sys.battling(sys.id(playerName))) {
     return "background: #9AEDC6";
   } else if (sys.tier(sys.id(playerName)) != this.tier) {
-    return "background: #fee";
+    return "background: #fcc";
   }
   return "";
 };
