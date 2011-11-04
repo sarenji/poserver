@@ -267,12 +267,14 @@ Tournament.prototype.prettyStringMatch = function(match) {
 };
 
 Tournament.prototype.getBackgroundStyle = function(playerName) {
-  if (sys.battling(sys.id(playerName))) {
+  if (sys.id(playerName)) {
+    return "background: #f55";
+  } else if (sys.battling(sys.id(playerName))) {
     return "background: #9AEDC6";
   } else if (sys.tier(sys.id(playerName)) != this.tier) {
-    return "background: #ca7";
+    return "background: #fee";
   }
-  return sys.id(playerName) ? "" : "background: #eee";
+  return "";
 };
 
 Tournament.prototype.makeMatchups = function() {
