@@ -571,10 +571,6 @@ User.prototype.cantTalk = function(message) {
       return true;
     }
   }
-  if ((this.ratedBattles === 0 && !this.registered)) {
-    announce(this.id, "Play some battles or register your nick.");
-    return true;
-  }
   return false;
 }
 
