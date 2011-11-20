@@ -1557,6 +1557,11 @@ function beforeChatMessage(player_id, message, channelId) {
   if (message.length === 0) {
     return;
   }
+
+  if (message.length > 200) {
+    announce(player_id, "You talk too much.");
+    return;
+  }
   
   if (message[0] === '/' && message.length > 1) {
     message     = message.substr(1);
