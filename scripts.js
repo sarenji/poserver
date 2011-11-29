@@ -1356,6 +1356,7 @@ function afterLogIn(player_id) {
   }
   
   joinChannels(user);
+  afterChangeTeam(player_id);
 }
 
 function joinChannels(user) {
