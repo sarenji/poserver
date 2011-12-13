@@ -323,3 +323,6 @@ Shellder
 Cloyster
 Chinchou
 Lanturn
+Magnemite
+Magneton
+Magnezone
