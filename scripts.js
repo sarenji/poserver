@@ -818,6 +818,11 @@ addOwnerCommand("reloadtiers", function() {
   sys.reloadTiers();
 });
 
+addAdminCommand("resetLadder", function(tier) {
+  sys.resetLadder(tier);
+  announce("The ladder was reset for " + tier);
+});
+
 addModCommand("wall", function() {
   var message = toArray(arguments).join(":");
   announce(this.name + ": " + message);
