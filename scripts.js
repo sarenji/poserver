@@ -627,7 +627,8 @@ var help = [
     "/tour tier:participants -- Starts a tournament.",
     "/drop user -- Removes the user from the tournament. Aliased to /dropout.",
     "/stop -- Stops the current tournament. Aliased to /cancel",
-    "/changecount -- Changes the number of participants in a tournament."  
+    "/changecount -- Changes the number of participants in a tournament." 
+    "/resetLadder tier -- resets the ratings for the specified tier."
   ], [
     "** OWNER COMMANDS",
     "/clearpass user -- Clear user's password.",
