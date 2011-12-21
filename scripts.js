@@ -628,9 +628,9 @@ var help = [
     "/drop user -- Removes the user from the tournament. Aliased to /dropout.",
     "/stop -- Stops the current tournament. Aliased to /cancel",
     "/changecount -- Changes the number of participants in a tournament." 
-    "/resetLadder tier -- resets the ratings for the specified tier."
   ], [
     "** OWNER COMMANDS",
+    "/resetLadder tier -- resets the ratings for the specified tier.",
     "/clearpass user -- Clear user's password.",
     "/destroy channel -- Deletes a channel."
   ]
@@ -819,9 +819,9 @@ addOwnerCommand("reloadtiers", function() {
   sys.reloadTiers();
 });
 
-addAdminCommand("resetLadder", function(tier) {
+addOwnerCommand("resetLadder", function(tier) {
   sys.resetLadder(tier);
-  announce("The ladder was reset for " + tier);
+  announce(this.name + " reset the ladder for " + tier);
 });
 
 addModCommand("wall", function() {
