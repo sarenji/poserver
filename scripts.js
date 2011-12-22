@@ -1074,6 +1074,7 @@ makeBlanketBan({
   abilities : [ "Moody" ]
 });
 
+
 /*******************\
 * Script wrappers   *
 \*******************/
@@ -1377,12 +1378,24 @@ if (!tier) tier = sys.tier(src);
     if (tier != "Standard UU") return; 
     for(var i = 0; i <6; ++i){
         if(sys.ability(sys.teamPokeAbility(src, i)) == "Drought"){
-        normalbot.sendMessage(src, "Drought is not allowed in Standard UU")
+        announce(src, "Drought is not allowed in Standard UU")
       sys.stopEvent()
         sys.changeTier(src, "StreetPKMN")
         return;
         }
     }
+}
+function SmashPassBan(src,tier) {
+    var bp = sys.moveNum("Baton Pass");
+    var ss = sys.moveNum("Shell Smash");
+    for (var i = 0; i < 6; ++i)
+        if ((tier == "Standard RU" || tier == "Standard NU") && sys.hasTeamPokeMove(src,i,ss) && sys.hasTeamPokeMove(src,i,bp)) {
+
+            announce(src,"SmashPass is banned from RU and NU");
+            sys.changeTier(src, "Challenge Cup");
+            sys.stopEvent();
+            return
+        }
 }
 
 function swiftSwimCheck(src, tier){
@@ -1491,6 +1504,7 @@ function afterChangeTeam(playerId) {
   moodyCheck(playerId, false);
   swiftSwimCheck(playerId);
   droughtCheck(playerId);
+  SmashPassBan(playerId,sys.tier(playerId));
 
   if (/[^\w-\[\]\. ]/g.test(user.name)) {
     announce(playerId, "Please do not use special characters in your name.");
@@ -1540,6 +1554,7 @@ function beforeChallengeIssued(sourceId, targetId, clauses, rated, mode) {
 function beforeChangeTier(playerId, oldTier, newTier) {
   swiftSwimCheck(playerId, newTier);
   droughtCheck(playerId, newTier);
+  SmashPassBan(playerId,newTier);
   /*
   if (!hasValidTier(playerId, newTier)) {
     sys.stopEvent();
