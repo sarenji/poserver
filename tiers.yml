@@ -1188,6 +1188,7 @@ VGC:
     gen: 5
     banParent: Standard OU
     pokemons:
+      - Abomasnow 
       - Blissey
       - Breloom
       - Bronzong
@@ -1228,6 +1229,7 @@ VGC:
       - Scizor
       - Scrafty
       - Skarmory
+      - Snover
       - Staraptor
       - Starmie
       - Swampert
