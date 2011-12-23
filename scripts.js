@@ -1385,6 +1385,35 @@ if (!tier) tier = sys.tier(src);
         }
     }
 }
+
+function eventNatureCheck(src) {
+   if(["StreetPKMN", "Challenge Cup"].indexOf(sys.tier(src)) != -1) {
+      return;
+   }
+   var pokeNatures = [
+      ["Heatran", ["Eruption"], "Quiet"],
+      ["Suicune", ["ExtremeSpeed", "Sheer Cold", "Aqua Ring", "Air Slash"], "Relaxed"],
+      ["Raikou", ["ExtremeSpeed", "Weather Ball", "Zap Cannon", "Aura Sphere"], "Rash"],
+      ["Entei", ["ExtremeSpeed", "Flare Blitz", "Howl", "Crush Claw"], "Adamant"]
+   ];
+   for(var i = 0; i < 6; ++i) {
+      var poke = sys.teamPoke(src, i);
+      for(x in pokeNatures) {
+         if(poke == sys.pokeNum(pokeNatures[x][0])) {
+            for(y in pokeNatures[x][1]) {
+               if(sys.hasTeamPokeMove(src, i, sys.moveNum(pokeNatures[x][1][y])) &&
+                     sys.teamPokeNature(src, i) != sys.natureNum(pokeNatures[x][2])) {
+                  announce(src, "" + pokeNatures[x][0] + " with " + pokeNatures[x][1][y] + " must have a " + pokeNatures[x][2] + " nature.");
+                  sys.stopEvent();
+                  sys.changeTier(src, "Challenge Cup");
+                  return;
+               }
+            }
+         }
+      }
+   }
+}
+
 function SmashPassBan(src,tier) {
     var bp = sys.moveNum("Baton Pass");
     var ss = sys.moveNum("Shell Smash");
@@ -1505,6 +1534,7 @@ function afterChangeTeam(playerId) {
   swiftSwimCheck(playerId);
   droughtCheck(playerId);
   SmashPassBan(playerId,sys.tier(playerId));
+  eventNatureCheck(playerId);
 
   if (/[^\w-\[\]\. ]/g.test(user.name)) {
     announce(playerId, "Please do not use special characters in your name.");
@@ -1555,6 +1585,7 @@ function beforeChangeTier(playerId, oldTier, newTier) {
   swiftSwimCheck(playerId, newTier);
   droughtCheck(playerId, newTier);
   SmashPassBan(playerId,newTier);
+  eventNatureCheck(playerId);
   /*
   if (!hasValidTier(playerId, newTier)) {
     sys.stopEvent();
