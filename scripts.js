@@ -631,6 +631,7 @@ var help = [
   ], [
     "** OWNER COMMANDS",
     "/resetLadder tier -- resets the ratings for the specified tier.",
+    "/resetPlayerRating name:tier -- resets the rating of the user in the tier to 1000.",
     "/clearpass user -- Clear user's password.",
     "/destroy channel -- Deletes a channel."
   ]
@@ -822,6 +823,11 @@ addOwnerCommand("reloadtiers", function() {
 addOwnerCommand("resetLadder", function(tier) {
   sys.resetLadder(tier);
   announce(this.name + " reset the ladder for " + tier);
+});
+
+addOwnerCommand("resetPlayerRating", function(player,tier) {
+  sys.changeRating(player, tier, 1000);
+  announce(this.name + " reset the rating of " + player + " in "+tier);
 });
 
 addModCommand("wall", function() {
