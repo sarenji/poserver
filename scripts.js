@@ -1391,19 +1391,19 @@ function eventNatureCheck(src) {
       return;
    }
    var pokeNatures = [
-      ["Heatran", ["Eruption"], "Quiet"],
-      ["Suicune", ["ExtremeSpeed", "Sheer Cold", "Aqua Ring", "Air Slash"], "Relaxed"],
-      ["Raikou", ["ExtremeSpeed", "Weather Ball", "Zap Cannon", "Aura Sphere"], "Rash"],
-      ["Entei", ["ExtremeSpeed", "Flare Blitz", "Howl", "Crush Claw"], "Adamant"]
+      {pokemon: "Heatran", moves: ["Eruption"], nature: "Quiet"},
+      {pokemon: "Suicune", moves: ["ExtremeSpeed", "Sheer Cold", "Aqua Ring", "Air Slash"], nature: "Relaxed"},
+      {pokemon: "Raikou", moves: ["ExtremeSpeed", "Weather Ball", "Zap Cannon", "Aura Sphere"], nature: "Rash"},
+      {pokemon: "Entei", moves: ["ExtremeSpeed", "Flare Blitz", "Howl", "Crush Claw"], nature: "Adamant"}
    ];
    for(var i = 0; i < 6; ++i) {
       var poke = sys.teamPoke(src, i);
-      for(x in pokeNatures) {
-         if(poke == sys.pokeNum(pokeNatures[x][0])) {
-            for(y in pokeNatures[x][1]) {
-               if(sys.hasTeamPokeMove(src, i, sys.moveNum(pokeNatures[x][1][y])) &&
-                     sys.teamPokeNature(src, i) != sys.natureNum(pokeNatures[x][2])) {
-                  announce(src, "" + pokeNatures[x][0] + " with " + pokeNatures[x][1][y] + " must have a " + pokeNatures[x][2] + " nature.");
+      for(var x = 0; x < pokeNatures.length; ++x) {
+         if(poke == sys.pokeNum(pokeNatures[x].pokemon)) {
+            for(var y = 0; y < pokeNatures[x].moves.length; ++y) {
+               if(sys.hasTeamPokeMove(src, i, sys.moveNum(pokeNatures[x].moves[y])) &&
+                     sys.teamPokeNature(src, i) != sys.natureNum(pokeNatures[x].nature)) {
+                  announce(src, "" + pokeNatures[x].pokemon + " with " + pokeNatures[x].moves[y] + " must have a " + pokeNatures[x].nature + " nature.");
                   sys.stopEvent();
                   sys.changeTier(src, "Challenge Cup");
                   return;
