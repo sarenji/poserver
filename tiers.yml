@@ -1188,60 +1188,64 @@ VGC:
     gen: 5
     banParent: Standard OU
     pokemons:
-      - Blissey
-      - Breloom
-      - Bronzong
-      - Celebi
+      - Venusaur
+      - Ninetales
+      - Dugtrio
+      - Alakazam
+      - Tentacruel
       - Cloyster
-      - Conkeldurr
-      - Deoxys-S
-      - Dragonite
-      - Espeon
-      - Excadrill
-      - Ferrothorn
-      - Forretress
-      - Gastrodon
-      - Gastrodon-East
       - Gengar
-      - Gliscor
+      - Chansey
+      - Starmie
       - Gyarados
-      - Haxorus
-      - Heatran
-      - Hippowdon
-      - Hydreigon
-      - Infernape
-      - Jellicent
-      - Jirachi
-      - Kyurem
-      - Landorus
+      - Vaporeon
+      - Jolteon
+      - Dragonite
+      - Politoed
+      - Espeon
+      - Forretress
+      - Scizor
+      - Skarmory
+      - Donphan
+      - Blissey
+      - Tyranitar
+      - Celebi
+      - Breloom
+      - Salamence
+      - Metagross
       - Latias
       - Latios
+      - Jirachi
+      - Infernape
+      - Gastrodon
       - Lucario
-      - Magnezone
-      - Metagross
-      - Mienshao
-      - Ninetales
-      - Politoed
-      - Reuniclus
-      - Rotom-W
-      - Salamence
-      - Scizor
-      - Scrafty
-      - Skarmory
-      - Staraptor
-      - Starmie
-      - Swampert
-      - Tentacruel
-      - Terrakion
-      - Thundurus
       - Toxicroak
-      - Tyranitar
-      - Vaporeon
-      - Venusaur
-      - Virizion
+      - Magnezone
+      - Gliscor
+      - Mamoswine
+      - Heatran
+      - Rotom-W
+      - Gastrodon-East
+      - Conkeldurr
+      - Scrafty
+      - Reuniclus
+      - Jellicent
+      - Ferrothorn
+      - Haxorus
+      - Mienshao
+      - Hydreigon
       - Volcarona
+      - Terrakion
+      - Virizion
+      - Tornadus
+      - Landorus
       - Vulpix
       - Wobbuffet
+      - Staraptor
+      - Hippowdon
+      - Snover
+      - Abomasnow
+      - Kyurem
     moves:
       - Double Team
       - Fissure
@@ -1272,74 +1276,58 @@ VGC:
     gen: 5
     banParent: Standard UU
     pokemons:
-      - Abomasnow
-      - Aerodactyl
-      - Alakazam
-      - Ambipom
-      - Arcanine
-      - Azelf
-      - Azumarill
-      - Bisharp
       - Blastoise
-      - Celebi
-      - Chansey
-      - Chandelure
-      - Cobalion
-      - Cresselia
-      - Crobat
-      - Darmanitan
-      - Darmanitan-D
-      - Deoxys-D
-      - Donphan
-      - Dusclops
-      - Empoleon
-      - Escavalier
-      - Espeon
-      - Flygon
-      - Froslass
-      - Golurk
-      - Heracross
-      - Hippowdon
-      - Hippopotas
-      - Hitmontop
-      - Houndoom
-      - Jolteon
-      - Kingdra
-      - Kyurem
-      - Machamp
-      - Mamoswine
-      - Mew
-      - Milotic
-      - Mismagius
-      - Nidoking
       - Nidoqueen
-      - Porygon2
-      - Raikou
-      - Registeel
-      - Rhyperior
-      - Roserade
-      - Rotom-H
-      - Sableye
-      - Shaymin
-      - Sigilyph
+      - Nidoking
+      - Arcanine
+      - Machamp
       - Slowbro
       - Snorlax
-      - Spiritomb
-      - Staraptor
-      - Stoutland
-      - Suicune
-      - Tornadus
-      - Togekiss
-      - Umbreon
-      - Venomoth
-      - Victini
-      - Vulpix
-      - Weavile
-      - Whimsicott
-      - Xatu
-      - Yanmega
       - Zapdos
+      - Mew
+      - Crobat
+      - Xatu
+      - Azumarill
+      - Umbreon
+      - Heracross
+      - Houndoom
+      - Kingdra
+      - Porygon2
+      - Hitmontop
+      - Raikou
+      - Suicune
+      - Swampert
+      - Sableye
+      - Flygon
+      - Milotic
+      - Dusclops
+      - Registeel
+      - Empoleon
+      - Roserade
+      - Ambipom
+      - Mismagius
+      - Bronzong
+      - Hippopotas
+      - Weavile
+      - Rhyperior
+      - Togekiss
+      - Froslass
+      - Azelf
+      - Shaymin
+      - Rotom-H
+      - Deoxys-D
+      - Victini
+      - Stoutland
+      - Krookodile
+      - Darmanitan
+      - Darmanitan-D
       - Zoroark
+      - Escavalier
+      - Chandelure
+      - Bisharp
+      - Cobalion
+      - Venomoth
+      - Yanmega
     moves:
       - Double Team
       - Fissure
@@ -1374,21 +1362,25 @@ VGC:
       - Charizard
       - Sandslash
       - Clefable
-      - Venomoth
       - Primeape
-      - Alakazam
-      - Victreebel
+      - Poliwrath
+      - Magneton
       - Hitmonlee
       - Hitmonchan
+      - Rhydon
       - Scyther
       - Omastar
       - Kabutops
+      - Aerodactyl
       - Moltres
       - Typhlosion
       - Feraligatr
+      - Lanturn
+      - Slowking
       - Gligar
       - Steelix
       - Qwilfish
+      - Smeargle
       - Entei
       - Sceptile
       - Ludicolo
@@ -1396,24 +1388,28 @@ VGC:
       - Aggron
       - Medicham
       - Manectric
+      - Roselia
       - Sharpedo
       - Crawdaunt
       - Claydol
       - Honchkrow
+      - Spiritomb
       - Munchlax
       - Drapion
       - Tangrowth
       - Electivire
-      - Yanmega
       - Porygon-Z
       - Gallade
       - Dusknoir
       - Rotom
       - Uxie
+      - Cresselia
       - Rotom-C
+      - Scolipede
+      - Whimsicott
       - Lilligant
-      - Krookodile
       - Crustle
+      - Sigilyph
       - Cofagrigus
       - Archeops
       - Sawsbuck
@@ -1422,7 +1418,10 @@ VGC:
       - Sawsbuck-Winter
       - Galvantula
       - Ferroseed
+      - Klinklang
       - Accelgor
+      - Druddigon
+      - Golurk
       - Bouffalant
       - Mandibuzz
       - Durant
