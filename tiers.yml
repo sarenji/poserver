@@ -1080,7 +1080,7 @@ VGC:
       - Rayquaza
       - Reshiram
       - Shaymin-S
-      - Snover 
+      - Snover
       - Tyranitar
       - Vulpix
       - Zekrom
@@ -1188,7 +1188,6 @@ VGC:
     gen: 5
     banParent: Standard OU
     pokemons:
-      - Abomasnow 
       - Blissey
       - Breloom
       - Bronzong
@@ -1229,7 +1228,6 @@ VGC:
       - Scizor
       - Scrafty
       - Skarmory
-      - Snover
       - Staraptor
       - Starmie
       - Swampert
@@ -1276,7 +1274,7 @@ VGC:
     pokemons:
       - Abomasnow
       - Aerodactyl
-      - Alakazam 
+      - Alakazam
       - Ambipom
       - Arcanine
       - Azelf
@@ -1308,7 +1306,7 @@ VGC:
       - Jolteon
       - Kingdra
       - Kyurem
-      - Machamp 
+      - Machamp
       - Mamoswine
       - Mew
       - Milotic
@@ -1321,7 +1319,7 @@ VGC:
       - Rhyperior
       - Roserade
       - Rotom-H
-      - Sableye 
+      - Sableye
       - Shaymin
       - Sigilyph
       - Slowbro
@@ -2757,4 +2755,3 @@ VGC:
     clauses:
       - Sleep Clause
       - Species Clause
-
