@@ -815,7 +815,8 @@ addOwnerCommand("reloadtiers", function() {
   announce(this.id, "Compiling tiers.yml into tiers.xml...");
   // NOTE: Specific to the windows server.
   // This just runs ruby tiers_compiler.rb
-  sys.system("tiers_compiler.bat");
+  //sys.system("tiers_compiler.bat");
+  sys.system("./tiers_compiler.rb");
   announce(this.id, "Reloading tiers.xml on server...");
   sys.reloadTiers();
 });
