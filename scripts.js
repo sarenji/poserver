@@ -612,7 +612,8 @@ var help = [
     "/mute user",
     "/mute user:duration",
     "/unmute user",
-    "/wall message"
+    "/wall message",
+    "/ip user -- returns player's IP address."
   ], [
     "** ADMINISTRATOR COMMANDS",
     "/ban user -- bans user for 1 day.",
@@ -633,7 +634,8 @@ var help = [
     "/resetLadder tier -- resets the ratings for the specified tier.",
     "/resetPlayerRating name:tier -- resets the rating of the user in the tier to 1000.",
     "/clearpass user -- Clear user's password.",
-    "/destroy channel -- Deletes a channel."
+    "/destroy channel -- Deletes a channel.",
+    "/hostname user -- returns player's hostname."
   ]
 ];
 
@@ -780,6 +782,13 @@ addModCommand([ "kick", "k" ], function(player_name, reason) {
   }
 });
 
+addModCommand("ip", function(player_name) {
+  announce(this.id, player_name + " has ip address " + sys.ip(sys.id(player_name)));
+});
+
+addOwnerCommand("hostname", function(player_name){
+  announce(this.id, player_name + " has hostname " + sys.hostname(sys.ip(sys.id(player_name)),player_name));
+});
 addOwnerCommand("reload", function() {
   var id          = this.id;
   var old_scripts = sys.getFileContent(SCRIPTS_URL);
