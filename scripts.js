@@ -28,6 +28,13 @@ var MAIN_CHANNEL = "Dragonspiral Tower";
 var dreamWorldPokemon = {};
 var silence = false;
 
+var pokemonHash = {};
+var counter = 1, pokemonName;
+while ((pokemonName = sys.pokemon(counter)) !== "Missingno") {
+  pokemonHash[pokemonName] = counter;
+  counter++;
+}
+
 var Tournament = (function() {
 
 var TOURNAMENT_INACTIVE = 0;
@@ -1488,7 +1495,9 @@ function loadDreamWorldPokemon() {
   var pokemonList = sys.getFileContent("dwpokemon.txt").split(/\s*\n\s*/);
   for (var i = 0, len = pokemonList.length; i < len; i++) {
     var pokemonName = pokemonList[i];
-    dreamWorldPokemon[sys.pokeNum(pokemonName)] = pokemonName;
+    if (pokemonName in pokemonHash) {
+      dreamWorldPokemon[pokemonHash[pokemonName]] = pokemonName;
+    }
   }
 }
 
