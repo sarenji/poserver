@@ -2754,3 +2754,65 @@ VGC:
     clauses:
       - Sleep Clause
       - Species Clause
+1st Gen:
+  displayOrder: 70
+  Ubers Gen 1:
+    displayOrder: 10
+    gen: 1
+    moves:
+      - Double Team
+      - Fissure
+      - Guillotine
+      - Horn Drill
+      - Minimize
+    clauses:
+      - Freeze Clause
+      - Sleep Clause
+      - Species Clause
+  OU Gen 1:
+    displayOrder: 20
+    gen: 1
+    pokemons:
+      - Mew
+      - Mewtwo
+    moves:
+      - Double Team
+      - Fissure
+      - Guillotine
+      - Horn Drill
+      - Minimize
+    clauses:
+      - Freeze Clause
+      - Sleep Clause
+      - Species Clause
+  UU Gen 1:
+    displayOrder: 30
+    gen: 1
+    banParent: OU Gen 1
+    pokemons:
+      - Alakazam
+      - Chansey
+      - Cloyster
+      - Dragonite
+      - Exeggutor
+      - Gengar
+      - Golem
+      - Jynx
+      - Lapras
+      - Persian
+      - Rhydon
+      - Slowbro
+      - Snorlax
+      - Starmie
+      - Tauros
+      - Zapdos
+    moves:
+      - Double Team
+      - Fissure
+      - Guillotine
+      - Horn Drill
+      - Minimize
+    clauses:
+      - Freeze Clause
+      - Sleep Clause
+      - Species Clause
