@@ -890,7 +890,7 @@ addModCommand([ "ban", "b" ], function(player_name, length, reason) {
   }
 });
 
-addAdminCommand("o", function() {
+addAdminCommand("silence", function() {
   silence = true;
   announce(this.name + " silenced the chat.");
 });
