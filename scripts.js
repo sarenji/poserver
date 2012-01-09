@@ -27,6 +27,7 @@ var MODERATOR_MAX_BAN_LENGTH = 24 * 60 * 60; // in seconds
 var MAIN_CHANNEL = "Dragonspiral Tower";
 var dreamWorldPokemon = {};
 var silence = false;
+var battlesStopped = false;
 
 var pokemonHash = {};
 var counter = 1, pokemonName;
@@ -626,6 +627,7 @@ var help = [
     "/ban user -- bans user for 1 day.",
     "/ban user:1y2M3w4d5h6m7s -- bans the user for the entered time.",
     "/b is aliased to /ban.",
+    "/kickall ip -- kicks all users with given IP address.",
     "/mute user:1y2M3w4d5h6m7s -- mutes the user for the entered time.",
     "/silence -- Silences the entire chat.",
     "/unsilence -- Lifts silence.",
@@ -642,7 +644,7 @@ var help = [
     "/resetPlayerRating name:tier -- resets the rating of the user in the tier to 1000.",
     "/clearpass user -- Clear user's password.",
     "/destroy channel -- Deletes a channel.",
-    "/hostname user -- returns player's hostname."
+    "/stopBattles -- Prevents new battles from starting (useful if server needs to be restarted)."
   ]
 ];
 
@@ -789,6 +791,17 @@ addModCommand([ "kick", "k" ], function(player_name, reason) {
   }
 });
 
+addAdminCommand("kickall", function(ip) {
+  var players = sys.playerIds();
+  var players_length = players.length;
+  for (var i = 0; i < players_length; ++i) {
+    var current_player = players[i];
+    if (ip == sys.ip(current_player)) {
+      sys.kick(current_player);
+    }
+  }
+});
+
 addModCommand("ip", function(player_name) {
   announce(this.id, player_name + " has ip address " + sys.ip(sys.id(player_name)));
 });
@@ -877,7 +890,7 @@ addModCommand([ "ban", "b" ], function(player_name, length, reason) {
   }
 });
 
-addAdminCommand("silence", function() {
+addAdminCommand("o", function() {
   silence = true;
   announce(this.name + " silenced the chat.");
 });
@@ -995,6 +1008,19 @@ addOwnerCommand("destroy", function() {
       sys.kick(players[i], channelId);
     }
   }
+});
+
+addOwnerCommand("stopBattles", function() {
+  battlesStopped = !battlesStopped;
+  if (battlesStopped)  {
+    announce("");
+    announce("*** ********************************************************************** ***");
+    announce("The battles are now stopped. The server will restart soon.");
+    announce("*** ********************************************************************** ***");
+    announce("");
+  } else {
+    announce("False alarm, battles may continue.");
+  } 
 });
 
 // Tournament wrappers
@@ -1548,6 +1574,11 @@ function afterBattleEnded(winnerId, loserId, result, battleId) {
 }
 
 function beforeBattleMatchup(src, dest, clauses, rated, mode) {
+  if (battlesStopped) {
+        announce(this.id, "Battles are now stopped as the server will restart soon.");
+        sys.stopEvent();
+        return;
+  }
   if (sys.tier(src) == sys.tier(dest)) {
     dreamWorldAbilitiesCheck(src, true);
     dreamWorldAbilitiesCheck(dest, true);
@@ -1557,6 +1588,11 @@ function beforeBattleMatchup(src, dest, clauses, rated, mode) {
 }
 
 function beforeChallengeIssued(sourceId, targetId, clauses, rated, mode) {
+  if (battlesStopped) {
+        announce(this.id, "Battles are now stopped as the server will restart soon.");
+        sys.stopEvent();
+        return;
+  }
   if (sys.tier(sourceId) == sys.tier(targetId)) {
     dreamWorldAbilitiesCheck(sourceId, true);
     dreamWorldAbilitiesCheck(targetId, true);
