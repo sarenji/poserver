@@ -1450,8 +1450,9 @@ function SmashPassBan(src,tier) {
 
 function HiMobileUser(src,tier) {
     var cleffa = sys.pokeNum("Cleffa");
+    var splash = sys.moveNum("Splash");
     //var missingno = sys.pokeNum("Missingo");
-    if ((tier != "Challenge Cup") && (sys.teamPoke(src,0) == cleffa) && (sys.teamPoke(src,1) == 0)) {
+    if ((tier != "Challenge Cup") && (sys.teamPoke(src,0) == cleffa) && sys.hasTeamPokeMove(src,0,splash && sys.teamPokeNick(src, 0) == "LOLZ") {
       var TourChan =  sys.channelId("Tournaments");
       sys.sendMessage(src, "*********",TourChan);	
       sys.sendMessage(src, "Hello " + sys.name(src) + "! You're probably scared and confused right now. This is not a Pokemon game like you're used to. This is a Pokemon battle simulator, where you battle using teams you create on the computer. Go to http://www.pokemon-online.eu to find out more and to download the team builder. In the meantime, you can play some Challenge Cup, which uses randomly-generated teams. Also, you should swipe right so you can change your channel to Dragonspiral Tower. The Tournaments channel is just for tournaments.",TourChan);
