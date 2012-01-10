@@ -2788,7 +2788,7 @@ Stadium:
   UU Stadium:
     displayOrder: 30
     gen: 1
-    banParent: OU Gen 1
+    banParent: OU Stadium
     pokemons:
       - Alakazam
       - Chansey
