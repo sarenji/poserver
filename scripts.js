@@ -1413,7 +1413,7 @@ function afterLogIn(player_id) {
   
   joinChannels(user);
   afterChangeTeam(player_id);
-  HiMobileUser(player_id,sys.tier(playerId));
+  HiMobileUser(player_id,sys.tier(player_Id));
 }
 
 function joinChannels(user) {
