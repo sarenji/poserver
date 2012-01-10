@@ -2754,9 +2754,9 @@ VGC:
     clauses:
       - Sleep Clause
       - Species Clause
-1st Gen:
+Stadium:
   displayOrder: 70
-  Ubers Gen 1:
+  Ubers Stadium:
     displayOrder: 10
     gen: 1
     moves:
@@ -2769,7 +2769,7 @@ VGC:
       - Freeze Clause
       - Sleep Clause
       - Species Clause
-  OU Gen 1:
+  OU Stadium:
     displayOrder: 20
     gen: 1
     pokemons:
@@ -2785,7 +2785,7 @@ VGC:
       - Freeze Clause
       - Sleep Clause
       - Species Clause
-  UU Gen 1:
+  UU Stadium:
     displayOrder: 30
     gen: 1
     banParent: OU Gen 1
