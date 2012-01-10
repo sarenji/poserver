@@ -1450,8 +1450,8 @@ function SmashPassBan(src,tier) {
 
 function HiMobileUser(src,tier) {
     var cleffa = sys.pokeNum("Cleffa");
-    var missingno = sys.pokeNum("Missingo");
-    if ((tier != "Challenge Cup") && (sys.teamPoke(src,0) == cleffa) && (sys.teamPoke(src,1) == missingno)) {
+    //var missingno = sys.pokeNum("Missingo");
+    if ((tier != "Challenge Cup") && (sys.teamPoke(src,0) == cleffa) && (sys.teamPoke(src,1) == 0)) {
       announce(src,"Hello, Android user! You're probably scared and confused right now. This is not a Pokemon game like you're used to. This is a Pokemon battle simulator. Go to http://www.pokemon-online.eu to find out more and to download the team builder. In the meantime, you can play some Challenge Cup, which uses randomly-generated teams. Also, you should swipe right so you can change your channel to Dragonspiral Tower. The Tournaments channel is just for tournaments.");
       sys.changeTier(src, "Challenge Cup");
       sys.stopEvent();
