@@ -1595,7 +1595,7 @@ function afterBattleEnded(winnerId, loserId, result, battleId) {
 
 function beforeBattleMatchup(src, dest, clauses, rated, mode) {
   if (battlesStopped) {
-        announce(this.id, "Battles are now stopped as the server will restart soon.");
+        announce(src, "Battles are now stopped as the server will restart soon.");
         sys.stopEvent();
         return;
   }
@@ -1609,7 +1609,7 @@ function beforeBattleMatchup(src, dest, clauses, rated, mode) {
 
 function beforeChallengeIssued(sourceId, targetId, clauses, rated, mode) {
   if (battlesStopped) {
-        announce(this.id, "Battles are now stopped as the server will restart soon.");
+        announce(src, "Battles are now stopped as the server will restart soon.");
         sys.stopEvent();
         return;
   }
