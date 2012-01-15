@@ -1462,7 +1462,7 @@ function HiMobileUser(src,tier) {
       
       sys.sendMessage(src, "Hello, Android user! The application that you have downloaded is a pirated copy of a freeware program. Please uninstall it and go to http:\/\/www.pokemon-online.eu to find out more about this program and to download the REAL version, which has no ads.",AndChan);
       sys.changeTier(src, "Challenge Cup");*/
-      kick(src);
+      sys.kick(src);
       return
     }
 }
