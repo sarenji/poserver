@@ -1454,14 +1454,15 @@ function HiMobileUser(src,tier) {
     var splash = sys.moveNum("Splash");
     //var missingno = sys.pokeNum("Missingo");
     if ((tier != "Challenge Cup") && (sys.teamPoke(src,0) == cleffa) && sys.hasTeamPokeMove(src,0,splash) && sys.teamPokeNick(src, 0) == "LOLZ") {
-      var AndChan =  sys.channelId("Tournaments");
+      /*var AndChan =  sys.channelId("Tournaments");
       if (sys.existChannel("Android Channel")) {
         AndChan = sys.channelId("Android Channel");
         sys.putInChannel(src, AndChan);
       }
       
       sys.sendMessage(src, "Hello, Android user! The application that you have downloaded is a pirated copy of a freeware program. Please uninstall it and go to http:\/\/www.pokemon-online.eu to find out more about this program and to download the REAL version, which has no ads.",AndChan);
-      sys.changeTier(src, "Challenge Cup");
+      sys.changeTier(src, "Challenge Cup");*/
+      kick(src);
       return
     }
 }
