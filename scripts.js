@@ -1404,13 +1404,13 @@ function beforeLogIn(player_id) {
 
 function afterLogIn(player_id) {
   var user    = SESSION.users(player_id);
-  var key     = makeKey(user.name, "muted");
+  /*var key     = makeKey(user.name, "muted");
   var expired = parseInt(getValue(key, 0), 10);
   if (expired > getTime()) {
     user.muted = true;
   } else {
     deleteValue(key);
-  }
+  }*/
   
   var android = HiMobileUser(player_id,sys.tier(player_id));
   if (!android)
