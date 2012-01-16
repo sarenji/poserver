@@ -982,7 +982,7 @@ addModCommand("unmute", function(playerName) {
 });
 
 addCommand("tiers", function() {
-  announce(this.id, "Smogon tiers: http://tinyurl.com/smtiers");
+  announce(this.id, "Smogon tiers: http://www.smogon.com/bw/tiers");
 });
 
 addCommand("dw", function() {
