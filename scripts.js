@@ -1378,7 +1378,7 @@ function serverStartUp() {
   
   sys.createChannel("Tournaments");
   sys.createChannel("Staff");
-  sys.createChannel("Android Channel");
+  //sys.createChannel("Android Channel");
 }
 
 function beforeLogIn(player_id) {
@@ -1412,9 +1412,13 @@ function afterLogIn(player_id) {
     deleteValue(key);
   }
   
-  joinChannels(user);
-  afterChangeTeam(player_id);
-  HiMobileUser(player_id,sys.tier(player_id));
+  var android = HiMobileUser(player_id,sys.tier(player_id));
+  if (!android)
+  {
+    joinChannels(user);
+    afterChangeTeam(player_id);
+  }
+  
 }
 
 function joinChannels(user) {
@@ -1463,8 +1467,11 @@ function HiMobileUser(src,tier) {
       sys.sendMessage(src, "Hello, Android user! The application that you have downloaded is a pirated copy of a freeware program. Please uninstall it and go to http:\/\/www.pokemon-online.eu to find out more about this program and to download the REAL version, which has no ads.",AndChan);
       sys.changeTier(src, "Challenge Cup");*/
       sys.kick(src);
-      return
+      return true;
     }
+  else {
+    return false;
+  }
 }
 
 
