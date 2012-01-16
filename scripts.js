@@ -1603,8 +1603,8 @@ function beforeBattleMatchup(src, dest, clauses, rated, mode) {
   if (sys.tier(src) == sys.tier(dest)) {
     dreamWorldAbilitiesCheck(src, true);
     dreamWorldAbilitiesCheck(dest, true);
-    moodyCheck(src, true);
-    moodyCheck(dest, true);
+    //moodyCheck(src, true);
+    //moodyCheck(dest, true);
   }
 }
 
@@ -1617,8 +1617,8 @@ function beforeChallengeIssued(sourceId, targetId, clauses, rated, mode) {
   if (sys.tier(sourceId) == sys.tier(targetId)) {
     dreamWorldAbilitiesCheck(sourceId, true);
     dreamWorldAbilitiesCheck(targetId, true);
-    moodyCheck(sourceId, true);
-    moodyCheck(targetId, true);
+    //moodyCheck(sourceId, true);
+    //moodyCheck(targetId, true);
   }
   var source = sys.name(sourceId);
   var target = sys.name(targetId);
