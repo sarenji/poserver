@@ -1573,9 +1573,9 @@ function afterChangeTeam(playerId) {
   user.name = sys.name(playerId);
   user.tier = sys.tier(playerId);
   dreamWorldAbilitiesCheck(playerId, false);
-  moodyCheck(playerId, false);
+  //moodyCheck(playerId, false);
   swiftSwimCheck(playerId);
-  droughtCheck(playerId);
+  //droughtCheck(playerId);
   SmashPassBan(playerId,sys.tier(playerId));
 
   if (/[^\w-\[\]\. ]/g.test(user.name)) {
