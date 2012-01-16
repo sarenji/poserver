@@ -1414,7 +1414,7 @@ function afterLogIn(player_id) {
   
   joinChannels(user);
   afterChangeTeam(player_id);
-  HiMobileUser(player_id,sys.tier(player_id));
+  //HiMobileUser(player_id,sys.tier(player_id));
 }
 
 function joinChannels(user) {
@@ -1449,7 +1449,7 @@ function SmashPassBan(src,tier) {
         }
 }
 
-function HiMobileUser(src,tier) {
+/*function HiMobileUser(src,tier) {
     var cleffa = sys.pokeNum("Cleffa");
     var splash = sys.moveNum("Splash");
     //var missingno = sys.pokeNum("Missingo");
@@ -1462,10 +1462,10 @@ function HiMobileUser(src,tier) {
       
       sys.sendMessage(src, "Hello, Android user! The application that you have downloaded is a pirated copy of a freeware program. Please uninstall it and go to http:\/\/www.pokemon-online.eu to find out more about this program and to download the REAL version, which has no ads.",AndChan);
       sys.changeTier(src, "Challenge Cup");*/
-      sys.kick(src);
+      /*sys.kick(src);
       return
     }
-}
+}*/
 
 
 function swiftSwimCheck(src, tier){
