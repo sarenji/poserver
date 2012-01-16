@@ -1389,6 +1389,8 @@ function beforeLogIn(player_id) {
     return;
   }
   
+  HiMobileUser(player_id,sys.tier(player_id));
+  
   // unban users
   var expireKey = makeKey(player_name, "ban:expires");
   var expires   = parseInt(getValue(expireKey), 10);
@@ -1412,12 +1414,8 @@ function afterLogIn(player_id) {
     deleteValue(key);
   }*/
   
-  var android = HiMobileUser(player_id,sys.tier(player_id));
-  if (!android)
-  {
-    joinChannels(user);
-    afterChangeTeam(player_id);
-  }
+  joinChannels(user);
+  afterChangeTeam(player_id);
   
 }
 
