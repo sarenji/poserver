@@ -1438,6 +1438,35 @@ if (!tier) tier = sys.tier(src);
         }
     }
 }
+
+function eventNatureCheck(src) {
+   if(["StreetPKMN", "Challenge Cup"].indexOf(sys.tier(src)) != -1) {
+      return;
+   }
+   var pokeNatures = [
+      {pokemon: "Heatran", moves: ["Eruption"], nature: "Quiet"},
+      {pokemon: "Suicune", moves: ["ExtremeSpeed", "Sheer Cold", "Aqua Ring", "Air Slash"], nature: "Relaxed"},
+      {pokemon: "Raikou", moves: ["ExtremeSpeed", "Weather Ball", "Zap Cannon", "Aura Sphere"], nature: "Rash"},
+      {pokemon: "Entei", moves: ["ExtremeSpeed", "Flare Blitz", "Howl", "Crush Claw"], nature: "Adamant"}
+   ];
+   for(var i = 0; i < 6; ++i) {
+      var poke = sys.teamPoke(src, i);
+      for(var x = 0; x < pokeNatures.length; ++x) {
+         if(poke == sys.pokeNum(pokeNatures[x].pokemon)) {
+            for(var y = 0; y < pokeNatures[x].moves.length; ++y) {
+               if(sys.hasTeamPokeMove(src, i, sys.moveNum(pokeNatures[x].moves[y])) &&
+                     sys.teamPokeNature(src, i) != sys.natureNum(pokeNatures[x].nature)) {
+                  announce(src, "" + pokeNatures[x].pokemon + " with " + pokeNatures[x].moves[y] + " must have a " + pokeNatures[x].nature + " nature.");
+                  sys.stopEvent();
+                  sys.changeTier(src, "Challenge Cup");
+                  return;
+               }
+            }
+         }
+      }
+   }
+}
+
 function SmashPassBan(src,tier) {
     var bp = sys.moveNum("Baton Pass");
     var ss = sys.moveNum("Shell Smash");
@@ -1582,6 +1611,7 @@ function afterChangeTeam(playerId) {
   swiftSwimCheck(playerId);
   //droughtCheck(playerId);
   SmashPassBan(playerId,sys.tier(playerId));
+  eventNatureCheck(playerId);
 
   if (/[^\w-\[\]\. ]/g.test(user.name)) {
     announce(playerId, "Please do not use special characters in your name.");
@@ -1642,6 +1672,7 @@ function beforeChangeTier(playerId, oldTier, newTier) {
   swiftSwimCheck(playerId, newTier);
   droughtCheck(playerId, newTier);
   SmashPassBan(playerId,newTier);
+  eventNatureCheck(playerId);
   /*
   if (!hasValidTier(playerId, newTier)) {
     sys.stopEvent();
