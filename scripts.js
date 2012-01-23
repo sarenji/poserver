@@ -808,7 +808,7 @@ addModCommand("ip", function(player_name) {
 });
 
 addOwnerCommand("playerCount", function(){
-  announce(this.id, "There are "+sys.numPlayers()+" logged in right now.");
+  announce(this.id, "There are "+sys.numPlayers()+" players logged in right now.");
 });
 addOwnerCommand("reload", function() {
   var id          = this.id;
