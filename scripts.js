@@ -644,7 +644,8 @@ var help = [
     "/resetPlayerRating name:tier -- resets the rating of the user in the tier to 1000.",
     "/clearpass user -- Clear user's password.",
     "/destroy channel -- Deletes a channel.",
-    "/stopBattles -- Prevents new battles from starting (useful if server needs to be restarted)."
+    "/stopBattles -- Prevents new battles from starting (useful if server needs to be restarted).",
+    "/playerCount -- Prints number of players logged onto the server."
   ]
 ];
 
@@ -806,8 +807,8 @@ addModCommand("ip", function(player_name) {
   announce(this.id, player_name + " has ip address " + sys.ip(sys.id(player_name)));
 });
 
-addOwnerCommand("hostname", function(player_name){
-  announce(this.id, player_name + " has hostname " + sys.hostname(sys.ip(sys.id(player_name)),player_name));
+addOwnerCommand("playerCount", function(){
+  announce(this.id, "There are "+sys.numPlayers()+" logged in right now.");
 });
 addOwnerCommand("reload", function() {
   var id          = this.id;
