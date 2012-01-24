@@ -326,3 +326,8 @@ Lanturn
 Magnemite
 Magneton
 Magnezone
+Bidoof
+Bibarel
+Remoraid
+Octillery
+Smeargle
