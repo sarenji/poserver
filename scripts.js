@@ -1505,7 +1505,7 @@ function HiMobileUser(src,tier) {
 
 function swiftSwimCheck(src, tier){
     if (!tier) tier = sys.tier(src);
-    if (tier != "Standard OU") return; 
+    if (tier != "Standard OU" && tier != "Dream World OU") return; 
     for(var i = 0; i <6; ++i){
         if(sys.ability(sys.teamPokeAbility(src, i)) == "Drizzle"){
             for(var j = 0; j <6; ++j){
