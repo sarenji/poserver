@@ -1590,15 +1590,12 @@ function moodyCheck(src, se) {
     if (["Standard Uber, Standard OU, Standard UU, Standard RU, Standard LC, Dream World OU, Dream World Ubers, Clear Skies"].indexOf(sys.tier(src)) == -1) {
         return; // only care about these tiers
     }
+    
     for (var i = 0; i < 6; i++) {
-        var x = sys.teamPoke(src, i);
-
-        if (x != 0 && inpokemons.indexOf(x) != -1 && sys.hasDreamWorldAbility(src, i)) {
-            if (se)
-                announce(src, "" + sys.pokemon(x) + "   is not allowed with Moody in this tier. Change it in the  teambuilder.");
-                sys.changeTier(src, "Challenge Cup");
-            if (se)
-                sys.stopEvent();
+        if(sys.ability(sys.teamPokeAbility(src, i)) == "Moody"){
+          announce(src, "" + sys.pokemon(sys.teamPoke(src, i)) + "   is not allowed with Moody in this tier. Change it in the  teambuilder.");
+          sys.changeTier(src, "Challenge Cup");
+          sys.stopEvent();
         }
     }
 }
