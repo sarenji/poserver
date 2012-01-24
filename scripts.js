@@ -1587,7 +1587,7 @@ var breedingpokemons = ["Bulbasaur", "Ivysaur", "Venusaur", "Charmander", "Charm
 breedingpokemons = breedingpokemons.map(function(p) { return sys.pokeNum(p); });
 
 function moodyCheck(src, se) {
-    if (["Standard Uber, Standard OU, Standard UU, Standard RU, Standard LC"].indexOf(sys.tier(src)) == -1) {
+    if (["Standard Uber, Standard OU, Standard UU, Standard RU, Standard LC, Dream World OU, Dream World Ubers, Clear Skies"].indexOf(sys.tier(src)) == -1) {
         return; // only care about these tiers
     }
     for (var i = 0; i < 6; i++) {
@@ -1595,8 +1595,8 @@ function moodyCheck(src, se) {
 
         if (x != 0 && inpokemons.indexOf(x) != -1 && sys.hasDreamWorldAbility(src, i)) {
             if (se)
-                announce(src, "+CheckBot: " + sys.pokemon(x) + "   is not allowed with Moody in this tier. Change it in the  teambuilder.");
-                sys.changeTier(src, "StreetPKMN");
+                announce(src, "" + sys.pokemon(x) + "   is not allowed with Moody in this tier. Change it in the  teambuilder.");
+                sys.changeTier(src, "Challenge Cup");
             if (se)
                 sys.stopEvent();
         }
@@ -1608,7 +1608,7 @@ function afterChangeTeam(playerId) {
   user.name = sys.name(playerId);
   user.tier = sys.tier(playerId);
   dreamWorldAbilitiesCheck(playerId, false);
-  //moodyCheck(playerId, false);
+  moodyCheck(playerId, false);
   swiftSwimCheck(playerId);
   //droughtCheck(playerId);
   SmashPassBan(playerId,sys.tier(playerId));
@@ -1639,8 +1639,8 @@ function beforeBattleMatchup(src, dest, clauses, rated, mode) {
   if (sys.tier(src) == sys.tier(dest)) {
     dreamWorldAbilitiesCheck(src, true);
     dreamWorldAbilitiesCheck(dest, true);
-    //moodyCheck(src, true);
-    //moodyCheck(dest, true);
+    moodyCheck(src, true);
+    moodyCheck(dest, true);
   }
 }
 
@@ -1653,8 +1653,8 @@ function beforeChallengeIssued(sourceId, targetId, clauses, rated, mode) {
   if (sys.tier(sourceId) == sys.tier(targetId)) {
     dreamWorldAbilitiesCheck(sourceId, true);
     dreamWorldAbilitiesCheck(targetId, true);
-    //moodyCheck(sourceId, true);
-    //moodyCheck(targetId, true);
+    moodyCheck(sourceId, true);
+    moodyCheck(targetId, true);
   }
   var source = sys.name(sourceId);
   var target = sys.name(targetId);
