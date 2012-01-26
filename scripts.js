@@ -1448,7 +1448,8 @@ function eventNatureCheck(src) {
       {pokemon: "Heatran", moves: ["Eruption"], nature: "Quiet"},
       {pokemon: "Suicune", moves: ["ExtremeSpeed", "Sheer Cold", "Aqua Ring", "Air Slash"], nature: "Relaxed"},
       {pokemon: "Raikou", moves: ["ExtremeSpeed", "Weather Ball", "Zap Cannon", "Aura Sphere"], nature: "Rash"},
-      {pokemon: "Entei", moves: ["ExtremeSpeed", "Flare Blitz", "Howl", "Crush Claw"], nature: "Adamant"}
+      {pokemon: "Entei", moves: ["ExtremeSpeed", "Flare Blitz", "Howl", "Crush Claw"], nature: "Adamant"},
+      {pokemon: "Serperior", moves: ["Aromatherapy"], nature: "Hardy"}
    ];
    for(var i = 0; i < 6; ++i) {
       var poke = sys.teamPoke(src, i);
