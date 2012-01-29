@@ -85,13 +85,13 @@ Tournament.prototype.create = function(user, tier, spots) {
     this.announce(user.id, "A tournament is already underway!");
     return false;
   }
-  
+
   // initialization
   this.initialize();
   this.state    = TOURNAMENT_SIGNUPS;
   this.tier     = tier;
   this.numSpots = parseInt(spots, 10);
-  
+
   // print out tournament data for users.
   var table = "<center><table cellpadding='5' border='1' style='background-color: #BFEFFF;'>";
   table += "<tr><td colspan='2'><b>" + user.name + " started a new tournament in #Tournaments!</b></td></tr>";
@@ -111,7 +111,7 @@ Tournament.prototype.join = function(user) {
     this.announce(user.id, "You cannot join this tournament now!");
     return;
   }
-  
+
   // check if player is/was already in tournament.
   if (this.players.indexOf(user.name) !== -1) {
     this.announce(user.id, "You are already in the tournament!");
@@ -120,7 +120,7 @@ Tournament.prototype.join = function(user) {
     this.announce(user.id, "You already lost in this tournament!");
     return;
   }
-  
+
   // add player to tournament
   this.players.push(user.name);
   if (this.isActive() && this.findUnpairedMatches().length > 0) {
@@ -137,7 +137,7 @@ Tournament.prototype.join = function(user) {
     this.numPlayers++;
     this.announce(user.name + " joined the tournament! Now " + this.players.length + "/" + this.numSpots + " filled.");
   }
-  
+
   // start tour when applicable
   if (this.players.length === this.numSpots && !this.isActive()) {
     this.state = TOURNAMENT_ACTIVE;
@@ -297,7 +297,7 @@ Tournament.prototype.makeMatchups = function() {
     }
   }
   this.players = players;
-  
+
   // randomize
   while (--len > 0) {
       var rand = Math.floor(Math.random() * (len + 1));
@@ -305,7 +305,7 @@ Tournament.prototype.makeMatchups = function() {
       this.players[len]  = this.players[rand];
       this.players[rand] = tmp;
   }
-  
+
   len = Math.min(this.numSpots, this.players.length);
   this.matches  = [];
   this.pairings = [];
@@ -418,17 +418,17 @@ Tournament.prototype.removePlayer = function(userName) {
   if (index < this.numPlayers) {
     this.numPlayers--;
   }
-  
+
   // find the player's matches.
   var matches = this.findMatches(userName);
   if (matches.length === 0) {
     return;
   }
-  
+
   // remove player from matches
   this.replaceWith(matches, userName, undefined);
   this.replaceWith(this.pairings, userName, undefined);
-  
+
   // either sub or give a bye.
   if (this.players.length > this.numPlayers) {
     var substitute = this.players[this.numPlayers];
@@ -540,7 +540,7 @@ User.prototype.log = function(message) {
   if (this.cantTalk(message)) {
     return false;
   }
-  
+
   this.lastMessages.unshift(message);
   if (this.lastMessages.length > 5) {
     this.lastMessages.pop();
@@ -553,7 +553,7 @@ User.prototype.cantTalk = function(message) {
   if (this.authedFor(MODERATOR)) {
     return false;
   }
-  
+
   if (timeDelta(this.lastMessageTime) < 50) {
     return true;
   }
@@ -637,7 +637,7 @@ var help = [
     "/tour tier:participants -- Starts a tournament.",
     "/drop user -- Removes the user from the tournament. Aliased to /dropout.",
     "/stop -- Stops the current tournament. Aliased to /cancel",
-    "/changecount -- Changes the number of participants in a tournament." 
+    "/changecount -- Changes the number of participants in a tournament."
   ], [
     "** OWNER COMMANDS",
     "/resetLadder tier -- resets the ratings for the specified tier.",
@@ -710,7 +710,7 @@ addCommand("auth", function(type, token, newAuth) {
     var group = AUTH_VALUES[token.toUpperCase()];
     var list  = sys.dbAuths();
     list      = findGroupAuthLevel(group, list).sort();
-    
+
     for (var i = 0, len = list.length; i < len; i++) {
       announce(this.id, list[i]);
     }
@@ -814,10 +814,10 @@ addOwnerCommand("reload", function() {
   var id          = this.id;
   var old_scripts = sys.getFileContent(SCRIPTS_URL);
   sys.writeToFile(SCRIPTS_BACKUP_URL, old_scripts);
-  
+
   if (arguments.length > 0) {
     var scriptURL = toArray(arguments).join(":");
-    
+
     sys.webCall(scriptURL, function(res) {
       sys.changeScript(res, true);
       sys.writeToFile(SCRIPTS_URL, res);
@@ -876,12 +876,12 @@ addModCommand([ "ban", "b" ], function(player_name, length, reason) {
       reason = length;
       length = MODERATOR_MAX_BAN_LENGTH;
     }
-    
+
     // limit mod bans
     if (this.auth === MODERATOR) {
       length = Math.min(length, MODERATOR_MAX_BAN_LENGTH);
     }
-    
+
     message = player_name + " was banned by " + this.name + " for " + prettyPrintTime(length) + ".";
     if (reason) {
       message += " (" + reason + ")";
@@ -915,7 +915,7 @@ addAdminCommand(["permban", "permaban", "pb"], function(playerName, reason) {
 
 addAdminCommand("topic", function() {
   var new_topic = toArray(arguments).join(":");
-  
+
 });
 
 addModCommand("unban", function(playerName) {
@@ -946,10 +946,10 @@ addModCommand("mute", function(player_name, length) {
       announce(this.id, player_name + " is already muted!");
       return;
     }
-    
+
     var message = this.name + " muted " + player_name;
     player.muted = true;
-    
+
     if (length) {
       var key = makeKey(player.name, "muted");
       length = parseLength(length);
@@ -963,7 +963,7 @@ addModCommand("mute", function(player_name, length) {
       }, length);
       message += " for " + prettyPrintTime(length);
     }
-    
+
     announce(message + ".");
   }
 });
@@ -1021,7 +1021,7 @@ addOwnerCommand("stopBattles", function() {
     announce("");
   } else {
     announce("False alarm, battles may continue.");
-  } 
+  }
 });
 
 // Tournament wrappers
@@ -1103,7 +1103,7 @@ function hasValidTier(playerName, toTier) {
       counter++;
     }
   }
-  
+
   for (var i = 0; i < 6; i++) {
     var ability = sys.ability(sys.teamPokeAbility(sys.id(playerName), i));
     var index   = banObject.abilities.indexOf(ability);
@@ -1112,7 +1112,7 @@ function hasValidTier(playerName, toTier) {
       counter--;
     }
   }
-  
+
   return counter > 0;
 }
 
@@ -1374,9 +1374,9 @@ function serverStartUp() {
       user.__proto__ = User.prototype;
     }
   });
-  
+
   loadDreamWorldPokemon();
-  
+
   sys.createChannel("Tournaments");
   sys.createChannel("Staff");
   //sys.createChannel("Android Channel");
@@ -1389,9 +1389,9 @@ function beforeLogIn(player_id) {
     sys.stopEvent();
     return;
   }
-  
+
   HiMobileUser(player_id,sys.tier(player_id));
-  
+
   // unban users
   var expireKey = makeKey(player_name, "ban:expires");
   var expires   = parseInt(getValue(expireKey), 10);
@@ -1414,10 +1414,10 @@ function afterLogIn(player_id) {
   } else {
     deleteValue(key);
   }*/
-  
+
   joinChannels(user);
   afterChangeTeam(player_id);
-  
+
 }
 
 function joinChannels(user) {
@@ -1429,7 +1429,7 @@ function joinChannels(user) {
 
 function droughtCheck(src, tier){
 if (!tier) tier = sys.tier(src);
-    if (tier != "Standard UU") return; 
+    if (tier != "Standard UU") return;
     for(var i = 0; i <6; ++i){
         if(sys.ability(sys.teamPokeAbility(src, i)) == "Drought"){
         announce(src, "Drought is not allowed in Standard UU")
@@ -1492,7 +1492,7 @@ function HiMobileUser(src,tier) {
         AndChan = sys.channelId("Android Channel");
         sys.putInChannel(src, AndChan);
       }
-      
+
       sys.sendMessage(src, "Hello, Android user! The application that you have downloaded is a pirated copy of a freeware program. Please uninstall it and go to http:\/\/www.pokemon-online.eu to find out more about this program and to download the REAL version, which has no ads.",AndChan);
       sys.changeTier(src, "Challenge Cup");*/
       sys.kick(src);
@@ -1506,7 +1506,7 @@ function HiMobileUser(src,tier) {
 
 function swiftSwimCheck(src, tier){
     if (!tier) tier = sys.tier(src);
-    if (tier != "Standard OU" && tier != "Dream World OU") return; 
+    if (tier != "Standard OU" && tier != "Dream World OU") return;
     for(var i = 0; i <6; ++i){
         if(sys.ability(sys.teamPokeAbility(src, i)) == "Drizzle"){
             for(var j = 0; j <6; ++j){
@@ -1591,7 +1591,7 @@ function moodyCheck(src, se) {
     if (["Standard Ubers", "Standard OU", "Standard UU", "Standard RU", "Standard LC", "Dream World OU", "Dream World Ubers", "Clear Skies"].indexOf(sys.tier(src)) == -1) {
         return; // only care about these tiers
     }
-    
+
     for (var i = 0; i < 6; i++) {
         if(sys.ability(sys.teamPokeAbility(src, i)) == "Moody"){
           announce(src, "" + sys.pokemon(sys.teamPoke(src, i)) + "   is not allowed with Moody in this tier. Change it in the  teambuilder.");
@@ -1701,7 +1701,7 @@ function beforeChatMessage(player_id, message, channelId) {
     announce(player_id, "You talk too much.");
     return;
   }
-  
+
   if (message[0] === '/' && message.length > 1) {
     message     = message.substr(1);
     var pieces  = message.split(/\s+/);
@@ -1710,15 +1710,15 @@ function beforeChatMessage(player_id, message, channelId) {
     user.run(command, pieces, channelId);
     return;
   }
-  
+
   if (user.muted) {
     return;
   }
-  
+
   if (!user.authedFor(MODERATOR) && silence) {
     return;
   }
-  
+
   if (!user.log(message)) {
     // can't talk
     return;
