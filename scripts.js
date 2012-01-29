@@ -1634,6 +1634,12 @@ function beforeBattleMatchup(src, dest, clauses, rated, mode) {
         sys.stopEvent();
         return;
   }
+  // Temporary until Doubles/Triples bug is fixed.
+  if (mode > 0) {
+    announce(sourceId, "Sorry, doubles and triples are disabled for now.");
+    sys.stopEvent();
+    return;
+  }
   if (sys.tier(src) == sys.tier(dest)) {
     dreamWorldAbilitiesCheck(src, true);
     dreamWorldAbilitiesCheck(dest, true);
@@ -1644,9 +1650,15 @@ function beforeBattleMatchup(src, dest, clauses, rated, mode) {
 
 function beforeChallengeIssued(sourceId, targetId, clauses, rated, mode) {
   if (battlesStopped) {
-        announce(src, "Battles are now stopped as the server will restart soon.");
+        announce(sourceId, "Battles are now stopped as the server will restart soon.");
         sys.stopEvent();
         return;
+  }
+  // Temporary until Doubles/Triples bug is fixed.
+  if (mode > 0) {
+    announce(sourceId, "Sorry, doubles and triples are disabled for now.");
+    sys.stopEvent();
+    return;
   }
   if (sys.tier(sourceId) == sys.tier(targetId)) {
     dreamWorldAbilitiesCheck(sourceId, true);
