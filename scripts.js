@@ -1538,30 +1538,12 @@ function dreamWorldAbilitiesCheck(src, se) {
                 else
                     announce(src, "" + sys.pokemon(x) + "  has to be Male and have no egg moves with its Dream World ability in  " +  sys.tier(src) + " tier. Change it in the teambuilder.");
             }
-            if (sys.tier(src) == "Standard OU" && sys.hasLegalTeamForTier(src, "Dream World OU")) {
+            if (sys.hasLegalTeamForTier(src, "Dream World OU") {
                 sys.changeTier(src, "Dream World OU");
-            } else if (sys.tier(src) == "Standard OU" && sys.hasLegalTeamForTier(src, "Dream World Ubers")) {
+            } else if (sys.hasLegalTeamForTier(src, "Dream World Ubers") {
                 sys.changeTier(src, "Dream World Ubers");
-            } else if (sys.tier(src) == "Standard Ubers") {
-                sys.changeTier(src, "Dream World Ubers");
-            }
-            else if (sys.tier(src) == "Standard UU" && sys.hasLegalTeamForTier(src, "Dream World OU")) {
-                sys.changeTier(src, "Dream World OU");
-            }
-            else if (sys.tier(src) == "Standard UU" && sys.hasLegalTeamForTier(src, "Dream World Ubers")) {
-                sys.changeTier(src, "Dream World Ubers");
-            }
-            else if (sys.tier(src) == "Standard RU" && sys.hasLegalTeamForTier(src, "Dream World OU")) {
-                sys.changeTier(src, "Dream World OU");
-            } else if (sys.tier(src) == "Standard RU" && sys.hasLegalTeamForTier(src, "Dream World Ubers")) {
-                sys.changeTier(src, "Dream World Ubers");
-            }
-            else if (sys.tier(src) == "Standard LC" && sys.hasLegalTeamForTier(src, "Dream World OU")) {
-                sys.changeTier(src, "Dream World OU");
-            }else {
-                if (se)
-                    sys.changePokeNum(src, i, 0);
-
+            } else {
+                sys.changeTier(src, "StreetPKMN");
             }
             if (se)
                 sys.stopEvent();
