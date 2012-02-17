@@ -1538,10 +1538,10 @@ function dreamWorldAbilitiesCheck(src, se) {
                 else
                     announce(src, "" + sys.pokemon(x) + "  has to be Male and have no egg moves with its Dream World ability in  " +  sys.tier(src) + " tier. Change it in the teambuilder.");
             }
-            if (sys.hasLegalTeamForTier(src, "Dream World OU") {
+            if (sys.hasLegalTeamForTier(src, "Dream World OU")) {
                 announce(src,"Moving you to Dream World OU.");
                 sys.changeTier(src, "Dream World OU");
-            } else if (sys.hasLegalTeamForTier(src, "Dream World Ubers") {
+            } else if (sys.hasLegalTeamForTier(src, "Dream World Ubers")) {
                 announce(src,"Moving you to Dream World Ubers.");
                 sys.changeTier(src, "Dream World Ubers");
             } else {
