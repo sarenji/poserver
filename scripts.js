@@ -645,7 +645,8 @@ var help = [
     "/clearpass user -- Clear user's password.",
     "/destroy channel -- Deletes a channel.",
     "/stopBattles -- Prevents new battles from starting (useful if server needs to be restarted).",
-    "/playerCount -- Prints number of players logged onto the server."
+    "/playerCount -- Prints number of players logged onto the server.",
+    "/fixRegistry -- If server falls off the registry, run this, and it'll add it back."
   ]
 ];
 
@@ -1022,6 +1023,13 @@ addOwnerCommand("stopBattles", function() {
   } else {
     announce("False alarm, battles may continue.");
   }
+});
+
+addOwnerCommand("fixRegistry", function() {
+  sys.makeServerPublic(false);
+  announce(this.id, "Server taken off the registry.");
+  sys.makeServerPublic(true);
+  announce(this.id, "Server added back to the registry.");
 });
 
 // Tournament wrappers
