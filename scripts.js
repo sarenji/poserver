@@ -603,7 +603,6 @@ var help = [
     "/dw -- See a list of released Dream World Pokemon.",
     "/tiers -- See a link to Smogon's Tiers.",
     "/clearpass -- Clear your own password.",
-    "/auth group:name",
     "/idle -- Sets your status to idle, which blocks challenges. Aliased to /away.",
     "* TOURNAMENT COMMANDS",
     "/join -- Enters you into a tournament if one is running.",
