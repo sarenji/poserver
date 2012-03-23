@@ -1491,7 +1491,7 @@ function SmashPassBan(src,tier) {
 
 function AdvIngrainSmeargleBan(src,tier) {
     var ingrain = sys.moveNum("Ingrain");
-    var smeargle = sys.pokeNum("Shell Smash");
+    var smeargle = sys.pokeNum("Smeargle");
     for (var i = 0; i < 6; ++i)
         if ((tier == "OU Gen 3") && sys.hasTeamPokeMove(src,i,ingrain) && (sys.teamPoke(src,i) == smeargle)) {
 
