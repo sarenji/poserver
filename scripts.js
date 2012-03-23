@@ -1646,12 +1646,6 @@ function beforeBattleMatchup(src, dest, clauses, rated, mode) {
     dreamWorldAbilitiesCheck(dest, true);
     moodyCheck(src, true);
     moodyCheck(dest, true);
-    swiftSwimCheck(src);
-    SmashPassBan(src,sys.tier(src));
-    AdvIngrainSmeargleBan(src,sys.tier(src));
-    swiftSwimCheck(dest);
-    SmashPassBan(dest,sys.tier(dest));
-    AdvIngrainSmeargleBan(dest,sys.tier(dest));
   }
 }
 
@@ -1684,7 +1678,7 @@ function beforeChangeTier(playerId, oldTier, newTier) {
   swiftSwimCheck(playerId, newTier);
   droughtCheck(playerId, newTier);
   SmashPassBan(playerId,newTier);
-  AdvIngrainSmeargleBan(playerId,sys.tier(playerId));
+  AdvIngrainSmeargleBan(playerId,newTier);
   eventNatureCheck(playerId);
   /*
   if (!hasValidTier(playerId, newTier)) {
