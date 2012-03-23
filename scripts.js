@@ -1646,6 +1646,12 @@ function beforeBattleMatchup(src, dest, clauses, rated, mode) {
     dreamWorldAbilitiesCheck(dest, true);
     moodyCheck(src, true);
     moodyCheck(dest, true);
+    swiftSwimCheck(src);
+    SmashPassBan(src,sys.tier(src));
+    AdvIngrainSmeargleBan(src,sys.tier(src));
+    swiftSwimCheck(dest);
+    SmashPassBan(dest,sys.tier(dest));
+    AdvIngrainSmeargleBan(dest,sys.tier(dest));
   }
 }
 
