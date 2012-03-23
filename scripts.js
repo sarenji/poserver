@@ -1489,6 +1489,20 @@ function SmashPassBan(src,tier) {
         }
 }
 
+function AdvIngrainSmeargleBan(src,tier) {
+    var ingrain = sys.moveNum("Ingrain");
+    var smeargle = sys.pokeNum("Shell Smash");
+    for (var i = 0; i < 6; ++i)
+        if ((tier == "OU Gen 3") && sys.hasTeamPokeMove(src,i,ingrain) && (sys.teamPoke(src,i) == smeargle)) {
+
+            announce(src,"Smeargle with Ingrain is not allowed in ADV OU");
+            sys.changeTier(src, "Challenge Cup");
+            sys.stopEvent();
+            return
+        }
+}
+
+
 function HiMobileUser(src,tier) {
     var cleffa = sys.pokeNum("Cleffa");
     var splash = sys.moveNum("Splash");
@@ -1602,6 +1616,7 @@ function afterChangeTeam(playerId) {
   swiftSwimCheck(playerId);
   //droughtCheck(playerId);
   SmashPassBan(playerId,sys.tier(playerId));
+  AdvIngrainSmeargleBan(playerId,sys.tier(playerId));
   eventNatureCheck(playerId);
 
   if (/[^\w-\[\]\. ]/g.test(user.name)) {
@@ -1663,6 +1678,7 @@ function beforeChangeTier(playerId, oldTier, newTier) {
   swiftSwimCheck(playerId, newTier);
   droughtCheck(playerId, newTier);
   SmashPassBan(playerId,newTier);
+  AdvIngrainSmeargleBan(playerId,sys.tier(playerId));
   eventNatureCheck(playerId);
   /*
   if (!hasValidTier(playerId, newTier)) {
