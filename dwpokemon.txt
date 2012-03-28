@@ -331,3 +331,4 @@ Bibarel
 Remoraid
 Octillery
 Smeargle
+Lucario
