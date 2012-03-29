@@ -1436,13 +1436,13 @@ function joinChannels(user) {
 
 function droughtCheck(src, tier){
 if (!tier) tier = sys.tier(src);
-    if (tier != "Standard UU") return;
+    if ((tier != "Standard UU") && (tier != "Standard RU") && (tier != "Standard NU")) return;
     for(var i = 0; i <6; ++i){
         if(sys.ability(sys.teamPokeAbility(src, i)) == "Drought"){
-        announce(src, "Drought is not allowed in Standard UU")
-      sys.stopEvent()
-        sys.changeTier(src, "StreetPKMN")
-        return;
+          announce(src, "Drought is not allowed in the lower tiers.");
+          sys.stopEvent();
+          sys.changeTier(src, "Challenge Cup");
+          return;
         }
     }
 }
@@ -1614,7 +1614,7 @@ function afterChangeTeam(playerId) {
   dreamWorldAbilitiesCheck(playerId, false);
   moodyCheck(playerId, false);
   swiftSwimCheck(playerId);
-  //droughtCheck(playerId);
+  droughtCheck(playerId);
   SmashPassBan(playerId,sys.tier(playerId));
   AdvIngrainSmeargleBan(playerId,sys.tier(playerId));
   eventNatureCheck(playerId);
