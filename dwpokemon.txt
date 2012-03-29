@@ -221,6 +221,7 @@ Poliwag
 Poliwrath
 Politoed
 Poliwhirl
+Vulpix
 Ninetales
 Musharna
 Munna
