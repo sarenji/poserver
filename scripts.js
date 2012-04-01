@@ -1705,7 +1705,7 @@ function beforeChatMessage(player_id, message, channelId) {
     return;
   }
 
-  if (message.length > 200) {
+  if (message.length > 200 && !user.authedFor(OWNER)) {
     announce(player_id, "You talk too much.");
     return;
   }
