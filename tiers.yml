@@ -1222,6 +1222,7 @@ VGC:
       - Mamoswine
       - Heatran
       - Rotom-W
+      - Deoxys-D
       - Gastrodon-East
       - Conkeldurr
       - Scrafty
@@ -1286,6 +1287,7 @@ VGC:
       - Xatu
       - Azumarill
       - Umbreon
+      - Gligar
       - Heracross
       - Houndoom
       - Kingdra
@@ -1295,7 +1297,9 @@ VGC:
       - Suicune
       - Swampert
       - Sableye
+      - Sharpedo
       - Flygon
+      - Claydol
       - Milotic
       - Dusclops
       - Registeel
@@ -1303,16 +1307,17 @@ VGC:
       - Roserade
       - Ambipom
       - Mismagius
+      - Honchkrow
       - Bronzong
       - Hippopotas
       - Weavile
       - Rhyperior
       - Togekiss
+      - Yanmega
       - Froslass
       - Azelf
       - Shaymin
       - Rotom-H
-      - Deoxys-D
       - Victini
       - Stoutland
       - Krookodile
@@ -1324,9 +1329,8 @@ VGC:
       - Bisharp
       - Cobalion
       - Venomoth
-      - Yanmega
-      - Cresselia
       - Porygon-Z
+      - Cresselia
       - Durant
     moves:
       - Double Team
@@ -1359,7 +1363,6 @@ VGC:
     gen: 5
     banParent: Standard RU
     pokemons:
-      - Charizard
       - Sandslash
       - Clefable
       - Primeape
@@ -1377,33 +1380,27 @@ VGC:
       - Feraligatr
       - Lanturn
       - Slowking
-      - Gligar
       - Steelix
       - Qwilfish
       - Smeargle
       - Entei
       - Sceptile
-      - Ludicolo
       - Hariyama
       - Aggron
       - Medicham
       - Manectric
       - Roselia
-      - Sharpedo
       - Crawdaunt
-      - Claydol
-      - Honchkrow
       - Spiritomb
       - Munchlax
       - Drapion
       - Tangrowth
       - Electivire
-      - Porygon-Z
       - Gallade
       - Dusknoir
       - Rotom
       - Uxie
-      - Cresselia
+      - Mesprit
       - Rotom-C
       - Scolipede
       - Whimsicott
@@ -1412,10 +1409,6 @@ VGC:
       - Sigilyph
       - Cofagrigus
       - Archeops
-      - Sawsbuck
-      - Sawsbuck-Summer
-      - Sawsbuck-Autumn
-      - Sawsbuck-Winter
       - Galvantula
       - Ferroseed
       - Klinklang
@@ -1424,7 +1417,6 @@ VGC:
       - Golurk
       - Bouffalant
       - Mandibuzz
-      - Durant
     moves:
       - Double Team
       - Fissure
