@@ -1,3 +1,4 @@
+#!/usr/bin/ruby1.8
 require 'yaml'
 require 'builder'
 
