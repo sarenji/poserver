@@ -802,7 +802,7 @@ addModCommand("ip", function(player_name) {
   announce(this.id, player_name + " has ip address " + sys.ip(sys.id(player_name)));
 });
 
-addOwnerCommand("playerCount", function(){
+addModCommand("playerCount", function(){
   announce(this.id, "There are "+sys.numPlayers()+" players logged in right now.");
 });
 addOwnerCommand("reload", function() {
@@ -833,6 +833,11 @@ addOwnerCommand("reload", function() {
 
 addOwnerCommand("rollback", function() {
   var id          = this.id;
+  var name    = this.name.toLowerCase();
+  if (name != "antar" && id != "sarenji" && id != "aldaron") {//only aldaron, antar and sarenji may use this script
+    announce(id, "You are not authorized to use this command.");
+    return;
+  }
   var old_scripts = sys.getFileContent(SCRIPTS_BACKUP_URL);
   sys.writeToFile(SCRIPTS_URL, old_scripts);
   sys.changeScript(old_scripts, true);
@@ -1004,6 +1009,12 @@ addCommand("clearpass", function(player_name) {
 
 // destroys a channel.
 addOwnerCommand("destroy", function() {
+  var id          = this.id;
+  var name    = this.name.toLowerCase();
+  if (name != "antar" && id != "sarenji" && id != "aldaron") {//only aldaron, antar and sarenji may use this script
+    announce(id, "You are not authorized to use this command.");
+    return;
+  }
   var channelId = sys.channelId(toArray(arguments).join(":"));
   if (channelId) {
     var players   = sys.playersOfChannel(channelId);
