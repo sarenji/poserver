@@ -886,7 +886,7 @@ addModCommand([ "ban", "b" ], function(player_name, length, reason) {
     if (reason) {
       message += " (" + reason + ")";
     }
-    sys.appendToFile("bans.txt", prettyPrintTime(getTime())+":"+message);
+    sys.appendToFile("bans.txt", timeStamp()+message+"\n");
     announce(message);
     ban(player_name, getTime() + length * 1000);
   }
@@ -909,7 +909,7 @@ addAdminCommand(["permban", "permaban", "pb"], function(playerName, reason) {
     if (reason) {
       message += " (" + reason + ")";
     }
-    sys.appendToFile("bans.txt", prettyPrintTime(getTime())+":"+message);
+    sys.appendToFile("bans.txt", timeStamp()+message+"\n");
     ban(playerName);
     announce(message);
   }
@@ -1232,6 +1232,17 @@ function prettyPrintTime(seconds) {
 
 function getTime() {
   return +new Date;
+}
+
+function timeStamp() {
+  var currentTime = new Date()
+  var month = currentTime.getMonth() + 1
+  var day = currentTime.getDate()
+  var year = currentTime.getFullYear()
+  var hour = currentTime.getHours()
+  var minute = currentTime.getMinutes()
+  return year+"/"+month+"/"+day+" "+hour+":"+minute+" "
+  
 }
 
 function timeDelta(milliseconds) {
