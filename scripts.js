@@ -908,7 +908,7 @@ addAdminCommand(["permban", "permaban", "pb"], function(playerName, reason) {
     if (reason) {
       message += " (" + reason + ")";
     }
-    sys.appendToFile("bans.txt", prettyPrintTime(getTime()+":"+message);
+    sys.appendToFile("bans.txt", prettyPrintTime(getTime())+":"+message);
     ban(playerName);
     announce(message);
   }
