@@ -731,11 +731,6 @@ addCommand("auth", function(type, token, newAuth) {
   }
 });
 
-addOwnerCommand("eval", function() {
-  var stuff = toArray(arguments);
-  sys.eval(stuff.join(":"));
-});
-
 addModCommand("say", function() {
   if (this.authedFor(SAY_LEVEL)) {
     var stuff = toArray(arguments).join(":");
@@ -812,6 +807,10 @@ addOwnerCommand("playerCount", function(){
 });
 addOwnerCommand("reload", function() {
   var id          = this.id;
+  if (id != 199470 || id != 132199 || id != 120307) {//only aldaron, antar and sarenji may use this script
+    announce(id, "You are not authorized to use this command.");
+    return;
+  }
   var old_scripts = sys.getFileContent(SCRIPTS_URL);
   sys.writeToFile(SCRIPTS_BACKUP_URL, old_scripts);
 
@@ -886,6 +885,7 @@ addModCommand([ "ban", "b" ], function(player_name, length, reason) {
     if (reason) {
       message += " (" + reason + ")";
     }
+    sys.appendToFile("bans.txt", prettyPrintTime(getTime()+":"+message);
     announce(message);
     ban(player_name, getTime() + length * 1000);
   }
@@ -908,6 +908,7 @@ addAdminCommand(["permban", "permaban", "pb"], function(playerName, reason) {
     if (reason) {
       message += " (" + reason + ")";
     }
+    sys.appendToFile("bans.txt", prettyPrintTime(getTime()+":"+message);
     ban(playerName);
     announce(message);
   }
@@ -1143,12 +1144,12 @@ function kick(playerName) {
 }
 
 function ban(playerName, expires) {
+  if (!expires) {
+    expires = getTime() + 24*3600*10 * 1000//permabans = 10-year bans..?
+  }
   var banKey = makeKey(playerName, "ban:expires");
   setValue(banKey, expires || 0);
   kick(playerName);
-  if (!expires) {
-    sys.ban(playerName);
-  }
 }
 
 /*******************\
