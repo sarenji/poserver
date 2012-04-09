@@ -807,7 +807,8 @@ addOwnerCommand("playerCount", function(){
 });
 addOwnerCommand("reload", function() {
   var id          = this.id;
-  if (id != 199470 && id != 132199 && id != 120307) {//only aldaron, antar and sarenji may use this script
+  var name    = this.name.toLowerCase();
+  if (name != "antar" && id != "sarenji" && id != "aldaron") {//only aldaron, antar and sarenji may use this script
     announce(id, "You are not authorized to use this command.");
     return;
   }
