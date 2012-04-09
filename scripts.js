@@ -885,7 +885,7 @@ addModCommand([ "ban", "b" ], function(player_name, length, reason) {
     if (reason) {
       message += " (" + reason + ")";
     }
-    sys.appendToFile("bans.txt", prettyPrintTime(getTime()+":"+message);
+    sys.appendToFile("bans.txt", prettyPrintTime(getTime())+":"+message);
     announce(message);
     ban(player_name, getTime() + length * 1000);
   }
