@@ -620,7 +620,8 @@ var help = [
     "/mute user:duration",
     "/unmute user",
     "/wall message",
-    "/ip user -- returns player's IP address."
+    "/ip user -- returns player's IP address",
+    "/aliases ip -- returns all alts associated with the given IP"
   ], [
     "** ADMINISTRATOR COMMANDS",
     "/ban user -- bans user for 1 day.",
@@ -800,6 +801,10 @@ addAdminCommand("kickall", function(ip) {
 
 addModCommand("ip", function(player_name) {
   announce(this.id, player_name + " has ip address " + sys.ip(sys.id(player_name)));
+});
+
+addModCommand("aliases",function(ip) {
+  announce(this.id, ip + " is associated with the following usernames:" + sys.aliases(ip));
 });
 
 addModCommand("playerCount", function(){
