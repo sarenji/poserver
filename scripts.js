@@ -112,6 +112,13 @@ Tournament.prototype.join = function(user) {
     return;
   }
 
+  // check if a player is in the wrong tier
+  if (sys.tier(user.id) !== this.tier) {
+    this.announce(user.id, "You are in the wrong tier!");
+    return;
+  }
+
+
   // check if player is/was already in tournament.
   if (this.players.indexOf(user.name) !== -1) {
     this.announce(user.id, "You are already in the tournament!");
@@ -620,7 +627,8 @@ var help = [
     "/mute user:duration",
     "/unmute user",
     "/wall message",
-    "/ip user -- returns player's IP address."
+    "/ip user -- returns player's IP address",
+    "/aliases ip -- returns all alts associated with the given IP"
   ], [
     "** ADMINISTRATOR COMMANDS",
     "/ban user -- bans user for 1 day.",
@@ -631,6 +639,7 @@ var help = [
     "/silence -- Silences the entire chat.",
     "/unsilence -- Lifts silence.",
     "/permaban -- Permanently bans a user. Aliased to /pb and /permban.",
+    "/ipban ip -- bans by IP address. Only works if the user is still online.",
     "/topic -- Changes the topic.",
     "* TOURNAMENT COMMANDS",
     "/tour tier:participants -- Starts a tournament.",
@@ -802,6 +811,10 @@ addModCommand("ip", function(player_name) {
   announce(this.id, player_name + " has ip address " + sys.ip(sys.id(player_name)));
 });
 
+addModCommand("aliases",function(ip) {
+  announce(this.id, ip + " is associated with the following usernames:" + sys.aliases(ip));
+});
+
 addModCommand("playerCount", function(){
   announce(this.id, "There are "+sys.numPlayers()+" players logged in right now.");
 });
@@ -918,6 +931,28 @@ addAdminCommand(["permban", "permaban", "pb"], function(playerName, reason) {
     ban(playerName);
     announce(message);
   }
+});
+
+addAdminCommand("ipban", function(ip,reason) {
+  var players = sys.playerIds();
+  var players_length = players.length;
+  for (var i = 0; i < players_length; ++i) {
+    var current_player = players[i];
+    if (ip == sys.ip(current_player)) {
+      var playerName = sys.name(current_player);
+      var auth = parseInt(sys.dbAuth(playerName), 10);
+      if (this.outranks(auth)) {
+	var message = playerName + " was banned by " + this.name + " for eternity.";
+    	if (reason) {
+      		message += " (" + reason + ")";
+    	}
+	sys.appendToFile("bans.txt", timeStamp()+message+"\n");
+    	ban(playerName);
+    	announce(message);
+     }
+      	
+     break;
+  }}
 });
 
 addAdminCommand("topic", function() {
@@ -1082,6 +1117,24 @@ addModCommand(["sub", "substitute"], function(userName, substitute) {
 addModCommand(["cancel", "stop"], function() {
   Tournament.stop(this);
 });
+
+/*addModCommand(["changetier"], function(playerName, newtier) {
+  playerID = sys.id(playerName);
+  if (!hasValidTier(playerName, newtier)) {
+    announce(this.id, playerName + " does not have a valid team for "+newtier);
+    return;
+  }
+
+  sys.changeTier(playerID, newtier);
+
+  announce(sys.name(this.id) + " changed " + playerName + "'s tier to " + newtier, sys.channelId("Staff"));
+  announce(sys.id(playerName),sys.name(this.id) + " changed your tier to " + newtier);
+
+  
+  afterChangeTeam(playerID);
+
+  
+});*/
 
 /*******************\
 * Tiers/ban lists   *
