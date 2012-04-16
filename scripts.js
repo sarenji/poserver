@@ -112,6 +112,12 @@ Tournament.prototype.join = function(user) {
     return;
   }
 
+  // check if a player is in the wrong tier
+  if (sys.tier(user.id) !== this.tier) {
+    this.announce(user.id, "You are in the wrong tier!");
+    return;
+  }
+
   // check if player is/was already in tournament.
   if (this.players.indexOf(user.name) !== -1) {
     this.announce(user.id, "You are already in the tournament!");
@@ -638,6 +644,8 @@ var help = [
     "/drop user -- Removes the user from the tournament. Aliased to /dropout.",
     "/stop -- Stops the current tournament. Aliased to /cancel",
     "/changecount -- Changes the number of participants in a tournament."
+    "/changename user:newname -- Changes a user's name temporarily";
+    "/changetier user:newtier -- Change's a user's tier";
   ], [
     "** OWNER COMMANDS",
     "/resetLadder tier -- resets the ratings for the specified tier.",
@@ -1086,6 +1094,16 @@ addModCommand(["sub", "substitute"], function(userName, substitute) {
 
 addModCommand(["cancel", "stop"], function() {
   Tournament.stop(this);
+});
+
+addAdminCommand(["changename"], function(playerName, newname) {
+  sys.changeName(sys.id(playerName), newname);
+  announce(sys.name(this.id) + " changed " + playerName + "'s name to " + newname);
+});
+
+addAdminCommand(["changetier"], function(playerName, newtier) {
+  sys.changeTier(sys.id(playerName), newtier);
+  announce(sys.name(this.id) + " changed " + playerName + "'s tier to " + newtier);
 });
 
 /*******************\
