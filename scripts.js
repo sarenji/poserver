@@ -874,7 +874,7 @@ addOwnerCommand("resetLadder", function(tier) {
   announce(this.name + " reset the ladder for " + tier);
 });
 
-addOwnerCommand("resetPlayerRating", function(player,tier) {
+addOwnerCommand("resetPlayerRating", function(player, tier) {
   sys.changeRating(player, tier, 1000);
   announce(this.name + " reset the rating of " + player + " in "+tier);
 });
