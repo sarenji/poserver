@@ -1029,7 +1029,7 @@ addCommand("tiers", function() {
 });
 
 addCommand("dw", function() {
-  announce(this.id, "Released Dream World content: http://tinyurl.com/dwareas and http://tinyurl.com/dwpkmn");
+  announce(this.id, "Released Dream World content: http://www.smogon.com/forums/showthread.php?t=3454925");
 });
 
 addCommand("clearpass", function(player_name) {
