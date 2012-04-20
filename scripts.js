@@ -1672,7 +1672,7 @@ var breedingpokemons = ["Bulbasaur", "Ivysaur", "Venusaur", "Charmander", "Charm
 breedingpokemons = breedingpokemons.map(function(p) { return sys.pokeNum(p); });
 
 function moodyCheck(src, se) {
-    if (["Standard Ubers", "Standard OU", "Standard UU", "Standard RU", "Standard LC", "Dream World OU", "Dream World Ubers", "Clear Skies"].indexOf(sys.tier(src)) == -1) {
+    if (["Standard Ubers", "Standard OU", "Standard UU", "Standard RU", "Standard NU", "Standard LC", "Dream World OU", "Dream World Ubers", "Clear Skies"].indexOf(sys.tier(src)) == -1) {
         return; // only care about these tiers
     }
 
