@@ -616,7 +616,7 @@ var help = [
     "/drop -- Removes yourself from a tournament. Aliased to /dropout.",
     "/viewround -- Shows the current round's matchups and subtitutes."
   ], [
-    "** MODERATOR COMMANDS",
+    "** DRIVER COMMANDS",
     "/kick user -- kicks user from the server. Aliased to /k.",
     "/ban user -- bans user for " + MODERATOR_MAX_BAN_LENGTH / 60 / 60 + " hours.",
     "/ban user:duration -- duration is in hours. Maximum of " + MODERATOR_MAX_BAN_LENGTH / 60 / 60 + " hours.",
@@ -628,9 +628,15 @@ var help = [
     "/unmute user",
     "/wall message",
     "/ip user -- returns player's IP address",
-    "/aliases ip -- returns all alts associated with the given IP"
+    "/aliases ip -- returns all alts associated with the given IP",
+    "* TOURNAMENT COMMANDS",
+    "/tour tier:participants -- Starts a tournament.",
+    "/drop user -- Removes the user from the tournament. Aliased to /dropout.",
+    "/stop -- Stops the current tournament. Aliased to /cancel",
+    "/changecount -- Changes the number of participants in a tournament.",
+    "/changetier user:tier -- Changes user's tier. Will fail if user does not have a valid team for the tier."
   ], [
-    "** ADMINISTRATOR COMMANDS",
+    "** MODERATOR COMMANDS",
     "/ban user -- bans user for 1 day.",
     "/ban user:1y2M3w4d5h6m7s -- bans the user for the entered time.",
     "/b is aliased to /ban.",
@@ -640,14 +646,9 @@ var help = [
     "/unsilence -- Lifts silence.",
     "/permaban -- Permanently bans a user. Aliased to /pb and /permban.",
     "/ipban ip -- bans by IP address. Only works if the user is still online.",
-    "/topic -- Changes the topic.",
-    "* TOURNAMENT COMMANDS",
-    "/tour tier:participants -- Starts a tournament.",
-    "/drop user -- Removes the user from the tournament. Aliased to /dropout.",
-    "/stop -- Stops the current tournament. Aliased to /cancel",
-    "/changecount -- Changes the number of participants in a tournament."
+    "/topic -- Changes the topic."
   ], [
-    "** OWNER COMMANDS",
+    "** ADMINISTRATOR COMMANDS",
     "/resetLadder tier -- resets the ratings for the specified tier.",
     "/resetPlayerRating name:tier -- resets the rating of the user in the tier to 1000.",
     "/clearpass user -- Clear user's password.",
@@ -942,7 +943,7 @@ addAdminCommand("ipban", function(ip,reason) {
       var playerName = sys.name(current_player);
       var auth = parseInt(sys.dbAuth(playerName), 10);
       if (this.outranks(auth)) {
-	var message = playerName + " was banned by " + this.name + " for eternity.";
+  var message = playerName + " was banned by " + this.name + " for eternity.";
     	if (reason) {
       		message += " (" + reason + ")";
     	}
@@ -1118,9 +1119,9 @@ addModCommand(["cancel", "stop"], function() {
   Tournament.stop(this);
 });
 
-/*addModCommand(["changetier"], function(playerName, newtier) {
+addModCommand(["changetier"], function(playerName, newtier) {
   playerID = sys.id(playerName);
-  if (!hasValidTier(playerName, newtier)) {
+  if (!sys.hasLegalTeamForTier(playerID, newtier)) {
     announce(this.id, playerName + " does not have a valid team for "+newtier);
     return;
   }
@@ -1134,7 +1135,7 @@ addModCommand(["cancel", "stop"], function() {
   afterChangeTeam(playerID);
 
   
-});*/
+});
 
 /*******************\
 * Tiers/ban lists   *
