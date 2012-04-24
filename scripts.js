@@ -85,6 +85,9 @@ Tournament.prototype.create = function(user, tier, spots) {
     this.announce(user.id, "A tournament is already underway!");
     return false;
   }
+  if (isNaN(spots) === True || spots < 1 || spots > 32) { // Tournaments must have a count greater than 1 but less than 32
+    this.announce(user.id, "You must specify a number greater than 1 but less than 32.");
+  }
 
   // initialization
   this.initialize();
@@ -157,6 +160,9 @@ Tournament.prototype.changecount = function(user, newNum) {
     this.announce(user.id, "The tournament is not in the signup stage!");
     return;
   }
+  if (isNaN(newNum) === True || newNum < 1 || newNum > 32) {
+    this.announce(user.id, "You must specify a number greater than 1 but less than 32.");
+  }
   this.numSpots = parseInt(newNum, 10);
   this.announce("The tournament is now " + newNum + "-man.");
 
@@ -178,8 +184,8 @@ Tournament.prototype.tick = function(winner, loser) {
   }
 };
 
-Tournament.prototype.forceWin = function(user, forcedWinner) {
-  var index = this.findMatch(forcedWinner);
+Tournament.prototype.forceWin = function(user, forcedWinner) { // Deprecating this until I get around to fixing it
+  /* var index = this.findMatch(forcedWinner);
   if (index !== -1) {
     var match = this.matches[index];
     var loser = match[0] === forcedWinner ? match[1] : match[0];
@@ -191,6 +197,8 @@ Tournament.prototype.forceWin = function(user, forcedWinner) {
   } else {
     this.announce(user.id, forcedWinner + " does not have a match!");
   }
+  */
+  this.announce(user.id, "FORCEWIN is deprecated. Use DROP instead.");
 };
 
 Tournament.prototype.advanceWinner = function(winner, loser) {
@@ -456,8 +464,8 @@ Tournament.prototype.substituteIn = function(userName) {
   return this.replaceWith(this.matches, undefined, userName, true);
 };
 
-Tournament.prototype.substitute = function(userName, substitute) {
-  // remove substitute from list of players if applicable.
+Tournament.prototype.substitute = function(userName, substitute) { // Deprecating this until I get around to fixing it
+  /* // remove substitute from list of players if applicable.
   var index = this.players.indexOf(substitute);
   if (index >= 0) this.players.splice(index, 1);
 
@@ -473,6 +481,8 @@ Tournament.prototype.substitute = function(userName, substitute) {
   // announce that a substitute took place
   this.announce(substitute + " will be subbing in for " + userName + "!");
   this.announce("New match: " + substitute + " vs. " + opponent + "!");
+  */
+  this.announce(user.id, "SUB is deprecated. Use DROP instead.");
 };
 
 Tournament.prototype.replaceWith = function(array, user, withUser, returnNow) {
