@@ -85,7 +85,7 @@ Tournament.prototype.create = function(user, tier, spots) {
     this.announce(user.id, "A tournament is already underway!");
     return false;
   }
-  if (isNaN(spots) === true || spots < 1 || spots > 32) { // Tournaments must have a count greater than 1 but less than 32
+  if (isNaN(spots) === true || spots < 1 || spots > 128) { // Tournaments must have a count greater than 1 but less than 32
     this.announce(user.id, "You must specify a number greater than 1 but less than 32.");
     return;
   }
