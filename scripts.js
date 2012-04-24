@@ -85,6 +85,10 @@ Tournament.prototype.create = function(user, tier, spots) {
     this.announce(user.id, "A tournament is already underway!");
     return false;
   }
+  if (isNaN(spots) === true || spots < 1 || spots > 32) { // Tournaments must have a count greater than 1 but less than 32
+    this.announce(user.id, "You must specify a number greater than 1 but less than 32.");
+    return;
+  }
 
   // initialization
   this.initialize();
@@ -157,6 +161,10 @@ Tournament.prototype.changecount = function(user, newNum) {
     this.announce(user.id, "The tournament is not in the signup stage!");
     return;
   }
+  if (isNaN(newNum) === true || newNum < 1 || newNum > 32) {
+    this.announce(user.id, "You must specify a number greater than 1 but less than 32.");
+    return;
+  }
   this.numSpots = parseInt(newNum, 10);
   this.announce("The tournament is now " + newNum + "-man.");
 
@@ -178,7 +186,7 @@ Tournament.prototype.tick = function(winner, loser) {
   }
 };
 
-Tournament.prototype.forceWin = function(user, forcedWinner) {
+Tournament.prototype.forceWin = function(user, forcedWinner) { // Fix this
   var index = this.findMatch(forcedWinner);
   if (index !== -1) {
     var match = this.matches[index];
@@ -456,7 +464,7 @@ Tournament.prototype.substituteIn = function(userName) {
   return this.replaceWith(this.matches, undefined, userName, true);
 };
 
-Tournament.prototype.substitute = function(userName, substitute) {
+Tournament.prototype.substitute = function(userName, substitute) { // Fix this
   // remove substitute from list of players if applicable.
   var index = this.players.indexOf(substitute);
   if (index >= 0) this.players.splice(index, 1);
@@ -473,6 +481,7 @@ Tournament.prototype.substitute = function(userName, substitute) {
   // announce that a substitute took place
   this.announce(substitute + " will be subbing in for " + userName + "!");
   this.announce("New match: " + substitute + " vs. " + opponent + "!");
+  
 };
 
 Tournament.prototype.replaceWith = function(array, user, withUser, returnNow) {
