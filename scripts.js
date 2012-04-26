@@ -39,22 +39,22 @@ while ((pokemonName = sys.pokemon(counter)) !== "Missingno") {
 var Tournament = (function() {
 
 var TOURNAMENT_INACTIVE = 0;
-var TOURNAMENT_SIGNUPS  = 1;
+var TOURNAMENT_SIGNUP   = 1;
 var TOURNAMENT_ACTIVE   = 2;
 
 function Tournament() {
   this.initialize();
 }
 
-Tournament.prototype.initialize = function() {
-  this.tier       = "StreetPKMN";
+Tournament.prototype.initialize = function() { // Flush all existing data as a safeguard
+  this.tier       = "";
   this.state      = TOURNAMENT_INACTIVE;
   this.round      = 0;
-  this.numSpots   = 0;
+  this.numSpots   = 2; // Tournaments cannot be conducted unless there is at least 2 participants
   this.players    = [];
   this.pairings   = [];
   this.matches    = [];
-  this.numPlayers = 0;
+  this.numPlayers = 2; // Tournaments cannot be conducted unless there is at least 2 participants
   this.losers     = {};
   this.channelId  = sys.channelId("Tournaments");
 };
@@ -72,84 +72,80 @@ Tournament.prototype.announceHTML = function() {
 };
 
 Tournament.prototype.create = function(user, tier, spots) {
-  // validate tier
   var tierList = sys.getTierList();
-  if (tierList.indexOf(tier) === -1) {
-    this.announce(user.id, tier + " is not a valid tier!");
-    this.announce(user.id, "Valid tiers are: " + tierList.join(", "));
-    return false;
+  if (tierList.indexOf(tier) === -1) { // Check for a valid tier
+    this.announce(user.id, tier + " is not a valid tier.");
+    this.announce(user.id, "The valid tiers are " + tierList.join(", ") + ".");
+    return;
   }
 
-  // only create new tournament if one is not already made.
-  if (this.state != TOURNAMENT_INACTIVE) {
-    this.announce(user.id, "A tournament is already underway!");
-    return false;
+  if (this.state != TOURNAMENT_INACTIVE) { // Check if a tournament is already in progress
+    this.announce(user.id, "You cannot start a tournament while one is underway.");
+    return;
   }
-  if (isNaN(spots) === true || spots < 1 || spots > 128) { // Tournaments must have a count greater than 1 but less than 32
+
+  if (isNaN(spots) === true || spots < 1 || spots > 128) { // Tournaments must have a count greater than 1 but less than 128
     this.announce(user.id, "You must specify a number no less than 1 but no greater than 128.");
     return;
   }
 
-  // initialization
   this.initialize();
-  this.state    = TOURNAMENT_SIGNUPS;
+  this.state    = TOURNAMENT_SIGNUP;
   this.tier     = tier;
   this.numSpots = parseInt(spots, 10);
 
-  // print out tournament data for users.
-  var table = "<center><table cellpadding='5' border='1' style='background-color: #BFEFFF;'>";
-  table += "<tr><td colspan='2'><b>" + user.name + " started a new tournament in #Tournaments!</b></td></tr>";
-  table += "<tr><td><b>Tier:</b> " + this.tier + "</td>";
-  table += "<td><b>Players:</b> " + this.numSpots + "</td></tr>";
-  table += "</table></center>";
-  announceHTML(table);
-  return true;
+  var table = "<table style="width:100%;border-spacing:0;border-collapse:collapse;border:solid #000;border-width:1px;">";
+  table += "<tr>";
+  table += "<th style="font-size:1em;border:1px solid #000;padding:3px 7px 2px 7px;text-align:center;border-width:0 1px;padding: .3em;border-width: 1px;background:#6363B0;color:#fff;font-size:.846em;padding:.5em;white-space:nowrap;text-align:center;">Tournament Announcement</th>";
+  table += "</tr>";
+  table += "<tr>";
+  table += "<td style="font-size:1em;border:1px solid #000;padding:3px 7px 2px 7px;text-align:center;border-width:0 1px;padding:.3em;">" + user.name + " started a " + this.tier + " tournament with " + this.numSpots + " spots!</td>";
+  table += "</tr>";
+  table += "<tr style="background:#ccf;">";
+  table += "<td>Join " + this.channelId + " to participate!</td>";
+  table += "</tr>";
+  table += "</table>";
+  announceHTML(table); // Print out a pretty table
+  return;
 };
 
 Tournament.prototype.join = function(user) {
-  // check if there's a tournament running first.
-  if (this.state === TOURNAMENT_INACTIVE) {
-    this.announce(user.id, "There is no tournament running!");
+  if (this.state === TOURNAMENT_INACTIVE) { // Check to see if a tournament is running
+    this.announce(user.id, "There is no tournament running.");
     return;
   } else if (this.round > 1) {
-    this.announce(user.id, "You cannot join this tournament now!");
+    this.announce(user.id, "You cannot join a tournament after the first round.");
     return;
   }
 
-  // check if a player is in the wrong tier
   if (sys.tier(user.id) !== this.tier) {
-    this.announce(user.id, "You are in the wrong tier!");
+    this.announce(user.id, "You are in the wrong tier.");
     return;
   }
 
-
-  // check if player is/was already in tournament.
   if (this.players.indexOf(user.name) !== -1) {
-    this.announce(user.id, "You are already in the tournament!");
+    this.announce(user.id, "You are already in the tournament.");
     return;
   } else if (this.losers[user.name]) {
-    this.announce(user.id, "You already lost in this tournament!");
+    this.announce(user.id, "You already lost in this tournament.");
     return;
   }
 
-  // add player to tournament
   this.players.push(user.name);
   if (this.isActive() && this.findUnpairedMatches().length > 0) {
-    // replace a bye
-    this.announce(user.name + " joined the tournament!");
+    this.announce(user.name + " joined the tournament.");
     var substitute = user.name;
     var opponent   = this.substituteIn(substitute);
     this.numPlayers++;
-    this.announce(substitute + " is now vs. " + opponent + "!");
+    this.announce(substitute + " is now facing " + opponent + ".");
   } else if (this.players.length > this.numSpots || (this.isActive() && this.players.length > this.numPlayers)) {
-    // add a sub
-    this.announce(user.name + " joined the tournament as substitute #" + (this.players.length - this.numPlayers) + "!");
+    this.announce(user.name + " joined the tournament as a substitute.");
   } else {
     this.numPlayers++;
-    this.announce(user.name + " joined the tournament! Now " + this.players.length + "/" + this.numSpots + " filled.");
+    var minOverMax = this.players.length / this.numSpots
+    this.announce(user.name + " joined the tournament. The signup process is now " + minOverMax * 100 + "% completed."); // Prints out a percent here
   }
 
-  // start tour when applicable
   if (this.players.length === this.numSpots && !this.isActive()) {
     this.state = TOURNAMENT_ACTIVE;
     this.advanceRound();
@@ -157,18 +153,17 @@ Tournament.prototype.join = function(user) {
 };
 
 Tournament.prototype.changecount = function(user, newNum) {
-  if (this.state !== TOURNAMENT_SIGNUPS) {
+  if (this.state !== TOURNAMENT_SIGNUP) {
     this.announce(user.id, "The tournament is not in the signup stage!");
     return;
   }
-  if (isNaN(newNum) === true || newNum < 1 || newNum > 32) {
-    this.announce(user.id, "You must specify a number greater than 1 but less than 32.");
+  if (isNaN(newNum) === true || newNum < 1 || newNum > 128) {
+    this.announce(user.id, "You must specify a number no less than 1 but no greater than 128.");
     return;
   }
   this.numSpots = parseInt(newNum, 10);
-  this.announce("The tournament is now " + newNum + "-man.");
+  this.announce(user.name + " changed the number of spots to " + newNum + "."); // Prints the user of the command now to cut down on abuse of this command
 
-  // start tour when applicable
   if (this.players.length >= this.numSpots) {
     this.state = TOURNAMENT_ACTIVE;
     this.advanceRound();
@@ -181,23 +176,23 @@ Tournament.prototype.tick = function(winner, loser) {
     if (this.matchesLeft() === 0) {
       this.advanceRound();
     } else {
-      this.announce(winner + " won a tournament battle! " + this.matchesLeft() + " matches remain.");
+      this.announce(winner + " won a tournament battle against " + loser + ". " + this.matchesLeft() + " matches remain.");
     }
   }
 };
 
-Tournament.prototype.forceWin = function(user, forcedWinner) { // Fix this
+Tournament.prototype.forceWin = function(user, forcedWinner) {
   var index = this.findMatch(forcedWinner);
   if (index !== -1) {
     var match = this.matches[index];
     var loser = match[0] === forcedWinner ? match[1] : match[0];
-    this.announce(user.name + " forced " + forcedWinner + " to take the win!");
+    this.announce(user.name + " forced " + forcedWinner + " to win their battle against " + loser + ".");
     this.advanceWinner(forcedWinner, loser);
     if (this.matchesLeft() === 0) {
       this.advanceRound();
     }
   } else {
-    this.announce(user.id, forcedWinner + " does not have a match!");
+    this.announce(user.id, forcedWinner + " has either lost their battle or did not join the tournament.");
   }
 };
 
@@ -213,7 +208,7 @@ Tournament.prototype.advanceRound = function() {
     this.numSpots = Math.floor(this.numSpots / 2);
   }
   if (this.numSpots === 0) {
-    this.announce("No one wins the tournament! Wait, how did this even happen?");
+    this.announce("We are experiencing a bug. Please notify a moderator."); // This should never happen
   } else if (this.numSpots === 1) {
     var userName = this.players.shift();
     this.state = TOURNAMENT_INACTIVE;
@@ -226,16 +221,16 @@ Tournament.prototype.advanceRound = function() {
 
 Tournament.prototype.viewRound = function(user) {
   if (this.state === TOURNAMENT_INACTIVE) {
-    announce(user.id, "There is no active tournament!");
+    announce(user.id, "There is no active tournament.");
     return;
-  } else if (this.state === TOURNAMENT_SIGNUPS) {
-    announce(user.id, "The " + this.numSpots + "-man " + this.tier + " tournament is still accepting signups!");
+  } else if (this.state === TOURNAMENT_SIGNUP) {
+    announce(user.id, "There are " + this.numSpots - this.players.length + " spots left for the " + this.tier + " tournament.");
     announce(user.id, "");
     for (var i = 0; i < this.players.length; i++) {
       if (i < this.numSpots) {
-        announce(user.id, "Player: " + this.players[i]);
+        announce(user.id, "Players: " + this.players[i]);
       } else {
-        announce(user.id, "Sub: " + this.players[i]);
+        announce(user.id, "Substitutes: " + this.players[i]);
       }
     }
     return;
@@ -250,12 +245,12 @@ Tournament.prototype.viewRound = function(user) {
   if (user) {
     this.announceHTML(user.id, table);
     if (this.players.length > this.numPlayers) {
-      this.announce(user.id, "Subs: " + this.players.slice(this.numPlayers).join(", "));
+      this.announce(user.id, "Substitutes: " + this.players.slice(this.numPlayers).join(", "));
     }
   } else {
     this.announceHTML(table);
     if (this.players.length > this.numPlayers) {
-      this.announce("Subs: " + this.players.slice(this.numPlayers).join(", "));
+      this.announce("Substitutes: " + this.players.slice(this.numPlayers).join(", "));
     }
   }
 };
@@ -313,7 +308,6 @@ Tournament.prototype.makeMatchups = function() {
   }
   this.players = players;
 
-  // randomize
   while (--len > 0) {
       var rand = Math.floor(Math.random() * (len + 1));
       var tmp  = this.players[len];
@@ -404,26 +398,26 @@ Tournament.prototype.matchesLeft = function() {
 Tournament.prototype.drop = function(user, playerName) {
   var index = this.players.indexOf(playerName);
   if (index !== -1) {
-    this.announce(user.name + " dropped " + playerName + " from the tournament!");
+    this.announce(user.name + " dropped " + playerName + " from the tournament.");
     this.removePlayer(playerName);
     if (this.isActive() && this.matchesLeft() === 0) {
       this.advanceRound();
     }
   } else {
-    this.announce(user.id, playerName + " is not in the tournament!");
+    this.announce(user.id, playerName + " is not in the tournament.");
   }
 }
 
 Tournament.prototype.dropout = function(user) {
   var index = this.players.indexOf(user.name);
   if (index !== -1) {
-    this.announce(user.name + " dropped out of the tournament!");
+    this.announce(user.name + " dropped out of the tournament.");
     this.removePlayer(user.name);
     if (this.isActive() && this.matchesLeft() === 0) {
       this.advanceRound();
     }
   } else {
-    this.announce(user.id, "You are not in the tournament!");
+    this.announce(user.id, "You are not in the tournament.");
   }
 };
 
@@ -434,52 +428,44 @@ Tournament.prototype.removePlayer = function(userName) {
     this.numPlayers--;
   }
 
-  // find the player's matches.
   var matches = this.findMatches(userName);
   if (matches.length === 0) {
     return;
   }
 
-  // remove player from matches
   this.replaceWith(matches, userName, undefined);
   this.replaceWith(this.pairings, userName, undefined);
 
-  // either sub or give a bye.
   if (this.players.length > this.numPlayers) {
     var substitute = this.players[this.numPlayers];
     var opponent   = this.substituteIn(substitute);
     this.numPlayers++;
-    this.announce(substitute + " will be subbing in for " + userName + "!");
-    this.announce("New match: " + substitute + " vs. " + opponent + "!");
+    this.announce(substitute + " will be substituting in for " + userName + ".");
+    this.announce("New match: " + substitute + " versus " + opponent + ".");
   } else {
     var match    = matches[0];
     var opponent = match[0] === undefined ? match[1] : match[0];
-    this.announce(opponent + " gets a bye!");
+    this.announce(opponent + " wins this round due to a technicality.");
   }
 };
 
-// returns opponent
 Tournament.prototype.substituteIn = function(userName) {
   this.replaceWith(this.pairings, undefined, userName, true);
   return this.replaceWith(this.matches, undefined, userName, true);
 };
 
-Tournament.prototype.substitute = function(userName, substitute) { // Fix this
-  // remove substitute from list of players if applicable.
+Tournament.prototype.substitute = function(userName, substitute) {
   var index = this.players.indexOf(substitute);
   if (index >= 0) this.players.splice(index, 1);
 
-  // replace substitute in list of players
   index = this.players.indexOf(userName);
   this.players[index] = substitute;
 
-  // substitute old player with new
   this.replaceWith(this.matches, userName, undefined);
   this.replaceWith(this.pairings, userName, undefined);
   var opponent = this.substituteIn(substitute);
 
-  // announce that a substitute took place
-  this.announce(substitute + " will be subbing in for " + userName + "!");
+  this.announce(substitute + " will be substituting in for " + userName + "!");
   this.announce("New match: " + substitute + " vs. " + opponent + "!");
   
 };
