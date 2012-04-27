@@ -94,17 +94,17 @@ if (this.state != TOURNAMENT_INACTIVE) { // Check if a tournament is already in 
   this.tier     = tier;
   this.numSpots = parseInt(spots, 10);
 
-  var table = "<table style="width:100%;border-spacing:0;border-collapse:collapse;border:solid #000;border-width:1px;">";
+  var table = "<center><table style=\"width:100%;border-spacing:0;border-collapse:collapse;border:solid #000;border-width:1px;\">";
   table += "<tr>";
-  table += "<th style="font-size:1em;border:1px solid #000;padding:3px 7px 2px 7px;text-align:center;border-width:0 1px;padding: .3em;border-width: 1px;background:#6363B0;color:#fff;font-size:.846em;padding:.5em;white-space:nowrap;text-align:center;">Tournament Announcement</th>";
+  table += "<th style=\"font-size:1em;border:1px solid #000;padding:3px 7px 2px 7px;text-align:center;border-width:0 1px;padding: .3em;border-width: 1px;background:#6363B0;color:#fff;font-size:.846em;padding:.5em;white-space:nowrap;text-align:center;\">Tournament Announcement</th>";
   table += "</tr>";
   table += "<tr>";
-  table += "<td style="font-size:1em;border:1px solid #000;padding:3px 7px 2px 7px;text-align:center;border-width:0 1px;padding:.3em;">" + user.name + " started a " + this.tier + " tournament with " + this.numSpots + " spots!</td>";
+  table += "<td style=\"font-size:1em;border:1px solid #000;padding:3px 7px 2px 7px;text-align:center;border-width:0 1px;padding:.3em;\">" + user.name + " started a " + this.tier + " tournament with " + this.numSpots + " spots!</td>";
   table += "</tr>";
-  table += "<tr style="background:#ccf;">";
-  table += "<td>Join " + this.channelId + " to participate!</td>";
+  table += "<tr style=\"background:#ccf;\">";
+  table += "<td>Go to the #Tournamnets channel and type /join to participate!</td>";
   table += "</tr>";
-  table += "</table>";
+  table += "</table></center>";
   announceHTML(table); // Print out a pretty table
   return;
 };
