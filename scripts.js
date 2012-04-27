@@ -96,13 +96,15 @@ if (this.state != TOURNAMENT_INACTIVE) { // Check if a tournament is already in 
 
   var table = "<center><table style=\"width:100%;border-spacing:0;border-collapse:collapse;border:solid #000;border-width:1px;\">";
   table += "<tr>";
-  table += "<th style=\"font-size:1em;border:1px solid #000;padding:3px 7px 2px 7px;text-align:center;border-width:0 1px;padding: .3em;border-width: 1px;background:#6363B0;color:#fff;font-size:.846em;padding:.5em;white-space:nowrap;text-align:center;\">Tournament Announcement</th>";
+  table += "<th colspan='2' style=\"font-size:1em;border:1px solid #000;padding:3px 7px 2px 7px;text-align:center;border-width:0 1px;padding: .3em;border-width: 1px;background:#6363B0;color:#fff;font-size:.846em;padding:.5em;white-space:nowrap;text-align:center;\">Tournament Announcement</th>";
   table += "</tr>";
   table += "<tr>";
-  table += "<td style=\"font-size:1em;border:1px solid #000;padding:3px 7px 2px 7px;text-align:center;border-width:0 1px;padding:.3em;\">" + user.name + " started a " + this.tier + " tournament with " + this.numSpots + " spots!</td>";
+  table += "<td colspan='2' style=\"font-size:1em;border:1px solid #000;padding:3px 7px 2px 7px;text-align:center;border-width:0 1px;padding:.3em;\"><b>" + user.name + "</b> started a tournament!</td>";
   table += "</tr>";
+  table += "<tr><td><b>Tier:</b> " + this.tier + "</td>";
+  table += "<td><b>Players:</b> " + this.numSpots + "</td></tr>";
   table += "<tr style=\"background:#ccf;\">";
-  table += "<td>Go to the #Tournamnets channel and type /join to participate!</td>";
+  table += "<td colspan='2'>Go to the #Tournaments channel and type /join to participate!</td>";
   table += "</tr>";
   table += "</table></center>";
   announceHTML(table); // Print out a pretty table
