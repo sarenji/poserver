@@ -50,11 +50,11 @@ Tournament.prototype.initialize = function() { // Flush all existing data as a s
   this.tier       = "";
   this.state      = TOURNAMENT_INACTIVE;
   this.round      = 0;
-  this.numSpots   = 2; // Tournaments cannot be conducted unless there is at least 2 participants
+  this.numSpots   = 0;
   this.players    = [];
   this.pairings   = [];
   this.matches    = [];
-  this.numPlayers = 2;
+  this.numPlayers = 0;
   this.losers     = {};
   this.channelId  = sys.channelId("Tournaments");
 };
