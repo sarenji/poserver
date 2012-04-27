@@ -93,13 +93,10 @@ if (this.state != TOURNAMENT_INACTIVE) { // Check if a tournament is already in 
   this.state    = TOURNAMENT_SIGNUP;
   this.tier     = tier;
   this.numSpots = parseInt(spots, 10);
-
+  this.announce(user.name + " started a tournament!");
   var table = "<center><table style=\"width:100%;border-spacing:0;border-collapse:collapse;border:solid #000;border-width:1px;\">";
   table += "<tr>";
   table += "<th colspan='2' style=\"font-size:1em;border:1px solid #000;padding:3px 7px 2px 7px;text-align:center;border-width:0 1px;padding: .3em;border-width: 1px;background:#6363B0;color:#fff;font-size:.846em;padding:.5em;white-space:nowrap;text-align:center;\">Tournament Announcement</th>";
-  table += "</tr>";
-  table += "<tr>";
-  table += "<td colspan='2' style=\"font-size:1em;border:1px solid #000;padding:3px 7px 2px 7px;text-align:center;border-width:0 1px;padding:.3em;\"><b>" + user.name + "</b> started a tournament!</td>";
   table += "</tr>";
   table += "<tr><td><b>Tier:</b> " + this.tier + "</td>";
   table += "<td><b>Players:</b> " + this.numSpots + "</td></tr>";
@@ -186,7 +183,11 @@ Tournament.prototype.tick = function(winner, loser) {
     if (this.matchesLeft() === 0) {
       this.advanceRound();
     } else {
-      this.announce(winner + " won a tournament battle against " + loser + ". " + this.matchesLeft() + " matches remain.");
+      if (this.matchesLeft() == 1) {
+        this.announce(winner + " won a tournament battle against " + loser + ". " + this.matchesLeft() + " matches remains.");
+      } else {
+        this.announce(winner + " won a tournament battle against " + loser + ". " + this.matchesLeft() + " matches remain.");
+      }
     }
   }
 };
