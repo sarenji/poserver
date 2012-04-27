@@ -235,7 +235,7 @@ Tournament.prototype.viewRound = function(user) {
     announce(user.id, "There is no active tournament.");
     return;
   } else if (this.state === TOURNAMENT_SIGNUP) {
-    announce(user.id, "There are " + this.numSpots - this.players.length + " spots left for the " + this.tier + " tournament.");
+    announce(user.id, "There are " + (this.numSpots - this.players.length) + " spots left for the " + this.tier + " tournament.");
     announce(user.id, "");
     for (var i = 0; i < this.players.length; i++) {
       if (i < this.numSpots) {
