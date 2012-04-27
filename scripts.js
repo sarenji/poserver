@@ -184,7 +184,7 @@ Tournament.prototype.tick = function(winner, loser) {
       this.advanceRound();
     } else {
       if (this.matchesLeft() == 1) {
-        this.announce(winner + " won a tournament battle against " + loser + ". " + this.matchesLeft() + " matches remains.");
+        this.announce(winner + " won a tournament battle against " + loser + ". " + this.matchesLeft() + " match remains.");
       } else {
         this.announce(winner + " won a tournament battle against " + loser + ". " + this.matchesLeft() + " matches remain.");
       }
