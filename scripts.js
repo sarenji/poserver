@@ -610,6 +610,7 @@ var help = [
     "/join -- Enters you into a tournament if one is running.",
     "/drop -- Removes yourself from a tournament. Aliased to /dropout.",
     "/viewround -- Shows the current round's matchups and subtitutes."
+    "/stats -- Shows the latest server statistics."
   ], [
     "** DRIVER COMMANDS",
     "/kick user -- kicks user from the server. Aliased to /k.",
@@ -1130,6 +1131,10 @@ addModCommand(["changetier"], function(playerName, newtier) {
   afterChangeTeam(playerID);
 
   
+});
+
+addCommand(["stats"], function() {
+  announce(this.id, "Latest Smogon University PO Statistics by Antar: http://www.smogon.com/forums/showthread.php?t=3464495");
 });
 
 /*******************\
