@@ -631,6 +631,8 @@ var help = [
     "/stop -- Stops the current tournament. Aliased to /cancel",
     "/changecount -- Changes the number of participants in a tournament.",
     "/changetier user:tier -- Changes user's tier. Will fail if user does not have a valid team for the tier."
+    "/sub currentplayer:newplayer -- Substitutes newplayer in for currentplayer in the active tournament."
+    "/forcewin player -- Forces player to take the win in the active tournament."
   ], [
     "** MODERATOR COMMANDS",
     "/ban user -- bans user for 1 day.",
