@@ -1514,6 +1514,7 @@ function beforeLogIn(player_id) {
   var expires   = parseInt(getValue(expireKey), 10);
   if (expires > 0) {
     if (expires > getTime()) {
+      announce(player_id, "You are currently banned. If you feel this was done unfairly or in error, appeal your ban here: http://www.smogon.com/forums/forumdisplay.php?f=126");
       sys.stopEvent();
       return;
     } else {
