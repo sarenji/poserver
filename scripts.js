@@ -832,12 +832,12 @@ addAdminCommand("kickall", function(ip) {
 });
 
 addModCommand("ip", function(player_name) {
-  if (sys.loggedIn(sys.id(player_name)) === true) {
+  if (sys.id(player_name) === undefined && sys.dbIp(player_name) === undefined) {
+    announce(this.id, "Invalid user name.");
+  } else if (sys.loggedIn(sys.id(player_name)) === true) {
     announce(this.id, player_name + " is logged in with ip address " + sys.ip(sys.id(player_name)));
-  } else if (sys.loggedIn(sys.id(player_name)) === false) {
-    announce(this.id, player_name + " last logged on from ip address " + sys.dbIp(player_name));
   } else {
-    announce(this.id, "Something went wrong. Did you enter a valid user?");
+    announce(this.id, player_name + " last logged on from ip address " + sys.dbIp(player_name));
   }
 });
 
@@ -846,12 +846,12 @@ addModCommand("aliases",function(ip) {
 });
 
 addModCommand("alts", function(userName) {
-  if (sys.loggedIn(sys.id(userName)) === true) {
+  if (sys.id(userName) === undefined && sys.dbIp(userName) === undefined) {
+    announce(this.id, "Invalid user name.");
+  } else if (sys.loggedIn(sys.id(userName)) === true) {
     announce(this.id, "Player " + userName + " (IP " + sys.ip(sys.id(userName)) + ") is associated with the following: " + sys.aliases(sys.ip(sys.id(userName))) + ".");
-  } else if (sys.loggedIn(sys.id(userName)) === false) {
-    announce(this.id, "Player " + userName + " (IP " + sys.dbIp(userName) + ") is associated with the following: " + sys.aliases(sys.dbIp(userName)) + ".");
   } else {
-    announce(this.id, "Something went wrong. Did you enter a valid user?");
+    announce(this.id, "Player " + userName + " (IP " + sys.dbIp(userName) + ") is associated with the following: " + sys.aliases(sys.dbIp(userName)) + ".");
   }
 });
 
