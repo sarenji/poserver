@@ -28,6 +28,10 @@ var MAIN_CHANNEL = "Dragonspiral Tower";
 var dreamWorldPokemon = {};
 var silence = false;
 var battlesStopped = false;
+var lagcontrol = false;
+var lcperiod = 10;
+var lccount = 0;
+var lcmax = 2;
 
 var pokemonHash = {};
 var counter = 1, pokemonName;
@@ -672,7 +676,9 @@ var help = [
     "/destroy channel -- Deletes a channel.",
     "/stopBattles -- Prevents new battles from starting (useful if server needs to be restarted).",
     "/playerCount -- Prints number of players logged onto the server.",
-    "/fixRegistry -- If server falls off the registry, run this, and it'll add it back."
+    "/fixRegistry -- If server falls off the registry, run this, and it'll add it back.",
+    "/lagcontrol [num[:time]] -- Only let num people log in per time seconds (default: 2:10).",
+    "/nolagcontrol -- Disable lag control."
   ]
 ];
 
@@ -1122,6 +1128,29 @@ addOwnerCommand("stopBattles", function() {
   }
 });
 
+addOwnerCommand(["lagcontrol"], function(thresh,period) {
+  if (lagcontrol) {
+    announce(this.id, "Lag control is already enabled. Use /nolagcontrol to disable it.");
+    return;
+  } else {
+    lagcontrol = true
+    if (period && period > 0) { lcperiod = period; }
+    if (thresh && thresh > 0)  { lcmax = thresh; }
+    announce(sys.name(this.id) + " has enabled lag control. The server will be limited to "+lcmax+" per "+lcperiod+" seconds", sys.channelId("Staff"));
+    sys.delayedCall(lcreset,lcperiod);
+  }
+});
+
+addOwnerCommand(["nolagcontrol"], function() {
+  if (!lagcontrol) {
+    announce(this.id, "Lag control is not enabled. Use /lagcontrol to enable it.");
+    return;
+  } else {
+    lagcontrol = false
+    announce(sys.name(this.id) + " has disabled lag control.", sys.channelId("Staff"));
+  }
+});
+
 addOwnerCommand("fixRegistry", function() {
   sys.makeServerPublic(false);
   announce(this.id, "Server taken off the registry.");
@@ -1516,7 +1545,25 @@ function serverStartUp() {
   //sys.createChannel("Android Channel");
 }
 
+function lcreset() {
+  if (lagcontrol) {
+    lccount = 0;
+    sys.delayedCall(lcreset, lcperiod);
+  }
+}
+
 function beforeLogIn(player_id) {
+  if (lagcontrol) {
+    if (lccount >= lcmax) {
+      announce(player_id, "This server isn't accepting more connections at the moment, this could be an effort to stop an excess amount of lag or an attack on the server. Please try again later.");
+      announce(player_id, "Please do not report this incident as a ban.");
+      sys.stopEvent();
+      return;
+    } else {
+      ++lccount;
+    }
+  }
+
   var player_name = sys.name(player_id);
   if (/[^\w-\[\]\. ]/g.test(player_name)) {
     announce(player_id, "Please do not use special characters in your name.");
