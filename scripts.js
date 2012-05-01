@@ -645,6 +645,7 @@ var help = [
     "/ip user -- returns player's IP address",
     "/aliases ip -- returns all alts associated with the given IP",
     "/alts user -- essentially combines the above commands", 
+    "/bancheck user -- reports whether the user is banned and, if so, for how long.",
     "* TOURNAMENT COMMANDS",
     "/tour tier:participants -- Starts a tournament.",
     "/drop user -- Removes the user from the tournament. Aliased to /dropout.",
@@ -845,6 +846,22 @@ addModCommand("alts", function(userName) {
     announce(this.id, "Player " + userName + " (IP " + sys.dbIp(userName) + ") is associated with the following: " + sys.aliases(sys.dbIp(userName)) + ".");
   } else {
     announce(this.id, "Something went wrong. Did you enter a valid user?");
+  }
+});
+
+addModCommand("bancheck", function(playerName) {
+  var expireKey = makeKey(playerName, "ban:expires");
+  var ip = sys.dbIp(playerName);
+  if (ip === undefined) {
+    announce(this.id, "No such user!");
+  } else if (getValue(expireKey)) {
+    if ((parseInt(getValue(expireKey), 10)-getTime()) > 0) {
+      announce(this.id, playerName+" is banned for the next "+prettyPrintTime((parseInt(getValue(expireKey), 10)-getTime())/1000));
+    } else {
+      announce(this.id, playerName+" was banned, but the ban has expired.");
+    }
+  } else {
+    announce(this.id, playerName+" is not banned!");
   }
 });
 
