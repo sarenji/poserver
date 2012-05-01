@@ -644,6 +644,7 @@ var help = [
     "/wall message",
     "/ip user -- returns player's IP address",
     "/aliases ip -- returns all alts associated with the given IP",
+    "/alts user -- essentially combines the above commands", 
     "* TOURNAMENT COMMANDS",
     "/tour tier:participants -- Starts a tournament.",
     "/drop user -- Removes the user from the tournament. Aliased to /dropout.",
@@ -824,11 +825,27 @@ addAdminCommand("kickall", function(ip) {
 });
 
 addModCommand("ip", function(player_name) {
-  announce(this.id, player_name + " has ip address " + sys.ip(sys.id(player_name)));
+  if (sys.loggedIn(sys.id(player_name)) === true) {
+    announce(this.id, player_name + " is logged in with ip address " + sys.ip(sys.id(player_name)));
+  } else if (sys.loggedIn(sys.id(player_name)) === false) {
+    announce(this.id, player_name + " last logged on from ip address " + sys.dbIp(player_name));
+  } else {
+    announce(this.id, "Something went wrong. Did you enter a valid user?");
+  }
 });
 
 addModCommand("aliases",function(ip) {
   announce(this.id, ip + " is associated with the following usernames:" + sys.aliases(ip));
+});
+
+addModCommand("alts", function(userName) {
+  if (sys.loggedIn(sys.id(userName)) === true) {
+    announce(this.id, "Player " + userName + " (IP " + sys.ip(sys.id(userName)) + ") is associated with the following: " + sys.aliases(sys.ip(sys.id(userName))) + ".");
+  } else if (sys.loggedIn(sys.id(userName)) === false) {
+    announce(this.id, "Player " + userName + " (IP " + sys.dbIp(userName) + ") is associated with the following: " + sys.aliases(sys.dbIp(userName)) + ".");
+  } else {
+    announce(this.id, "Something went wrong. Did you enter a valid user?");
+  }
 });
 
 addModCommand("playerCount", function(){
