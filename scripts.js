@@ -942,6 +942,13 @@ addModCommand("wall", function() {
 
 addModCommand([ "ban", "b" ], function(player_name, length, reason) {
   var auth = parseInt(sys.dbAuth(player_name), 10);
+  var ip;
+  if (sys.loggedIn(sys.id(player_name)) === true) {
+    ip = sys.ip(sys.id(player_name));
+  } else {
+    ip = sys.dbIp(player_name);
+  }
+
   var message;
   if (this.outranks(auth)) {
     if (length && /^(\d+[mshdyMw]?)+$/.test(length)) {
@@ -956,7 +963,7 @@ addModCommand([ "ban", "b" ], function(player_name, length, reason) {
       length = Math.min(length, MODERATOR_MAX_BAN_LENGTH);
     }
 
-    message = player_name + " was banned by " + this.name + " for " + prettyPrintTime(length) + ".";
+    message = player_name + " (IP:"+ip+") was banned by " + this.name + " for " + prettyPrintTime(length) + ".";
     if (reason) {
       message += " (" + reason + ")";
     }
@@ -978,8 +985,15 @@ addAdminCommand(["unsilence", "desilence"], function() {
 
 addAdminCommand(["permban", "permaban", "pb"], function(playerName, reason) {
   var auth = parseInt(sys.dbAuth(playerName), 10);
+  var ip;
+  if (sys.loggedIn(sys.id(player_name)) === true) {
+    ip = sys.ip(sys.id(player_name));
+  } else {
+    ip = sys.dbIp(player_name);
+  }
+
   if (this.outranks(auth)) {
-    var message = playerName + " was banned by " + this.name + " for eternity.";
+    var message =  player_name + " (IP:"+ip+") was banned by " + this.name + " for eternity.";
     if (reason) {
       message += " (" + reason + ")";
     }
