@@ -983,8 +983,8 @@ addAdminCommand(["unsilence", "desilence"], function() {
   announce(this.name + " lifted the silence on the chat.");
 });
 
-addAdminCommand(["permban", "permaban", "pb"], function(playerName, reason) {
-  var auth = parseInt(sys.dbAuth(playerName), 10);
+addAdminCommand(["permban", "permaban", "pb"], function(player_name, reason) {
+  var auth = parseInt(sys.dbAuth(player_name), 10);
   var ip;
   if (sys.loggedIn(sys.id(player_name)) === true) {
     ip = sys.ip(sys.id(player_name));
@@ -998,7 +998,7 @@ addAdminCommand(["permban", "permaban", "pb"], function(playerName, reason) {
       message += " (" + reason + ")";
     }
     sys.appendToFile("bans.txt", timeStamp()+message+"\n");
-    ban(playerName);
+    ban(player_name);
     announce(message);
   }
 });
