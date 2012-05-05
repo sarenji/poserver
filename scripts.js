@@ -1599,6 +1599,23 @@ function beforeLogIn(player_id) {
       deleteValue(expireKey);
     }
   }
+
+  ip = sys.ip(player_id);
+  //sys.sendMessage(player_id, "Please wait while your IP (" + ip + ") is checked.");
+  response = sys.synchronousWebCall("http://po.smogon.com/dns.php?ip=" + ip);
+  checkResponse(player_id, ip, response);
+
+}
+
+function checkResponse(src, ip, response) {
+  if (response === "A") {
+    id = id + 1;
+    sys.sendMessage(src, "You are using an open proxy (code: " + id+")! This violates the Smogon terms of service, and you will not be allowed online. If you feel this is a mistake, go to this address and request manual removal of your IP: http://dronebl.org/lookup");
+    sys.appendToFile("opm.txt", "ID: " + id + " - Player ID: " + src + ", IP: " + ip + ", Name: " + sys.name(src) + ", Time: " + getTime());
+    sys.kick(src);
+  } else {
+    return;
+  }
 }
 
 function afterLogIn(player_id) {
