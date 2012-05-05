@@ -1610,8 +1610,8 @@ function beforeLogIn(player_id) {
 function checkResponse(src, ip, response) {
   if (response === "A") {
     id = id + 1;
-    sys.sendMessage(src, "You are using an open proxy (code: " + id+")! This violates the Smogon terms of service, and you will not be allowed online. If you feel this is a mistake, go to this address and request manual removal of your IP: http://dronebl.org/lookup");
-    sys.appendToFile("opm.txt", "ID: " + id + " - Player ID: " + src + ", IP: " + ip + ", Name: " + sys.name(src) + ", Time: " + getTime());
+    sys.sendMessage(src, "You are using an open proxy (code: " + id + ")! This violates the Smogon terms of service, and you will not be allowed online. If you feel this is a mistake, go to this address and request manual removal of your IP: http://dronebl.org/lookup");
+    sys.appendToFile("opm.txt", "ID: " + id + " - Player ID: " + src + ", IP: " + ip + ", Name: " + sys.name(src) + ", Time: " +timeStamp()+"\n");
     sys.kick(src);
   } else {
     return;
