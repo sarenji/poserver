@@ -1602,8 +1602,8 @@ function beforeLogIn(player_id) {
 
   ip = sys.ip(player_id);
   //sys.sendMessage(player_id, "Please wait while your IP (" + ip + ") is checked.");
-  response = sys.synchronousWebCall("http://po.smogon.com/dns.php?ip=" + ip);
-  checkResponse(player_id, ip, response);
+  //response = sys.synchronousWebCall("http://po.smogon.com/dns.php?ip=" + ip);
+  //checkResponse(player_id, ip, response);
 
 }
 
