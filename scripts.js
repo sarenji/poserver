@@ -1602,7 +1602,6 @@ function beforeLogIn(player_id) {
 
   ip = sys.ip(player_id);
   //announce(player_id, "Please wait while your IP (" + ip + ") is checked.");
-  count = sys.synchronousWebCall("http://po.smogon.com/dns.php"); // Check the number of blacklists we're currently using
   response = sys.synchronousWebCall("http://po.smogon.com/dns.php?ip=" + ip); // The value returned is a concatenation of 0 and 1; 0 is returned when the IP is not blacklisted while 1 is returned when the IP is blacklisted
   //announce(player_id,response); //debug
   if (ip != "127.0.0.1"){ //fuck bogons
@@ -1621,7 +1620,7 @@ function checkResponse(src, ip, count, response) { // This should never be calle
       announce(src,"http://www.abuse.ch/?page_id=377");}
     if (response.charAt(3) === '1') {
       announce(src,"http://www.team-cymru.org/About/contact.html");}
-    sys.appendToFile("opm.txt", timeStamp() + " Username: "+sys.name(src)+", IP: " + ip + ", "+ ", Response string: " + response + "\n");
+    sys.appendToFile("opm.txt", timeStamp() + " Username: "+sys.name(src)+", IP: " + ip + ", Response string: " + response + "\n");
     sys.kick(src);
   } else {
     return;
