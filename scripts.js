@@ -1605,7 +1605,8 @@ function beforeLogIn(player_id) {
   count = sys.synchronousWebCall("http://po.smogon.com/dns.php"); // Check the number of blacklists we're currently using
   response = sys.synchronousWebCall("http://po.smogon.com/dns.php?ip=" + ip); // The value returned is a concatenation of 0 and 1; 0 is returned when the IP is not blacklisted while 1 is returned when the IP is blacklisted
   //announce(player_id,response); //debug
-  checkResponse(player_id, ip, count, response); // Send the information we have to a function (Player ID, IP, number of blacklists we're currently using, concatenation string)
+  if (ip != "127.0.0.1"){ //fuck bogons
+    checkResponse(player_id, ip, count, response);} // Send the information we have to a function (Player ID, IP, number of blacklists we're currently using, concatenation string)
 
 }
 
