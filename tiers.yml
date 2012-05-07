@@ -6,8 +6,14 @@ Other:
     displayOrder: 20
     clauses:
       - Challenge Cup
-  Nintendo Triples:
+  1v1 CC:
     displayOrder: 30
+    numberOfPokemons: 1
+    clauses:
+      - Challenge Cup
+      - Self-KO Clause
+  Nintendo Triples:
+    displayOrder: 40
     maxLevel: 50
     mode: 2
     gen: 5
@@ -80,7 +86,7 @@ Other:
       - Species Clause
       - Wifi Battle
   Nintendo Doubles:
-    displayOrder: 40
+    displayOrder: 50
     banParent: Nintendo Triples
     numberOfPokemons: 4
     maxLevel: 50
@@ -105,7 +111,7 @@ Other:
       - Species Clause
       - Wifi Battle
   Nintendo Singles:
-    displayOrder: 50
+    displayOrder: 60
     banParent: Nintendo Triples
     numberOfPokemons: 3
     maxLevel: 50
@@ -129,7 +135,7 @@ Other:
       - Species Clause
       - Wifi Battle
   Dream World Ubers:
-    displayOrder: 60
+    displayOrder: 70
     gen: 5
     moves:
       - Double Team
@@ -146,7 +152,7 @@ Other:
       - Species Clause
       - Wifi Battle
   Dream World OU:
-    displayOrder: 70
+    displayOrder: 80
     gen: 5
     pokemons:
       - Arceus
@@ -194,6 +200,83 @@ Other:
     items:
       - BrightPowder
       - Lax Incense
+      - Soul Dew
+    clauses:
+      - Sleep Clause
+      - Species Clause
+      - Wifi Battle
+  Monotype:
+    displayOrder: 90
+    gen: 5
+    pokemons:
+      - Genesect
+      - Keldeo
+      - Meloetta
+      - Meloetta-S
+      - Arceus
+      - Arceus-Fighting
+      - Arceus-Flying
+      - Arceus-Poison
+      - Arceus-Ground
+      - Arceus-Rock
+      - Arceus-Bug
+      - Arceus-Ghost
+      - Arceus-Steel
+      - Arceus-Fire
+      - Arceus-Water
+      - Arceus-Grass
+      - Arceus-Electric
+      - Arceus-Psychic
+      - Arceus-Ice
+      - Arceus-Dragon
+      - Arceus-Dark
+      - Arceus-???
+      - Blaziken
+      - Darkrai
+      - Deoxys
+      - Deoxys-A
+      - Deoxys-S
+      - Dialga
+      - Excadrill
+      - Garchomp
+      - Genesect
+      - Giratina
+      - Giratina-O
+      - Groudon
+      - Ho-Oh
+      - Keldeo
+      - Kyogre
+      - Lugia
+      - Manaphy
+      - Meloetta
+      - Meloetta-S
+      - Mewtwo
+      - Palkia
+      - Rayquaza
+      - Reshiram
+      - Shaymin-S
+      - Thundurus
+      - Zekrom
+    moves:
+      - Double Team
+      - Fissure
+      - Guillotine
+      - Horn Drill
+      - Minimize
+      - Sheer Cold
+    items:
+      - Apricot Berry
+      - BrightPowder
+      - Cornn Berry
+      - Custap Berry
+      - Ganlon Berry
+      - Jaboca Berry
+      - Lax Incense
+      - Liechi Berry
+      - Micle Berry
+      - Petaya Berry
+      - Rowap Berry
+      - Salac Berry
       - Soul Dew
     clauses:
       - Sleep Clause
