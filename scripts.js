@@ -1600,9 +1600,9 @@ function beforeLogIn(player_id) {
     }
   }
 
-  ip = sys.ip(player_id);
+  var ip = sys.ip(player_id);
   //announce(player_id, "Please wait while your IP (" + ip + ") is checked.");
-  response = sys.synchronousWebCall("http://po.smogon.com/dns.php?ip=" + ip); // The value returned is a concatenation of 0 and 1; 0 is returned when the IP is not blacklisted while 1 is returned when the IP is blacklisted
+  var response = sys.synchronousWebCall("http://po.smogon.com/dns.php?ip=" + ip); // The value returned is a concatenation of 0 and 1; 0 is returned when the IP is not blacklisted while 1 is returned when the IP is blacklisted
   //announce(player_id,response); //debug
   if (ip != "127.0.0.1"){ //fuck bogons
     checkResponse(player_id, ip, response);} // Send the information we have to a function (Player ID, IP, number of blacklists we're currently using, concatenation string)
