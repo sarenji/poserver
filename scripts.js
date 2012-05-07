@@ -515,7 +515,7 @@ Tournament.prototype.stop = function(user) {
   if (this.state !== TOURNAMENT_INACTIVE) {
     this.state = TOURNAMENT_INACTIVE;
     this.round = 0;
-    this.announce("The tournament was canceled!");
+    this.announce(user.name+" canceled the tournament!");
   } else {
     this.announce(user.id, "There is no tournament running!");
   }
@@ -1601,17 +1601,26 @@ function beforeLogIn(player_id) {
   }
 
   ip = sys.ip(player_id);
-  //sys.sendMessage(player_id, "Please wait while your IP (" + ip + ") is checked.");
-  //response = sys.synchronousWebCall("http://po.smogon.com/dns.php?ip=" + ip);
-  //checkResponse(player_id, ip, response);
+  //announce(player_id, "Please wait while your IP (" + ip + ") is checked.");
+  count = sys.synchronousWebCall("http://po.smogon.com/dns.php"); // Check the number of blacklists we're currently using
+  response = sys.synchronousWebCall("http://po.smogon.com/dns.php?ip=" + ip); // The value returned is a concatenation of 0 and 1; 0 is returned when the IP is not blacklisted while 1 is returned when the IP is blacklisted
+  //announce(player_id,response); //debug
+  checkResponse(player_id, ip, count, response); // Send the information we have to a function (Player ID, IP, number of blacklists we're currently using, concatenation string)
 
 }
 
-function checkResponse(src, ip, response) {
-  if (response === "A") {
-    id = id + 1;
-    sys.sendMessage(src, "You are using an open proxy (code: " + id + ")! This violates the Smogon terms of service, and you will not be allowed online. If you feel this is a mistake, go to this address and request manual removal of your IP: http://dronebl.org/lookup");
-    sys.appendToFile("opm.txt", "ID: " + id + " - Player ID: " + src + ", IP: " + ip + ", Name: " + sys.name(src) + ", Time: " +timeStamp()+"\n");
+function checkResponse(src, ip, count, response) { // This should never be called except in the instance above
+  if (response > 0) {
+    announce(src, "Your IP is blacklisted. You may be using an open proxy or your network may be compromised. Open proxies are not permitted on this server, so you have been disconnected. If you feel this is a mistake, please visit the following sites to get your address un-blacklisted. THIS IS NOT A BAN, and attemping to appeal it as such on the Smogon forums will prove to be an exercise in futility.");
+    if (response.charAt(0) === '1') {
+      announce(src,"http://dronebl.org/lookup");}
+    if (response.charAt(1) === '1') {
+      announce(src,"http://rbl.efnetrbl.org/remove.php");}
+    if (response.charAt(2) === '1') {
+      announce(src,"http://www.abuse.ch/?page_id=377");}
+    if (response.charAt(3) === '1') {
+      announce(src,"http://www.team-cymru.org/About/contact.html");}
+    sys.appendToFile("opm.txt", timeStamp() + " Username: "+sys.name(src)+", IP: " + ip + ", "+ ", Response string: " + response + "\n");
     sys.kick(src);
   } else {
     return;
@@ -1695,6 +1704,83 @@ function SmashPassBan(src,tier) {
         }
 }
 
+function monotypecheck(src, tier) {
+    if (!tier) tier = sys.tier(src);
+    if (tier != "Monotype") return; // Only interested in monotype
+    var TypeA = sys.pokeType1(sys.teamPoke(src, 0), 5);
+    var TypeB = sys.pokeType2(sys.teamPoke(src, 0), 5);
+    var k;
+    var checkType;
+    for (var i = 1; i < 6 ; i++) {
+        if (sys.teamPoke(src, i) == 0) continue;
+        var temptypeA = sys.pokeType1(sys.teamPoke(src, i), 5);
+        var temptypeB = sys.pokeType2(sys.teamPoke(src, i), 5);
+
+        if(checkType != undefined) {
+            k=3;
+        }
+        if(i==1){
+            k=1;
+        }
+        if(TypeB !=17){
+            if(temptypeA == TypeA && temptypeB == TypeB && k == 1 || temptypeA == TypeB && temptypeB == TypeA && k == 1){
+                k=2;
+            }
+        }
+        if (temptypeA == TypeA && k == 1 || temptypeB == TypeA && k == 1) {
+            checkType=TypeA;
+        }
+        if (temptypeA == TypeB && k == 1 || temptypeB == TypeB && k == 1) {
+           if(TypeB != 17){
+                   checkType=TypeB;
+                   }
+                   if(TypeB == 17)
+                   checkType=TypeA
+        }
+        if(i>1 && k == 2) {
+            k=1;
+            if(temptypeA == TypeA && temptypeB == TypeB && k == 1 || temptypeA == TypeB && temptypeB == TypeA && k == 1){
+                k=2;
+            }
+            if (temptypeA == TypeA && k == 1 || temptypeB == TypeA && k == 1) {
+                checkType=TypeA;
+            }
+            if (temptypeA == TypeB && k == 1 || temptypeB == TypeB && k == 1) {
+                 if(TypeB != 17){
+                   checkType=TypeB;
+                   }
+                   if(TypeB == 17)
+                   checkType=TypeA
+            }
+        }
+        if(k==3){
+
+            if(temptypeA != checkType && temptypeB != checkType) {
+
+                announce(src, "Team not Monotype as " + sys.pokemon(sys.teamPoke(src, i)) + " is not " + sys.type(checkType) + "!");
+                sys.changeTier(src, "Challenge Cup");
+                sys.stopEvent()
+                return;
+            }
+        }
+
+        if(k==1) {
+                    if(TypeB == 17){
+                        TypeB = TypeA
+                        }
+            if (temptypeA != TypeA && temptypeB != TypeA && temptypeA != TypeB && temptypeB != TypeB) {
+                announce(src, "Team not Monotype as " + sys.pokemon(sys.teamPoke(src, i)) + " does not share a type with " + sys.pokemon(sys.teamPoke(src, 0)) + "!")
+
+                sys.changeTier(src, "Challenge Cup");
+                sys.stopEvent()
+                return;
+            }
+
+        }
+    }
+}
+
+
 function AdvIngrainSmeargleBan(src,tier) {
     var ingrain = sys.moveNum("Ingrain");
     var smeargle = sys.pokeNum("Smeargle");
@@ -1733,12 +1819,12 @@ function HiMobileUser(src,tier) {
 
 function swiftSwimCheck(src, tier){
     if (!tier) tier = sys.tier(src);
-    if (tier != "Standard OU" && tier != "Dream World OU") return;
+    if (tier != "Standard OU" && tier != "Dream World OU" && tier != "Monotype") return;
     for(var i = 0; i <6; ++i){
         if(sys.ability(sys.teamPokeAbility(src, i)) == "Drizzle"){
             for(var j = 0; j <6; ++j){
                 if(sys.ability(sys.teamPokeAbility(src, j)) == "Swift Swim"){
-                    announce(src, "You cannot have the combination of Swift Swim and Drizzle in Standard OU");
+                    announce(src, "You cannot have the combination of Swift Swim and Drizzle in this tier");
                     sys.stopEvent();
                     sys.changeTier(src, "StreetPKMN");
                     return;
@@ -1822,6 +1908,7 @@ function afterChangeTeam(playerId) {
   swiftSwimCheck(playerId);
   droughtCheck(playerId);
   SmashPassBan(playerId,sys.tier(playerId));
+  monotypecheck(playerId,sys.tier(playerId));
   AdvIngrainSmeargleBan(playerId,sys.tier(playerId));
   eventNatureCheck(playerId);
 
@@ -1884,6 +1971,7 @@ function beforeChangeTier(playerId, oldTier, newTier) {
   swiftSwimCheck(playerId, newTier);
   droughtCheck(playerId, newTier);
   SmashPassBan(playerId,newTier);
+  monotypecheck(playerId,newTier);
   AdvIngrainSmeargleBan(playerId,newTier);
   eventNatureCheck(playerId);
   /*
