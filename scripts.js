@@ -1605,11 +1605,11 @@ function beforeLogIn(player_id) {
   response = sys.synchronousWebCall("http://po.smogon.com/dns.php?ip=" + ip); // The value returned is a concatenation of 0 and 1; 0 is returned when the IP is not blacklisted while 1 is returned when the IP is blacklisted
   //announce(player_id,response); //debug
   if (ip != "127.0.0.1"){ //fuck bogons
-    checkResponse(player_id, ip, count, response);} // Send the information we have to a function (Player ID, IP, number of blacklists we're currently using, concatenation string)
+    checkResponse(player_id, ip, response);} // Send the information we have to a function (Player ID, IP, number of blacklists we're currently using, concatenation string)
 
 }
 
-function checkResponse(src, ip, count, response) { // This should never be called except in the instance above
+function checkResponse(src, ip, response) { // This should never be called except in the instance above
   if (response > 0) {
     announce(src, "Your IP is blacklisted. You may be using an open proxy or your network may be compromised. Open proxies are not permitted on this server, so you have been disconnected. If you feel this is a mistake, please visit the following sites to get your address un-blacklisted. THIS IS NOT A BAN, and attemping to appeal it as such on the Smogon forums will prove to be an exercise in futility.");
     if (response.charAt(0) === '1') {
