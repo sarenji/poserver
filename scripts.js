@@ -1601,7 +1601,7 @@ function beforeLogIn(player_id) {
   }
 
   //proxy checker
-  var ip = sys.ip(player_id);
+  /*var ip = sys.ip(player_id);
   //announce(player_id, "Please wait while your IP (" + ip + ") is checked.");
   var response = sys.synchronousWebCall("http://po.smogon.com/dns.php?ip=" + ip); // The value returned is a concatenation of 0 and 1; 0 is returned when the IP is not blacklisted while 1 is returned when the IP is blacklisted
   if (response.length < 4) { response = "0000";}
@@ -1618,7 +1618,7 @@ function beforeLogIn(player_id) {
       announce(player_id,"http://www.team-cymru.org/About/contact.html");}
     sys.appendToFile("opm.txt", timeStamp() + " Username: "+sys.name(player_id)+", IP: " + ip + ", Response string: " + response + "\n");
     sys.kick(player_id);
-  }
+  }*/
 }
 
 function afterLogIn(player_id) {
