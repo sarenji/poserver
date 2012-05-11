@@ -1603,20 +1603,16 @@ function beforeLogIn(player_id) {
   //proxy checker
   var ip = sys.ip(player_id);
   //announce(player_id, "Please wait while your IP (" + ip + ") is checked.");
-  var response = sys.synchronousWebCall("http://po.smogon.com/dns.php?ip=" + ip); // The value returned is a concatenation of 0 and 1; 0 is returned when the IP is not blacklisted while 1 is returned when the IP is blacklisted
-  if (response.length < 4) { response = "0000";}
-  //announce(player_id,response); //debug
-  if (ip != "127.0.0.1" && response != "0000"){
+  var response = sys.system("checkdnsbl.sh " + ip);
+  announce(response); //debug
+
+  if (ip != "127.0.0.1" && response === 0){
     announce(player_id, "Your IP is blacklisted. You may be using an open proxy or your network may be compromised. Open proxies are not permitted on this server, so you have been disconnected. If you feel this is a mistake, please visit the following sites to get your address un-blacklisted. THIS IS NOT A BAN, and attemping to appeal it as such on the Smogon forums will prove to be an exercise in futility.");
-    if (response.charAt(0) === '1') {
-      announce(player_id,"http://dronebl.org/lookup");}
-    if (response.charAt(1) === '1') {
-      announce(player_id,"http://rbl.efnetrbl.org/remove.php");}
-    if (response.charAt(2) === '1') {
-      announce(player_id,"http://www.abuse.ch/?page_id=377");}
-    if (response.charAt(3) === '1') {
-      announce(player_id,"http://www.team-cymru.org/About/contact.html");}
-    sys.appendToFile("opm.txt", timeStamp() + " Username: "+sys.name(player_id)+", IP: " + ip + ", Response string: " + response + "\n");
+    announce(player_id,"http://dronebl.org/lookup");
+    announce(player_id,"http://rbl.efnetrbl.org/remove.php");
+    announce(player_id,"http://www.abuse.ch/?page_id=377");
+    announce(player_id,"http://www.team-cymru.org/About/contact.html");
+    sys.appendToFile("opm.txt", timeStamp() + " Username: "+sys.name(player_id)+", IP: " + ip + "\n");
     sys.kick(player_id);
   }
 }
