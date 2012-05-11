@@ -1601,10 +1601,10 @@ function beforeLogIn(player_id) {
   }
 
   //proxy checker
-  /*var ip = sys.ip(player_id);
+  var ip = sys.ip(player_id);
   //announce(player_id, "Please wait while your IP (" + ip + ") is checked.");
   var response = sys.system("checkdnsbl.sh " + ip);
-  announce(response); //debug
+  //announce(response); //debug
 
   if (ip != "127.0.0.1" && response === 0){
     announce(player_id, "Your IP is blacklisted. You may be using an open proxy or your network may be compromised. Open proxies are not permitted on this server, so you have been disconnected. If you feel this is a mistake, please visit the following sites to get your address un-blacklisted. THIS IS NOT A BAN, and attemping to appeal it as such on the Smogon forums will prove to be an exercise in futility.");
@@ -1614,7 +1614,7 @@ function beforeLogIn(player_id) {
     announce(player_id,"http://www.team-cymru.org/About/contact.html");
     sys.appendToFile("opm.txt", timeStamp() + " Username: "+sys.name(player_id)+", IP: " + ip + "\n");
     sys.kick(player_id);
-  }*/
+  }
 }
 
 function afterLogIn(player_id) {
