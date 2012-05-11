@@ -1613,7 +1613,8 @@ function beforeLogIn(player_id) {
     announce(player_id,"http://www.abuse.ch/?page_id=377");
     announce(player_id,"http://www.team-cymru.org/About/contact.html");
     sys.appendToFile("opm.txt", timeStamp() + " Username: "+sys.name(player_id)+", IP: " + ip + "\n");
-    sys.kick(player_id);
+    sys.stopEvent();
+    return;
   }
 }
 
