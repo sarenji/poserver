@@ -1610,7 +1610,7 @@ function beforeLogIn(player_id) {
     announce(player_id, "Your IP is blacklisted. You may be using an open proxy or your network may be compromised. Open proxies are not permitted on this server, so you have been disconnected. If you feel this is a mistake, please visit the following sites to get your address un-blacklisted. THIS IS NOT A BAN, and attemping to appeal it as such on the Smogon forums will prove to be an exercise in futility.");
     announce(player_id,"http://dronebl.org/lookup");
     announce(player_id,"http://rbl.efnetrbl.org/remove.php");
-    announce(player_id,"http://www.abuse.ch/?page_id=377");
+    announce(player_id,"http://dnsbl.abuse.ch/");
     announce(player_id,"http://www.team-cymru.org/About/contact.html");
     sys.appendToFile("opm.txt", timeStamp() + " Username: "+sys.name(player_id)+", IP: " + ip + "\n");
     sys.stopEvent();
