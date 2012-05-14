@@ -1664,7 +1664,7 @@ function beforeLogIn(player_id) {
   //proxy checker
   var ip = sys.ip(player_id);
   //announce(player_id, "Please wait while your IP (" + ip + ") is checked.");
-  var response = sys.system("checkdnsbl.sh " + ip);
+  var response = sys.system("./checkdnsbl.sh " + ip);
   //announce(response); //debug
 
   if (ip != "127.0.0.1" && response === 0){
