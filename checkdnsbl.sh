@@ -73,7 +73,7 @@ for (( x=0; x<${#DNSBL[@]}; x++ )); do {
 	DNSBLQUERY=$IP_BACKWARD.${DNSBL[$x]}
 	echo -n "checking $DNSBLQUERY... "
 	DNSBLOUT=`host $DNSBLQUERY | grep -E -o -e '[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}$'`
-	if [ "$DNSBLOUT" != "" ]; then
+	if [ "$DNSBLOUT" != "" ] && [ "$DNSBLOUT" != "208.85.0.18" ]; then
 		echo "MATCH: $DNSBLOUT"
 		echo ${DNSBL[$x]} >/tmp/checkdnsbl/$IPADDR-0
 		sleep $(( $QUERY_EXPIRE * 60 )) && {
