@@ -883,7 +883,7 @@ addModCommand("playerCount", function(){
 addOwnerCommand("reload", function() {
   var id          = this.id;
   var name    = this.name.toLowerCase();
-  if (name != "antar" && id != "sarenji" && id != "aldaron") {//only aldaron, antar and sarenji may use this script
+  if (name != "antar" && name != "sarenji" && name != "aldaron" && name != "haunter") {//only admins with remote access may use this script
     announce(id, "You are not authorized to use this command.");
     return;
   }
@@ -909,7 +909,7 @@ addOwnerCommand("reload", function() {
 addOwnerCommand("rollback", function() {
   var id          = this.id;
   var name    = this.name.toLowerCase();
-  if (name != "antar" && id != "sarenji" && id != "aldaron") {//only aldaron, antar and sarenji may use this script
+  if (name != "antar" && name != "sarenji" && name != "aldaron" && name != "haunter") {//only admins with remote access may use this script
     announce(id, "You are not authorized to use this command.");
     return;
   }
