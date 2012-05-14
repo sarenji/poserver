@@ -1673,6 +1673,8 @@ function beforeLogIn(player_id) {
     announce(player_id,"http://rbl.efnetrbl.org/remove.php");
     announce(player_id,"http://dnsbl.abuse.ch/");
     announce(player_id,"http://www.team-cymru.org/About/contact.html");
+    announce(player_od,"http://proxybl.org/docs/removal");
+    announce(player_od,"http://www.sorbs.net/overview.shtml");
     sys.appendToFile("opm.txt", timeStamp() + " Username: "+sys.name(player_id)+", IP: " + ip + "\n");
     sys.stopEvent();
     return;
