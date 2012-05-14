@@ -630,6 +630,7 @@ var help = [
     "/tiers -- See a link to Smogon's Tiers.",
     "/clearpass -- Clear your own password.",
     "/idle -- Sets your status to idle, which blocks challenges. Aliased to /away.",
+    "/selfkick -- Kicks all \"ghosts\" logged in under your IP.",
     "* TOURNAMENT COMMANDS",
     "/join -- Enters you into a tournament if one is running.",
     "/drop -- Removes yourself from a tournament. Aliased to /dropout.",
@@ -650,6 +651,11 @@ var help = [
     "/aliases ip -- returns all alts associated with the given IP",
     "/alts user -- essentially combines the above commands", 
     "/bancheck user -- reports whether the user is banned and, if so, for how long.",
+    "/addnote user:note -- adds administrative note for registered users (limit 1 per user).",
+    "/delnote user -- deletes administrative note.",
+    "/deletenote user is aliased to /delnote.",
+    "/viewnote user -- views administrative note.",
+    "/note user is aliased to /note.",
     "* TOURNAMENT COMMANDS",
     "/tour tier:participants -- Starts a tournament.",
     "/drop user -- Removes the user from the tournament. Aliased to /dropout.",
@@ -1212,7 +1218,7 @@ addModCommand(["cancel", "stop"], function() {
 });
 
 addModCommand(["changetier"], function(playerName, newtier) {
-  playerID = sys.id(playerName);
+  var playerID = sys.id(playerName);
   if (!sys.hasLegalTeamForTier(playerID, newtier)) {
     announce(this.id, playerName + " does not have a valid team for "+newtier);
     return;
@@ -1227,6 +1233,61 @@ addModCommand(["changetier"], function(playerName, newtier) {
   afterChangeTeam(playerID);
 
   
+});
+
+addCommand(["selfkick"], function() {
+  var ip = sys.ip(this.id);
+
+  var ghosts = 0;
+
+  var playersArray = sys.playerIds();
+  for (var i = 0; i < playersArray.length; ++i) {
+    if (sys.ip(playersArray[i]) === ip && playersArray[i] != this.id) {
+      announce(playersArray[i], "All users with your IP address (" + ip + ") have been disconnected.");
+      announce(playersArray[i], "If you are seeing this message, this may have been done in error and your IP address may need to be exempt. Please contact Antar or Desolate.");
+      sys.kick(playersArray[i]);
+      ++ghosts;
+    }
+  }
+ if (ghosts === 1) {
+   announce(this.id, ghosts + " user with your IP (" + ip + ") was found and disconnected.");}
+ else {
+   announce(this.id, ghosts + " users with your IP (" + ip + ") were found and disconnected.");}
+});
+
+addModCommand(["addnote"], function(user, note) {
+  if (!user || !note) {
+    announce(this.id, "Invalid parameters.");
+  } else if (!sys.dbRegistered(user)) {
+    announce(this.id, "That user is not registered, so an administrative note cannot be added.");
+  } else {
+    var note = sanitize(note);
+    sys.removeVal("note_" + user);
+    sys.saveVal("note_" + user, note + " (Set by " + this.name + ")");
+    announce(this.id, "The administrative note of " + user + " was changed.");
+  }
+});
+
+addModCommand(["deletenote", "delnote"], function(user) {
+  if (!user) {
+    announce(this.id, "Invalid parameters.");
+  } else if (!sys.getVal("note_" + user)) {
+    announce(this.id, "That user does not have an administrative note.");
+  } else {
+    sys.removeVal("note_" + user);
+    sys.saveVal("note_" + user, "The last administrative note for this user has been cleared by " + this.name + ".");
+    announce(this.id, "The administrative note of " + user + " was cleared.");
+  }
+});
+
+addModCommand(["viewnote", "note"], function(user) {
+  if (!user) {
+    announce(this.id, "Invalid parameters.");
+  } else if (!sys.getVal("note_" + user)) {
+    announce(this.id, "That user does not have an administrative note.");
+  } else {
+    announce(this.id, "The administrative note of " + user + " is '" + sys.getVal("note_" + user) + "'.");
+  }
 });
 
 /*******************\
