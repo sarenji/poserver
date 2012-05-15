@@ -41,12 +41,13 @@
 # DNSBL[x] -- array of DNSBL hosts to query
 DNSBL[0]="dnsbl.dronebl.org"
 DNSBL[1]="rbl.efnetrbl.org"
-DNSBL[2]="combined.abuse.ch"
-DNSBL[3]="bogons.cymru.com"
-DNSBL[4]="dnsbl.proxybl.org"
-DNSBL[5]="http.dnsbl.sorbs.net"
-DNSBL[6]="socks.dnsbl.sorbs.net"
-DNSBL[7]="misc.dnsbl.sorbs.net"
+DNSBL[2]="bogons.cymru.com"
+DNSBL[3]="dnsbl.proxybl.org"
+DNSBL[4]="http.dnsbl.sorbs.net"
+DNSBL[5]="socks.dnsbl.sorbs.net"
+DNSBL[6]="misc.dnsbl.sorbs.net"
+DNSBL[7]="escalations.dnsbl.sorbs.net"
+DNSBL[8]="zombie.dnsbl.sorbs.net"
 
 
 
