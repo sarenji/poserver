@@ -1671,7 +1671,6 @@ function beforeLogIn(player_id) {
     announce(player_id, "Your IP is blacklisted. You may be using an open proxy or your network may be compromised. Open proxies are not permitted on this server, so you have been disconnected. If you feel this is a mistake, please visit the following sites to get your address un-blacklisted. THIS IS NOT A BAN, and attemping to appeal it as such on the Smogon forums will prove to be an exercise in futility.");
     announce(player_id,"http://dronebl.org/lookup");
     announce(player_id,"http://rbl.efnetrbl.org/remove.php");
-    announce(player_id,"http://dnsbl.abuse.ch/");
     announce(player_id,"http://www.team-cymru.org/About/contact.html");
     announce(player_od,"http://proxybl.org/docs/removal");
     announce(player_od,"http://www.sorbs.net/overview.shtml");
