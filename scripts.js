@@ -1364,7 +1364,7 @@ function kick(playerName) {
 
 function ban(playerName, expires) {
   if (!expires) {
-    expires = getTime() + 24*3600*10 * 1000//permabans = 10-year bans..?
+    expires = getTime() + 24*3600*365*10 * 1000//permabans = 10-year bans..?
   }
   var banKey = makeKey(playerName, "ban:expires");
   setValue(banKey, expires || 0);
