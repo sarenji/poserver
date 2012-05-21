@@ -678,6 +678,7 @@ var help = [
     "** ADMINISTRATOR COMMANDS",
     "/resetLadder tier -- resets the ratings for the specified tier.",
     "/resetPlayerRating name:tier -- resets the rating of the user in the tier to 1000.",
+    "/pullLogs name:num -- pull all battle logs for user for the past num days and put them on the web server.",
     "/clearpass user -- Clear user's password.",
     "/destroy channel -- Deletes a channel.",
     "/stopBattles -- Prevents new battles from starting (useful if server needs to be restarted).",
@@ -940,6 +941,22 @@ addOwnerCommand("resetPlayerRating", function(player,tier) {
   sys.changeRating(player, tier, 1000);
   announce(this.name + " reset the rating of " + player + " in "+tier);
 });
+
+addOwnerCommand("pullLogs", function(playerName,days) {
+  if (sys.id(playerName) === undefined && sys.dbIp(playerName) === undefined) {//make sure user exists
+    announce(this.id, "Invalid user name.");
+    return;
+  }
+  days = parseInt(days); //sanitize
+  if (days < 0) {
+    announce(this.id, "Invalid date range.");
+    return;
+  }
+
+  sys.system("./pullLogs.sh \""+playerName+"\" "+days+" &");
+  announce(this.id, "Log pull for "+playerName+" initiated.");
+  announce(this.id, "Look for the logs in http://po.smogon.com/Admin/battleLogs/"+playerName);
+});  
 
 addModCommand("wall", function() {
   var message = toArray(arguments).join(":");
