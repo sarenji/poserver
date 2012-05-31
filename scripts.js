@@ -673,7 +673,9 @@ var help = [
     "/unsilence -- Lifts silence.",
     "/permaban -- Permanently bans a user. Aliased to /pb and /permban.",
     "/ipban ip -- bans by IP address. Only works if the user is still online.",
-    "/topic -- Changes the topic."
+    "/topic -- Changes the topic.",
+    "/lagcontrol [num[:time]] -- Only let num people log in per time seconds (default: 2:10 or last used).",
+    "/nolagcontrol -- Disable lag control."
   ], [
     "** ADMINISTRATOR COMMANDS",
     "/resetLadder tier -- resets the ratings for the specified tier.",
@@ -683,9 +685,7 @@ var help = [
     "/destroy channel -- Deletes a channel.",
     "/stopBattles -- Prevents new battles from starting (useful if server needs to be restarted).",
     "/playerCount -- Prints number of players logged onto the server.",
-    "/fixRegistry -- If server falls off the registry, run this, and it'll add it back.",
-    "/lagcontrol [num[:time]] -- Only let num people log in per time seconds (default: 2:10).",
-    "/nolagcontrol -- Disable lag control."
+    "/fixRegistry -- If server falls off the registry, run this, and it'll add it back."
   ]
 ];
 
@@ -1165,7 +1165,7 @@ addOwnerCommand("stopBattles", function() {
   }
 });
 
-addOwnerCommand(["lagcontrol"], function(thresh,period) {
+addAdminCommand(["lagcontrol"], function(thresh,period) {
   if (lagcontrol) {
     announce(this.id, "Lag control is already enabled. Use /nolagcontrol to disable it.");
     return;
@@ -1178,7 +1178,7 @@ addOwnerCommand(["lagcontrol"], function(thresh,period) {
   }
 });
 
-addOwnerCommand(["nolagcontrol"], function() {
+addAdminCommand(["nolagcontrol"], function() {
   if (!lagcontrol) {
     announce(this.id, "Lag control is not enabled. Use /lagcontrol to enable it.");
     return;
@@ -1645,17 +1645,6 @@ function lcreset() {
 }
 
 function beforeLogIn(player_id) {
-  if (lagcontrol) {
-    if (lccount >= lcmax) {
-      announce(player_id, "This server isn't accepting more connections at the moment, this could be an effort to stop an excess amount of lag or an attack on the server. Please try again later.");
-      announce(player_id, "Please do not report this incident as a ban.");
-      sys.stopEvent();
-      return;
-    } else {
-      ++lccount;
-    }
-  }
-
   var player_name = sys.name(player_id);
   if (/[^\w-\[\]\. ]/g.test(player_name)) {
     announce(player_id, "Please do not use special characters in your name.");
@@ -1678,7 +1667,18 @@ function beforeLogIn(player_id) {
     }
   }
 
-  //proxy checker
+  if (lagcontrol) {
+    if (lccount >= lcmax && parseInt(sys.dbAuth(player_name), 10) == 0) {//mods can bypass lagcontrol
+      announce(player_id, "This server isn't accepting more connections at the moment, this could be an effort to stop an excess amount of lag or an attack on the server. Please try again later.");
+      announce(player_id, "Please do not report this incident as a ban.");
+      sys.stopEvent();
+      return;
+    } else {
+      ++lccount;
+    }
+  }
+
+  /*proxy checker
   var ip = sys.ip(player_id);
   //announce(player_id, "Please wait while your IP (" + ip + ") is checked.");
   var response = sys.system("./checkdnsbl.sh " + ip);
@@ -1694,7 +1694,7 @@ function beforeLogIn(player_id) {
     sys.appendToFile("opm.txt", timeStamp() + " Username: "+sys.name(player_id)+", IP: " + ip + "\n");
     sys.stopEvent();
     return;
-  }
+  }*/
 }
 
 function afterLogIn(player_id) {
@@ -1708,6 +1708,8 @@ function afterLogIn(player_id) {
   }*/
 
   joinChannels(user);
+  if (silence) {
+  	announce(player_id,"The chat is silenced."); }
   afterChangeTeam(player_id);
 
 }
