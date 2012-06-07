@@ -1776,6 +1776,23 @@ function SmashPassBan(src,tier) {
         }
 }
 
+function LightingRodPika(src,tier) {
+    if (tier == "Dream World OU" || tier == "Dream World Ubers" || tier == "StretPKMN"){
+	return
+    }
+    for(var i = 0; i < 6; ++i) {
+	if (sys.teamPoke(src,i) == sys.pokeNum("Pikachu") || sys.teamPoke(src,i) == sys.pokeNum("Raichu"))
+	{
+		if (sys.ability(sys.teamPokeAbility(src, i)) == "Lightningrod" && sys.hasTeamPokeMove(src,i,sys.moveNum("Extremespeed"))) {
+			announce(src,"Pikachu and Raichu are not allowed to have both Lightningrod and Extremespeed");
+		    	sys.changeTier(src, "1v1 CC");
+		    	sys.stopEvent();
+		    	return
+	}}
+		
+    }
+}
+
 function monotypecheck(src, tier) {
     if (!tier) tier = sys.tier(src);
     if (tier != "Monotype") return; // Only interested in monotype
@@ -1980,6 +1997,7 @@ function afterChangeTeam(playerId) {
   swiftSwimCheck(playerId);
   droughtCheck(playerId);
   SmashPassBan(playerId,sys.tier(playerId));
+  LightingRodPika(playerId,sys.tier(playerId));
   monotypecheck(playerId,sys.tier(playerId));
   AdvIngrainSmeargleBan(playerId,sys.tier(playerId));
   eventNatureCheck(playerId);
@@ -2043,6 +2061,7 @@ function beforeChangeTier(playerId, oldTier, newTier) {
   swiftSwimCheck(playerId, newTier);
   droughtCheck(playerId, newTier);
   SmashPassBan(playerId,newTier);
+  LightingRodPika(playerId,sys.tier(playerId));
   monotypecheck(playerId,newTier);
   AdvIngrainSmeargleBan(playerId,newTier);
   eventNatureCheck(playerId);
