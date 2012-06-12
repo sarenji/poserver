@@ -2157,23 +2157,6 @@ function afterChangeTier(playerId, oldTier, newTier) {
   }
 }
 
-({
-  serverStartUp          : serverStartUp,
-  beforeLogIn            : beforeLogIn,
-  afterLogIn             : afterLogIn,
-  afterBattleEnded       : afterBattleEnded,
-  afterChangeTeam        : afterChangeTeam,
-  afterChannelJoin       : afterChannelJoin,
-  afterChangeTier        : afterChangeTier,
-  beforeBattleMatchup    : beforeBattleMatchup,
-  beforeChallengeIssued  : beforeChallengeIssued,
-  beforeChannelDestroyed : beforeChannelDestroyed,
-  beforeChannelJoin      : beforeChannelJoin,
-  beforeChangeTier       : beforeChangeTier,
-  beforeChannelCreated   : beforeChannelCreated,
-  beforeChatMessage      : beforeChatMessage
-})
-
 /*
  *
  * This checks for the appropriate conditions for the RS 200 tier.
@@ -2465,3 +2448,20 @@ tier_checker.add_new_check(INCLUDING, ["RS 200"], function rubysapphire200Check(
     }
     return !valid;
 });
+
+({
+  serverStartUp          : serverStartUp,
+  beforeLogIn            : beforeLogIn,
+  afterLogIn             : afterLogIn,
+  afterBattleEnded       : afterBattleEnded,
+  afterChangeTeam        : afterChangeTeam,
+  afterChannelJoin       : afterChannelJoin,
+  afterChangeTier        : afterChangeTier,
+  beforeBattleMatchup    : beforeBattleMatchup,
+  beforeChallengeIssued  : beforeChallengeIssued,
+  beforeChannelDestroyed : beforeChannelDestroyed,
+  beforeChannelJoin      : beforeChannelJoin,
+  beforeChangeTier       : beforeChangeTier,
+  beforeChannelCreated   : beforeChannelCreated,
+  beforeChatMessage      : beforeChatMessage
+})
