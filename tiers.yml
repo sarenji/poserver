@@ -2734,6 +2734,27 @@ VGC:
     clauses:
       - Sleep Clause
       - Species Clause
+  RS 200:
+    displayOrder: 40
+    gen: 3
+    moves:
+      - Double Team
+      - Minimize
+      - Fissure
+      - Guillotine
+      - Horn Drill
+      - Sheer Cold
+    items:
+      - Ganlon Berry
+      - Salac Berry
+      - Petaya Berry
+      - Apricot Berry
+      - Lansat Berry
+      - Starf Berry
+    clauses:
+      - Sleep Clause
+      - Species Clause
+
 
 2nd Gen:
   displayOrder: 60
