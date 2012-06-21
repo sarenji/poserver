@@ -1725,8 +1725,8 @@ function droughtCheck(src, tier){
 if (!tier) tier = sys.tier(src);
     if ((tier != "Standard UU") && (tier != "Standard RU") && (tier != "Standard NU")) return;
     for(var i = 0; i <6; ++i){
-        if(sys.ability(sys.teamPokeAbility(src, i)) == "Drought"){
-          announce(src, "Drought is not allowed in the lower tiers.");
+        if(sys.ability(sys.teamPokeAbility(src, i)) == "Drought" || sys.ability(sys.teamPokeAbility(src, i)) == "Sand Stream"){
+          announce(src, "Drought and Sand Stream are not allowed in the lower tiers.");
           sys.stopEvent();
           sys.changeTier(src, "Challenge Cup");
           return;
