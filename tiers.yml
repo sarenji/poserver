@@ -50,7 +50,6 @@ Other:
       - Groudon
       - Ho-Oh
       - Jirachi
-      - Keldeo
       - Kyogre
       - Kyurem
       - Lugia
@@ -207,7 +206,6 @@ Other:
     gen: 5
     pokemons:
       - Genesect
-      - Keldeo
       - Meloetta
       - Meloetta-S
       - Arceus
@@ -254,6 +252,8 @@ Other:
       - Shaymin-S
       - Thundurus
       - Zekrom
+      - Kyurem-B
+      - Kyurem-W
     moves:
       - Double Team
       - Fissure
@@ -1081,7 +1081,6 @@ VGC:
     gen: 5
     pokemons:
       - Genesect
-      - Keldeo
       - Meloetta
       - Meloetta-S
     moves:
@@ -1318,6 +1317,10 @@ VGC:
       - Wobbuffet
       - Staraptor
       - Kyurem
+      - Keldeo
+      - Tornadus-T
+      - Thundurus-T
+      - Landorus-T
     moves:
       - Double Team
       - Fissure
