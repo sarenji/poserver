@@ -433,3 +433,11 @@ Sigilyph
 Tornadus
 Thundurus
 Landorus
+Heatmor
+Tornadus-T
+Thundurus-T
+Landorus-T
+Durant
+Pidove
+Tranquill
+Unfezant
