@@ -1276,6 +1276,7 @@ VGC:
       - Dragonite
       - Politoed
       - Espeon
+      - Mew
       - Forretress
       - Scizor
       - Skarmory
@@ -1301,12 +1302,10 @@ VGC:
       - Deoxys-D
       - Gastrodon-East
       - Conkeldurr
-      - Scrafty
       - Reuniclus
       - Jellicent
       - Ferrothorn
       - Haxorus
-      - Mienshao
       - Hydreigon
       - Volcarona
       - Terrakion
@@ -1320,6 +1319,8 @@ VGC:
       - Tornadus-T
       - Thundurus-T
       - Landorus-T
+      - Hippowdon
+      - Abomasnow
     moves:
       - Double Team
       - Fissure
@@ -1350,14 +1351,12 @@ VGC:
     banParent: Standard UU
     pokemons:
       - Blastoise
-      - Nidoqueen
       - Nidoking
       - Arcanine
       - Machamp
       - Slowbro
       - Snorlax
       - Zapdos
-      - Mew
       - Crobat
       - Xatu
       - Azumarill
@@ -1399,7 +1398,6 @@ VGC:
       - Darmanitan
       - Darmanitan-D
       - Zoroark
-      - Escavalier
       - Chandelure
       - Bisharp
       - Cobalion
@@ -1407,9 +1405,9 @@ VGC:
       - Porygon-Z
       - Cresselia
       - Durant
-      - Hippowdon
       - Snover
-      - Abomasnow
+      - Mienshao
+      - Scrafty
     moves:
       - Double Team
       - Fissure
@@ -1491,10 +1489,15 @@ VGC:
       - Klinklang
       - Accelgor
       - Druddigon
-      - Golurk
       - Bouffalant
       - Mandibuzz
       - Jynx
+      - Escavalier
+      - Nidoqueen
+      - Quagsire
+      - Metang
+      - Magmortar
+      - Cryogonal
     moves:
       - Double Team
       - Fissure
