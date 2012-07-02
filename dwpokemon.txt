@@ -118,6 +118,7 @@ Scyther
 Jynx
 Electabuzz
 Magmar
+Pinsir
 Tauros
 Magikarp
 Gyarados
