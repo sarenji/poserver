@@ -464,6 +464,7 @@ Sawsbuck
 Sawsbuck-Summer
 Sawsbuck-Autumn
 Sawsbuck-Winter
+Emolga
 Karrablast
 Escavailer
 Foongus
