@@ -338,6 +338,12 @@ VGC:
       - Shaymin-S
       - Victini
       - Zekrom
+      - Thundurus-T
+      - Tornadus-T
+      - Landorus-T
+      - Kyurem-B
+      - Kyurem-W
+      - Keldeo-R
     moves:
       - Sky Drop
       - Dark Void
@@ -923,6 +929,12 @@ VGC:
       - Zapdos
       - Zigzagoon
       - Zubat
+      - Thundurus-T
+      - Tornadus-T
+      - Landorus-T
+      - Kyurem-B
+      - Kyurem-W
+      - Keldeo-R
     moves:
       - Sky Drop
     items:
@@ -1318,6 +1330,7 @@ VGC:
       - Staraptor
       - Kyurem
       - Keldeo
+      - Keldeo-R
       - Tornadus-T
       - Thundurus-T
       - Landorus-T
@@ -1741,6 +1754,7 @@ VGC:
       - Kangaskhan
       - Kecleon
       - Keldeo
+      - Keldeo-R
       - Kingdra
       - Kingler
       - Kirlia
