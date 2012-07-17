@@ -1095,8 +1095,6 @@ VGC:
     gen: 5
     pokemons:
       - Genesect
-      - Meloetta
-      - Meloetta-S
     moves:
       - Double Team
       - Fissure
@@ -1336,6 +1334,8 @@ VGC:
       - Landorus-T
       - Hippowdon
       - Abomasnow
+      - Meloetta
+      - Meloetta-S
     moves:
       - Double Team
       - Fissure
