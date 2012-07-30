@@ -632,6 +632,7 @@ var help = [
   [
     "** BASIC USER COMMANDS",
     "/ranking -- See your own ranking.",
+    "/ranking user:tier -- See ranking of user in tier.", 
     "/dw -- See a list of released Dream World Pokemon.",
     "/tiers -- See a link to Smogon's Tiers.",
     "/clearpass -- Clear your own password.",
@@ -805,10 +806,12 @@ addCommand([ "idle", "away"], function() {
   announce(this.id, "You are now " + status + ".");
 });
 
-addCommand("ranking", function(player_name) {
+addCommand("ranking", function(player_name,tier) {
   var player = getPlayer(player_name) || this;
-  var rank   = sys.ranking(player.id);
-  var tier   = sys.tier(player.id);
+  if (!tier)
+	tier=sys.tier(player.id,0);
+  var rank   = sys.ranking(player.id,tier);
+  //var tier   = sys.tier(player.id);
   if (rank) {
     var possessive = player_name ? player_name + "'s" : "Your";
     announce(this.id, possessive + " rank in " + tier + " is " + rank
