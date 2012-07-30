@@ -538,9 +538,7 @@ function User(id) {
   this.lastMessages = [];
   this.lastMessageTime = 0;
   this.idle = sys.away(id);
-  this.tier = sys.tier(id);
   this.channelId = 0;
-  this.ratedBattles = sys.ratedBattles(this.id) || 0;
   var key = makeKey(this.name, "first-seen");
   this.firstSeen = getValue(key, getTime());
   setValue(key, this.firstSeen);
@@ -881,7 +879,7 @@ addModCommand("bancheck", function(playerName) {
 addModCommand("playerCount", function(){
   announce(this.id, "There are "+sys.numPlayers()+" players logged in right now.");
 });
-addOwnerCommand("reload", function() {
+/*addOwnerCommand("reload", function() {
   var id          = this.id;
   var name    = this.name.toLowerCase();
   if (name != "antar" && name != "sarenji" && name != "aldaron" && name != "haunter" && name != "desolate") {//only admins with remote access may use this script
@@ -918,7 +916,7 @@ addOwnerCommand("rollback", function() {
   sys.writeToFile(SCRIPTS_URL, old_scripts);
   sys.changeScript(old_scripts, true);
   announce(id, "Scripts rolled back!");
-});
+});*/
 
 addOwnerCommand("reloadtiers", function() {
   announce(this.id, "Fetching tiers.yml...");
@@ -1652,8 +1650,6 @@ function beforeLogIn(player_id) {
     return;
   }
 
-  HiMobileUser(player_id,sys.tier(player_id));
-
   // unban users
   var expireKey = makeKey(player_name, "ban:expires");
   var expires   = parseInt(getValue(expireKey), 10);
@@ -1721,11 +1717,11 @@ function joinChannels(user) {
   sys.putInChannel(user.id, sys.channelId("Tournaments"));
 }
 
-function droughtCheck(src, tier){
-if (!tier) tier = sys.tier(src);
+function droughtCheck(src, team, tier){
+if (!tier) tier = sys.tier(src,team);
     if ((tier != "Standard UU") && (tier != "Standard RU") && (tier != "Standard NU")) return;
     for(var i = 0; i <6; ++i){
-        if(sys.ability(sys.teamPokeAbility(src, i)) == "Drought" || sys.ability(sys.teamPokeAbility(src, i)) == "Sand Stream" || sys.ability(sys.teamPokeAbility(src, i)) == "Snow Warning"){
+        if(sys.ability(sys.teamPokeAbility(src, team, i)) == "Drought" || sys.ability(sys.teamPokeAbility(src, team, i)) == "Sand Stream" || sys.ability(sys.teamPokeAbility(src, team, i)) == "Snow Warning"){
           announce(src, "Permanent weather abilities are not allowed in the lower tiers.");
           sys.stopEvent();
           sys.changeTier(src, "Challenge Cup");
@@ -1734,8 +1730,8 @@ if (!tier) tier = sys.tier(src);
     }
 }
 
-function eventNatureCheck(src) {
-   if(["StreetPKMN", "Challenge Cup"].indexOf(sys.tier(src)) != -1) {
+function eventNatureCheck(src,team) {
+   if(["StreetPKMN", "Challenge Cup"].indexOf(sys.tier(src,team)) != -1) {
       return;
    }
    var pokeNatures = [
@@ -1746,15 +1742,15 @@ function eventNatureCheck(src) {
       {pokemon: "Serperior", moves: ["Aromatherapy"], nature: "Hardy"}
    ];
    for(var i = 0; i < 6; ++i) {
-      var poke = sys.teamPoke(src, i);
+      var poke = sys.teamPoke(src, team, i);
       for(var x = 0; x < pokeNatures.length; ++x) {
          if(poke == sys.pokeNum(pokeNatures[x].pokemon)) {
             for(var y = 0; y < pokeNatures[x].moves.length; ++y) {
                if(sys.hasTeamPokeMove(src, i, sys.moveNum(pokeNatures[x].moves[y])) &&
-                     sys.teamPokeNature(src, i) != sys.natureNum(pokeNatures[x].nature)) {
+                     sys.teamPokeNature(src, team, i) != sys.natureNum(pokeNatures[x].nature)) {
                   announce(src, "" + pokeNatures[x].pokemon + " with " + pokeNatures[x].moves[y] + " must have a " + pokeNatures[x].nature + " nature.");
                   sys.stopEvent();
-                  sys.changeTier(src, "Challenge Cup");
+                  sys.changeTier(src, team, "Challenge Cup");
                   return;
                }
             }
@@ -1776,16 +1772,16 @@ function SmashPassBan(src,tier) {
         }
 }
 
-function LightingRodPika(src,tier) {
+function LightingRodPika(src,team,tier) {
     if (tier == "Dream World OU" || tier == "Dream World Ubers" || tier == "StretPKMN"){
 	return
     }
     for(var i = 0; i < 6; ++i) {
-	if (sys.teamPoke(src,i) == sys.pokeNum("Pikachu") || sys.teamPoke(src,i) == sys.pokeNum("Raichu"))
+	if (sys.teamPoke(src,team,i) == sys.pokeNum("Pikachu") || sys.teamPoke(src,team,i) == sys.pokeNum("Raichu"))
 	{
-		if (sys.ability(sys.teamPokeAbility(src, i)) == "Lightningrod" && sys.hasTeamPokeMove(src,i,sys.moveNum("Extremespeed"))) {
+		if (sys.ability(sys.teamPokeAbility(src,team,i)) == "Lightningrod" && sys.hasTeamPokeMove(src,team,i,sys.moveNum("Extremespeed"))) {
 			announce(src,"Pikachu and Raichu are not allowed to have both Lightningrod and Extremespeed");
-		    	sys.changeTier(src, "1v1 CC");
+		    	sys.changeTier(src, team, "1v1 CC");
 		    	sys.stopEvent();
 		    	return
 	}}
@@ -1793,7 +1789,7 @@ function LightingRodPika(src,tier) {
     }
 }
 
-function RS200(src,tier) {
+function RS200(src,team,tier) {
    if(tier != "RS 200") {
       return;
    }
@@ -1992,25 +1988,25 @@ function RS200(src,tier) {
 	{pokemon: "Registeel", moves:  ["Body Slam", "Counter", "Defense Curl", "Double-Edge", "DynamicPunch", "Endure", "Explosion", "Ice Punch", "Mega Kick", "Mega Punch", "Mimic", "Mud-Slap", "Psych Up", "Rock Slide", "Rollout", "Seismic Toss", "Sleep Talk", "Snore", "Substitute", "Swagger", "Thunder Wave", "ThunderPunch"]}
         ];
    for(var i = 0; i < 6; ++i) {
-      var poke = sys.teamPoke(src, i);
+      var poke = sys.teamPoke(src, team,i);
       for(var x = 0; x < banList.length; ++x) {
          if(poke == sys.pokeNum(banList[x].pokemon)) {
             for(var y = 0; y < banList[x].moves.length; ++y) {
-               if(sys.hasTeamPokeMove(src, i, sys.moveNum(banList[x].moves[y]))) {
+               if(sys.hasTeamPokeMove(src, team, i, sys.moveNum(banList[x].moves[y]))) {
                   announce(src, "" + banList[x].pokemon + " with " + banList[x].moves[y] + " is banned from RS 200.");
                   sys.stopEvent();
-                  if (sys.hasLegalTeamForTier(src, "UU Gen 3")) {
+                  if (sys.hasLegalTeamForTier(src, team, "UU Gen 3")) {
                 	announce(src,"Moving you to UU Gen 3.");
-                	sys.changeTier(src, "UU Gen 3");
-            	  } else if (sys.hasLegalTeamForTier(src, "OU Gen 3")) {
+                	sys.changeTier(src, team, "UU Gen 3");
+            	  } else if (sys.hasLegalTeamForTier(src, team, "OU Gen 3")) {
                 	announce(src,"Moving you to OU Gen 3.");
-                	sys.changeTier(src, "OU Gen 3");
-            	  } else if (sys.hasLegalTeamForTier(src, "Ubers Gen 3")) {
+                	sys.changeTier(src, team, "OU Gen 3");
+            	  } else if (sys.hasLegalTeamForTier(src, team, "Ubers Gen 3")) {
                 	announce(src,"Moving you to Ubers Gen 3.");
-                	sys.changeTier(src, "Ubers Gen 3");
+                	sys.changeTier(src, team, "Ubers Gen 3");
             	  } else {
                 	announce(src,"Moving you to 1v1 CC.");
-                	sys.changeTier(src, "1v1 CC");
+                	sys.changeTier(src, team, "1v1 CC");
             	  }
                   return;
                }
@@ -2020,17 +2016,17 @@ function RS200(src,tier) {
    }
 }
 
-function monotypecheck(src, tier) {
-    if (!tier) tier = sys.tier(src);
+function monotypecheck(src, team, tier) {
+    if (!tier) tier = sys.tier(src,team);
     if (tier != "Monotype") return; // Only interested in monotype
-    var TypeA = sys.pokeType1(sys.teamPoke(src, 0), 5);
-    var TypeB = sys.pokeType2(sys.teamPoke(src, 0), 5);
+    var TypeA = sys.pokeType1(sys.teamPoke(src, team, 0), 5);
+    var TypeB = sys.pokeType2(sys.teamPoke(src, team, 0), 5);
     var k;
     var checkType;
     for (var i = 1; i < 6 ; i++) {
-        if (sys.teamPoke(src, i) == 0) continue;
-        var temptypeA = sys.pokeType1(sys.teamPoke(src, i), 5);
-        var temptypeB = sys.pokeType2(sys.teamPoke(src, i), 5);
+        if (sys.teamPoke(src, team, i) == 0) continue;
+        var temptypeA = sys.pokeType1(sys.teamPoke(src, team, i), 5);
+        var temptypeB = sys.pokeType2(sys.teamPoke(src, team, i), 5);
 
         if(checkType != undefined) {
             k=3;
@@ -2073,8 +2069,8 @@ function monotypecheck(src, tier) {
 
             if(temptypeA != checkType && temptypeB != checkType) {
 
-                announce(src, "Team not Monotype as " + sys.pokemon(sys.teamPoke(src, i)) + " is not " + sys.type(checkType) + "!");
-                sys.changeTier(src, "Challenge Cup");
+                announce(src, "Team not Monotype as " + sys.pokemon(sys.teamPoke(src, team, i)) + " is not " + sys.type(checkType) + "!");
+                sys.changeTier(src, team, "Challenge Cup");
                 sys.stopEvent()
                 return;
             }
@@ -2085,7 +2081,7 @@ function monotypecheck(src, tier) {
                         TypeB = TypeA
                         }
             if (temptypeA != TypeA && temptypeB != TypeA && temptypeA != TypeB && temptypeB != TypeB) {
-                announce(src, "Team not Monotype as " + sys.pokemon(sys.teamPoke(src, i)) + " does not share a type with " + sys.pokemon(sys.teamPoke(src, 0)) + "!")
+                announce(src, "Team not Monotype as " + sys.pokemon(sys.teamPoke(src, team, i)) + " does not share a type with " + sys.pokemon(sys.teamPoke(src, team, 0)) + "!")
 
                 sys.changeTier(src, "Challenge Cup");
                 sys.stopEvent()
@@ -2097,52 +2093,29 @@ function monotypecheck(src, tier) {
 }
 
 
-function AdvIngrainSmeargleBan(src,tier) {
+function AdvIngrainSmeargleBan(src,team,tier) {
     var ingrain = sys.moveNum("Ingrain");
     var smeargle = sys.pokeNum("Smeargle");
     for (var i = 0; i < 6; ++i)
-        if ((tier == "OU Gen 3") && sys.hasTeamPokeMove(src,i,ingrain) && (sys.teamPoke(src,i) == smeargle)) {
+        if ((tier == "OU Gen 3") && sys.hasTeamPokeMove(src,team,i,ingrain) && (sys.teamPoke(src,team,i) == smeargle)) {
 
             announce(src,"Smeargle with Ingrain is not allowed in ADV OU");
-            sys.changeTier(src, "Challenge Cup");
+            sys.changeTier(src, team,"Challenge Cup");
             sys.stopEvent();
             return
         }
 }
 
-
-function HiMobileUser(src,tier) {
-    var cleffa = sys.pokeNum("Cleffa");
-    var splash = sys.moveNum("Splash");
-    //var missingno = sys.pokeNum("Missingo");
-    if ((tier != "Challenge Cup") && (sys.teamPoke(src,0) == cleffa) && sys.hasTeamPokeMove(src,0,splash) && sys.teamPokeNick(src, 0) == "LOLZ") {
-      /*var AndChan =  sys.channelId("Tournaments");
-      if (sys.existChannel("Android Channel")) {
-        AndChan = sys.channelId("Android Channel");
-        sys.putInChannel(src, AndChan);
-      }
-
-      sys.sendMessage(src, "Hello, Android user! The application that you have downloaded is a pirated copy of a freeware program. Please uninstall it and go to http:\/\/www.pokemon-online.eu to find out more about this program and to download the REAL version, which has no ads.",AndChan);
-      sys.changeTier(src, "Challenge Cup");*/
-      sys.kick(src);
-      return true;
-    }
-  else {
-    return false;
-  }
-}
-
-
-function swiftSwimCheck(src, tier){
-    if (!tier) tier = sys.tier(src);
+function swiftSwimCheck(src, team, tier){
+    if (!tier) tier = sys.tier(src,tier);
     if (tier != "Standard OU" && tier != "Dream World OU" && tier != "Monotype") return;
     for(var i = 0; i <6; ++i){
-        if(sys.ability(sys.teamPokeAbility(src, i)) == "Drizzle"){
+        if(sys.ability(sys.teamPokeAbility(src, team, i)) == "Drizzle"){
             for(var j = 0; j <6; ++j){
-                if(sys.ability(sys.teamPokeAbility(src, j)) == "Swift Swim"){
+                if(sys.ability(sys.teamPokeAbility(src, team, j)) == "Swift Swim"){
                     announce(src, "You cannot have the combination of Swift Swim and Drizzle in this tier");
                     sys.stopEvent();
-                    sys.changeTier(src, "StreetPKMN");
+                    sys.changeTier(src, team, "StreetPKMN");
                     return;
                 }
             }
@@ -2150,32 +2123,32 @@ function swiftSwimCheck(src, tier){
     }
 }
 
-function dreamWorldAbilitiesCheck(src, se) {
-    if (sys.gen(src) < 5)
+function dreamWorldAbilitiesCheck(src, team, se) {
+    if (sys.gen(src,team) < 5)
         return;
 
-    if (["StreetPKMN", "Dream World OU", "Dream World Ubers", "Challenge Cup"].indexOf(sys.tier(src)) != -1) {
+    if (["StreetPKMN", "Dream World OU", "Dream World Ubers", "Challenge Cup"].indexOf(sys.tier(src,team)) != -1) {
         return; // don't care about these tiers
     }
 
     for (var i = 0; i < 6; i++) {
-        var x = sys.teamPoke(src, i);
-        if (x != 0 && sys.hasDreamWorldAbility(src, i)  && (!(x in dreamWorldPokemon) || (breedingpokemons.indexOf(x) != -1  && sys.compatibleAsDreamWorldEvent(src, i) != true))) {
+        var x = sys.teamPoke(src, team, i);
+        if (x != 0 && sys.hasDreamWorldAbility(src, team, i)  && (!(x in dreamWorldPokemon) || (breedingpokemons.indexOf(x) != -1  && sys.compatibleAsDreamWorldEvent(src, team, i) != true))) {
             if (se) {
                 if (!(x in dreamWorldPokemon))
                     announce(src, "" + sys.pokemon(x) + " is  not allowed with a Dream World ability in this tier. Change it in the  teambuilder.");
                 else
                     announce(src, "" + sys.pokemon(x) + "  has to be Male and have no egg moves with its Dream World ability in  " +  sys.tier(src) + " tier. Change it in the teambuilder.");
             }
-            if (sys.hasLegalTeamForTier(src, "Dream World OU")) {
+            if (sys.hasLegalTeamForTier(src,team, "Dream World OU")) {
                 announce(src,"Moving you to Dream World OU.");
-                sys.changeTier(src, "Dream World OU");
-            } else if (sys.hasLegalTeamForTier(src, "Dream World Ubers")) {
+                sys.changeTier(src,team, "Dream World OU");
+            } else if (sys.hasLegalTeamForTier(src, team,"Dream World Ubers")) {
                 announce(src,"Moving you to Dream World Ubers.");
-                sys.changeTier(src, "Dream World Ubers");
+                sys.changeTier(src, team, "Dream World Ubers");
             } else {
                 announce(src,"Moving you to StreetPKMN.");
-                sys.changeTier(src, "StreetPKMN");
+                sys.changeTier(src, team, "StreetPKMN");
             }
             if (se)
                 sys.stopEvent();
@@ -2201,34 +2174,34 @@ function loadDreamWorldPokemon() {
 var breedingpokemons = ["Bulbasaur", "Ivysaur", "Venusaur", "Charmander", "Charmeleon", "Charizard", "Squirtle", "Wartortle", "Blastoise", "Turtwig", "Grotle", "Torterra", "Chimchar", "Monferno", "Infernape", "Piplup", "Prinplup", "Empoleon", "Treecko", "Grovyle", "Sceptile", "Torchic", "Combusken", "Blaziken", "Mudkip", "Marshtomp", "Swampert"];
 breedingpokemons = breedingpokemons.map(function(p) { return sys.pokeNum(p); });
 
-function moodyCheck(src, se) {
-    if (["Standard Ubers", "Standard OU", "Standard UU", "Standard RU", "Standard NU", "Standard LC", "Dream World OU", "Dream World Ubers", "Clear Skies"].indexOf(sys.tier(src)) == -1) {
+function moodyCheck(src, team, se) {
+    if (["Standard Ubers", "Standard OU", "Standard UU", "Standard RU", "Standard NU", "Standard LC", "Dream World OU", "Dream World Ubers", "Clear Skies"].indexOf(sys.tier(src,team)) == -1) {
         return; // only care about these tiers
     }
 
     for (var i = 0; i < 6; i++) {
-        if(sys.ability(sys.teamPokeAbility(src, i)) == "Moody"){
-          announce(src, "" + sys.pokemon(sys.teamPoke(src, i)) + "   is not allowed with Moody in this tier. Change it in the  teambuilder.");
-          sys.changeTier(src, "Challenge Cup");
+        if(sys.ability(sys.teamPokeAbility(src, team, i)) == "Moody"){
+          announce(src, "" + sys.pokemon(sys.teamPoke(src, team,  i)) + "   is not allowed with Moody in this tier. Change it in the  teambuilder.");
+          sys.changeTier(src, team, "Challenge Cup");
           sys.stopEvent();
         }
     }
 }
 
-function afterChangeTeam(playerId) {
+function afterChangeTeam(playerId,team) {
   var user = SESSION.users(playerId);
   user.name = sys.name(playerId);
-  user.tier = sys.tier(playerId);
-  dreamWorldAbilitiesCheck(playerId, false);
-  moodyCheck(playerId, false);
-  swiftSwimCheck(playerId);
-  droughtCheck(playerId);
-  SmashPassBan(playerId,sys.tier(playerId));
-  LightingRodPika(playerId,sys.tier(playerId));
-  RS200(playerId,sys.tier(playerId));
-  monotypecheck(playerId,sys.tier(playerId));
-  AdvIngrainSmeargleBan(playerId,sys.tier(playerId));
-  eventNatureCheck(playerId);
+  user.tier = sys.tier(playerId,team);
+  dreamWorldAbilitiesCheck(playerId, team, false);
+  moodyCheck(playerId, team, false);
+  swiftSwimCheck(playerId, team);
+  droughtCheck(playerId, team);
+  SmashPassBan(playerId,team,sys.tier(playerId,team));
+  LightingRodPika(playerId,team,sys.tier(playerId,team));
+  RS200(playerId,team,sys.tier(playerId,team));
+  monotypecheck(playerId,team,sys.tier(playerId,team));
+  AdvIngrainSmeargleBan(playerId,team,sys.tier(playerId,team));
+  eventNatureCheck(playerId,team);
 
   if (/[^\w-\[\]\. ]/g.test(user.name)) {
     announce(playerId, "Please do not use special characters in your name.");
@@ -2252,7 +2225,7 @@ function beforeBattleMatchup(src, dest, clauses, rated, mode) {
         sys.stopEvent();
         return;
   }
-  if (sys.tier(src) == sys.tier(dest)) {
+  /*if (sys.tier(src) == sys.tier(dest)) {
     dreamWorldAbilitiesCheck(src, true);
     dreamWorldAbilitiesCheck(dest, true);
     moodyCheck(src, true);
@@ -2260,27 +2233,27 @@ function beforeBattleMatchup(src, dest, clauses, rated, mode) {
     RS200(src,sys.tier(src))
     RS200(dest,sys.tier(src))
     
-  }
+  }*/
 }
 
-function beforeChallengeIssued(sourceId, targetId, clauses, rated, mode) {
+function beforeChallengeIssued(sourceId, targetId, clauses, rated, mode,team,destTier) {
   if (battlesStopped) {
         announce(sourceId, "Battles are now stopped as the server will restart soon.");
         sys.stopEvent();
         return;
   }
-  if (sys.tier(sourceId) == sys.tier(targetId)) {
-    dreamWorldAbilitiesCheck(sourceId, true);
-    dreamWorldAbilitiesCheck(targetId, true);
-    moodyCheck(sourceId, true);
-    moodyCheck(targetId, true);
-    RS200(sourceId,sys.tier(sourceId));
-    RS200(targetId,sys.tier(targetId));
+  if (sys.tier(sourceId,team) == destTier) {
+    dreamWorldAbilitiesCheck(sourceId, team, true);
+    //dreamWorldAbilitiesCheck(targetId, true);
+    moodyCheck(sourceId, team, true);
+    //moodyCheck(targetId, true);
+    RS200(sourceId,team,sys.tier(sourceId));
+    //RS200(targetId,sys.tier(targetId));
   }
   var source = sys.name(sourceId);
   var target = sys.name(targetId);
   if (Tournament.isActive() && Tournament.isTourBattle(source, target)) {
-    if (sys.tier(sourceId) === sys.tier(targetId) && sys.tier(sourceId) === Tournament.tier) {
+    if (sys.tier(sourceId,team) === destTier && sys.tier(sourceId,team) === Tournament.tier) {
       Tournament.announce(sourceId, "This battle will count for the tournament!");
       Tournament.announce(targetId, "This battle will count for the tournament!");
     } else {
@@ -2290,15 +2263,15 @@ function beforeChallengeIssued(sourceId, targetId, clauses, rated, mode) {
   }
 }
 
-function beforeChangeTier(playerId, oldTier, newTier) {
-  swiftSwimCheck(playerId, newTier);
-  droughtCheck(playerId, newTier);
-  SmashPassBan(playerId,newTier);
-  LightingRodPika(playerId,sys.tier(playerId));
-  RS200(playerId,newTier);
-  monotypecheck(playerId,newTier);
-  AdvIngrainSmeargleBan(playerId,newTier);
-  eventNatureCheck(playerId);
+function beforeChangeTier(playerId, team, oldTier, newTier) {
+  swiftSwimCheck(playerId, team, newTier);
+  droughtCheck(playerId, team, newTier);
+  SmashPassBan(playerId, team, newTier);
+  LightingRodPika(playerId, team, newTier);
+  RS200(playerId, team, newTier);
+  monotypecheck(playerId, team, newTier);
+  AdvIngrainSmeargleBan(playerId, team, newTier);
+  eventNatureCheck(playerId, team);
   /*
   if (!hasValidTier(playerId, newTier)) {
     sys.stopEvent();
