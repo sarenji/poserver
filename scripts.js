@@ -123,8 +123,11 @@ Tournament.prototype.join = function(user) {
   }
 
   // check if a player is in the wrong tier
-  if (sys.tier(user.id) !== this.tier) {
-    this.announce(user.id, "You are in the wrong tier!");
+  var tiers = [];
+  for (var i=0; i<sys.teamCount(user.id); i++)
+	tiers.push(sys.tier(user.id,i));
+  if (tiers.indexOf(this.tier) === -1) {
+    this.announce(user.id, "You have no teams in this tier!");
     return;
   }
 
@@ -300,11 +303,16 @@ Tournament.prototype.prettyStringMatch = function(match) {
 };
 
 Tournament.prototype.getBackgroundStyle = function(playerName) {
-  if (!sys.id(playerName)) {
+  var playerId = sys.id(playerName);
+  var tiers = [];
+  for (var i=0; i<sys.teamCount(playerId); i++)
+	tiers.push(sys.tier(playerId,i));
+
+  if (!playerId) {
     return "background: #f33";
-  } else if (sys.battling(sys.id(playerName))) {
+  } else if (sys.battling(playerId)) {
     return "background: #9AEDC6";
-  } else if (sys.tier(sys.id(playerName)) != this.tier) {
+  } else if (tiers.indexOf(this.tier) === -1) {
     return "background: #fcc";
   }
   return "";
