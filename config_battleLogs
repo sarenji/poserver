@@ -1,0 +1,5 @@
+[General]
+save_mixed_tiers=true
+save_raw_files=false
+save_text_files=true
+tiers=@Invalid()

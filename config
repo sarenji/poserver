@@ -1,5 +1,4 @@
 [General]
-server_port=5081
 sql_driver=0
 sql_db_name=pokemon
 sql_db_port=5432
@@ -49,7 +48,7 @@ SafeMode=false
 [Server]
 Password=pikachu
 RequirePassword=false
-Private=1
+Private=0
 Name=Smogon University
 Announcement="<a href=\"http://www.smogon.com/sim/rules\">SERVER RULES</a> (updated 5/21)<br \\>Having problems? Try our <a href=\"http://www.smogon.com/forums/showthread.php?t=3463942\">FAQ</a> and our <a href=\"http://www.smogon.com/forums/showthread.php?t=3464379\">Beginner's Guide</a>!<br \\>The transition to Pokemon Showdown has started. Read more <a href=\"http://www.smogon.com/forums/showthread.php?t=3468843\">here.</a>"
 Description="The main simulator server for <a href=http://www.smogon.com>Smogon University</a>. Getting a No. 7 connection timeout error? Post <a href=\"http://www.smogon.com/forums/showthread.php?t=3447193\">here</a>."
