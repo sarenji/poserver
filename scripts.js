@@ -2258,7 +2258,7 @@ function beforeChallengeIssued(sourceId, targetId, clauses, rated, mode,team,des
     //dreamWorldAbilitiesCheck(targetId, true);
     moodyCheck(sourceId, team, true);
     //moodyCheck(targetId, true);
-    RS200(sourceId,team,sys.tier(sourceId));
+    RS200(sourceId,team,sys.tier(sourceId,team));
     //RS200(targetId,sys.tier(targetId));
   }
   var source = sys.name(sourceId);
