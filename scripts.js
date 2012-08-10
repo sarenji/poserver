@@ -1757,7 +1757,7 @@ function eventNatureCheck(src,team) {
       for(var x = 0; x < pokeNatures.length; ++x) {
          if(poke == sys.pokeNum(pokeNatures[x].pokemon)) {
             for(var y = 0; y < pokeNatures[x].moves.length; ++y) {
-               if(sys.hasTeamPokeMove(src, i, sys.moveNum(pokeNatures[x].moves[y])) &&
+               if(sys.hasTeamPokeMove(src, team, i, sys.moveNum(pokeNatures[x].moves[y])) &&
                      sys.teamPokeNature(src, team, i) != sys.natureNum(pokeNatures[x].nature)) {
                   announce(src, "" + pokeNatures[x].pokemon + " with " + pokeNatures[x].moves[y] + " must have a " + pokeNatures[x].nature + " nature.");
                   sys.stopEvent();
