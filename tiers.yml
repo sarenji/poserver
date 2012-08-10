@@ -207,7 +207,6 @@ Other:
     displayOrder: 90
     gen: 5
     pokemons:
-      - Genesect
       - Meloetta
       - Meloetta-S
       - Arceus
@@ -236,7 +235,6 @@ Other:
       - Dialga
       - Excadrill
       - Garchomp
-      - Genesect
       - Giratina
       - Giratina-O
       - Groudon
@@ -1094,7 +1092,6 @@ VGC:
     displayOrder: 10
     gen: 5
     pokemons:
-      - Genesect
     moves:
       - Double Team
       - Fissure
@@ -1147,7 +1144,6 @@ VGC:
       - Deoxys
       - Deoxys-A
       - Dialga
-      - Genesect
       - Giratina
       - Giratina-O
       - Groudon
@@ -1225,7 +1221,6 @@ VGC:
       - Dialga
       - Excadrill
       - Garchomp
-      - Genesect
       - Giratina
       - Giratina-O
       - Groudon
@@ -1273,6 +1268,7 @@ VGC:
     gen: 5
     banParent: Standard OU
     pokemons:
+      - Genesect
       - Venusaur
       - Ninetales
       - Dugtrio
